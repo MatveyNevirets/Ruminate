@@ -12,7 +12,7 @@ class ThemeIndexNotifier extends StateNotifier<int> {
     state = newIndex;
   }
 
-  void toogle() {
+  void toggle() {
     if (state != themesCount - 1) {
       state = state + 1;
     } else {

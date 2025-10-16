@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ruminate/core/providers/page_controller_provider.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_container.dart';
 
@@ -8,29 +9,76 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final pageNotifierProvider = ref.watch(pageProvider.notifier);
+    final pageIndexProvider = ref.watch(pageProvider);
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: Text("Ruminate", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+        title: Text(
+          "Ruminate",
+          style: TextStyle(fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onPrimary),
+        ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: Padding(
-        padding: Theme.of(context).largePadding,
+      body: SafeArea(
         child: ListView(
           children: [
-            Row(
-              children: [
-                Expanded(child: AppContainer()),
-                SizedBox(width: Theme.of(context).mediumPaddingDouble),
-                Expanded(child: AppContainer()),
-              ],
+            Padding(
+              padding: Theme.of(context).largePadding,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Рефлексируй!",
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                  ),
+                  SizedBox(height: Theme.of(context).mediumPaddingDouble),
+                  Row(
+                    children: [
+                      Expanded(child: AppContainer(title: "Ежедневная рефлексия")),
+                      SizedBox(width: Theme.of(context).mediumPaddingDouble),
+                      Expanded(child: AppContainer(title: "Создать рефлексию")),
+                    ],
+                  ),
+                  SizedBox(height: Theme.of(context).mediumPaddingDouble),
+                  SizedBox(
+                    width: double.maxFinite,
+                    child: AppContainer(title: "Ежемесячная рефлексия"),
+                  ),
+                  SizedBox(height: Theme.of(context).largePaddingDouble),
+                  Text(
+                    "Вспомни!",
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                  ),
+                  SizedBox(height: Theme.of(context).mediumPaddingDouble),
+                  Row(
+                    children: [
+                      Expanded(child: AppContainer(title: "Все рефлексии")),
+                      SizedBox(width: Theme.of(context).mediumPaddingDouble),
+                      Expanded(child: AppContainer(title: "Неделю назад ты думал о..")),
+                    ],
+                  ),
+                  SizedBox(height: Theme.of(context).mediumPaddingDouble),
+                  SizedBox(
+                    width: double.maxFinite,
+                    child: AppContainer(title: "Личные победы"),
+                  ),
+                  SizedBox(height: Theme.of(context).largePaddingDouble),
+                ],
+              ),
             ),
-            SizedBox(height: Theme.of(context).mediumPaddingDouble),
-            AppContainer(),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.red,
+
+        onTap: (index) => pageNotifierProvider.changePage(index),
+        currentIndex: pageIndexProvider,
         backgroundColor: Theme.of(context).colorScheme.primary,
         items: [
           BottomNavigationBarItem(
