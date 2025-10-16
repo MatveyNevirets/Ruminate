@@ -1,13 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ruminate/core/providers/page_controller_provider.dart';
+import 'package:ruminate/core/providers/theme_provider.dart';
 import 'package:ruminate/core/styles/app_border_radiuses_extention.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 
 class AppContainer extends StatelessWidget {
+  AppContainer({super.key, this.title, this.onClick});
   String? title;
-  AppContainer({super.key, this.title});
+  final VoidCallback? onClick;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class AppContainer extends StatelessWidget {
               ),
             ),
           ),
-          onTap: () => ref.read(pageProvider.notifier).changePage(1),
+          onTap: () => onClick == null ? ref.read(themeIndexProvider.notifier).toggle() : onClick!.call(),
         );
       },
     );

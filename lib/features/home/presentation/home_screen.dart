@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ruminate/core/providers/page_controller_provider.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
+import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_container.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -13,13 +15,7 @@ class HomeScreen extends ConsumerWidget {
     final pageIndexProvider = ref.watch(pageProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Ruminate",
-          style: TextStyle(fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onPrimary),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+      appBar: createAppBar(context),
       body: SafeArea(
         child: ListView(
           children: [
@@ -37,7 +33,12 @@ class HomeScreen extends ConsumerWidget {
                   SizedBox(height: Theme.of(context).mediumPaddingDouble),
                   Row(
                     children: [
-                      Expanded(child: AppContainer(title: "Ежедневная рефлексия")),
+                      Expanded(
+                        child: AppContainer(
+                          title: "Ежедневная рефлексия",
+                          onClick: () => context.go("/home/daily_reflection"),
+                        ),
+                      ),
                       SizedBox(width: Theme.of(context).mediumPaddingDouble),
                       Expanded(child: AppContainer(title: "Создать рефлексию")),
                     ],
