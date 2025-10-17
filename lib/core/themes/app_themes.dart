@@ -9,7 +9,8 @@ abstract class AppThemes {
       colorScheme: ColorScheme.fromSeed(seedColor: _seedColors[0]),
       textTheme: TextTheme(
         bodyLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+        bodyMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+        bodySmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
       ),
     ),
     ThemeData.light().copyWith(
@@ -17,7 +18,8 @@ abstract class AppThemes {
       colorScheme: ColorScheme.fromSeed(seedColor: _seedColors[1]),
       textTheme: TextTheme(
         bodyLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+        bodyMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+        bodySmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
       ),
     ),
     ThemeData.light().copyWith(
@@ -25,12 +27,10 @@ abstract class AppThemes {
       colorScheme: ColorScheme.fromSeed(seedColor: _seedColors[2]),
       textTheme: TextTheme(
         bodyLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+        bodyMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+        bodySmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
       ),
     ),
-    ThemeData.dark().copyWith(colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber)),
-    ThemeData.dark().copyWith(colorScheme: ColorScheme.fromSeed(seedColor: Colors.red)),
-    ThemeData.dark().copyWith(colorScheme: ColorScheme.fromSeed(seedColor: Colors.green)),
   ]);
 
   static get getThemes => _themes;
