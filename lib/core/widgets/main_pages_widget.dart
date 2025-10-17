@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ruminate/core/providers/page_controller_provider.dart';
+import 'package:ruminate/core/providers/navigation_providers.dart';
+import 'package:ruminate/core/widgets/bottom_navigation_bar.dart';
 import 'package:ruminate/features/home/presentation/home_screen.dart';
 
 class MainPagesWidget extends ConsumerWidget {
@@ -10,17 +9,34 @@ class MainPagesWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pageNotifierProvider = ref.watch(pageProvider.notifier);
+    final controller = ref.watch(pageControllerProvider);
+
+    final navigationProvider = ref.watch(navigationNotifierProvider.notifier);
+    final navigationIndex = ref.watch(navigationNotifierProvider);
 
     return PageView(
-      controller: pageNotifierProvider.pageController,
-      onPageChanged: (ints) {
-        log("$ints");
-      },
+      controller: controller,
+
       children: [
         HomeScreen(),
-        Scaffold(body: Center(child: Text("1"))),
-        Scaffold(body: Center(child: Text("2"))),
+        Scaffold(
+          body: Center(
+            child: Text(
+              "Здесь будет статистика",
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
+            ),
+          ),
+          bottomNavigationBar: createBottomNavigationBar(context, navigationProvider, navigationIndex),
+        ),
+        Scaffold(
+          body: Center(
+            child: Text(
+              "Здесь будет профиль",
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
+            ),
+          ),
+          bottomNavigationBar: createBottomNavigationBar(context, navigationProvider, navigationIndex),
+        ),
       ],
     );
   }

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ruminate/core/providers/page_controller_provider.dart';
+import 'package:ruminate/core/providers/navigation_providers.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_container.dart';
+import 'package:ruminate/core/widgets/bottom_navigation_bar.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pageNotifierProvider = ref.watch(pageProvider.notifier);
-    final pageIndexProvider = ref.watch(pageProvider);
+    final navigationProvider = ref.watch(navigationNotifierProvider.notifier);
+    final navigationIndex = ref.watch(navigationNotifierProvider);
 
     return Scaffold(
       appBar: createAppBar(context),
@@ -28,7 +29,7 @@ class HomeScreen extends ConsumerWidget {
                     "Рефлексируй!",
                     style: Theme.of(
                       context,
-                    ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                    ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                   ),
                   SizedBox(height: Theme.of(context).mediumPaddingDouble),
                   Row(
@@ -53,7 +54,7 @@ class HomeScreen extends ConsumerWidget {
                     "Вспомни!",
                     style: Theme.of(
                       context,
-                    ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                    ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                   ),
                   SizedBox(height: Theme.of(context).mediumPaddingDouble),
                   Row(
@@ -75,27 +76,7 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.red,
-
-        onTap: (index) => pageNotifierProvider.changePage(index),
-        currentIndex: pageIndexProvider,
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_work_outlined, color: Theme.of(context).colorScheme.onPrimary),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.pie_chart_outline, color: Theme.of(context).colorScheme.onPrimary),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_box_outlined, color: Theme.of(context).colorScheme.onPrimary),
-            label: "",
-          ),
-        ],
-      ),
+      bottomNavigationBar: createBottomNavigationBar(context, navigationProvider, navigationIndex),
     );
   }
 }
