@@ -5,8 +5,8 @@ import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
 import 'package:ruminate/core/widgets/app_text_field.dart';
 
-class SuperficialReviewScreen extends StatelessWidget {
-  const SuperficialReviewScreen({super.key});
+class IndepthEnergyScreen extends StatelessWidget {
+  const IndepthEnergyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,38 +19,32 @@ class SuperficialReviewScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Итоги дня",
+                "Тело и энергия",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               Text(
-                "Как я могу описать день в одном предложении?",
+                "Какой уровень энергии у меня сейчас по шкале от 1 до 10?",
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
               AppTextField(),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               Text(
-                "Какие эмоции сопровождали этот день?",
+                "Где в теле я сейчас чувствую напряжение или комфорт?",
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
               AppTextField(),
-              SizedBox(height: Theme.of(context).extraLargePaddingDouble),
-              Text(
-                "Что сегодня запомнилось больше всего?",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
-              ),
-              SizedBox(height: Theme.of(context).mediumPaddingDouble),
-              AppTextField(),
+
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               AppButton(
-                onClick: () => context.go("/home/daily_reflection/superficial_reflection/wins/"),
+                onClick: () => context.go("/home/daily_reflection/indepth_reflection/energy/wins/"),
                 text: "Пропустить",
               ),
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
               AppButton(
-                onClick: () => context.go("/home/daily_reflection/superficial_reflection/wins/"),
+                onClick: () => context.go("/home/daily_reflection/indepth_reflection/energy/wins/"),
                 text: "Далее",
               ),
             ],

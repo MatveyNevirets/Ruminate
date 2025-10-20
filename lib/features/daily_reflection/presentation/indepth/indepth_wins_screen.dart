@@ -5,8 +5,8 @@ import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
 import 'package:ruminate/core/widgets/app_text_field.dart';
 
-class SuperficialReviewScreen extends StatelessWidget {
-  const SuperficialReviewScreen({super.key});
+class IndepthWinsScreen extends StatelessWidget {
+  const IndepthWinsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,38 +19,50 @@ class SuperficialReviewScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Итоги дня",
+                "Победы дня",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               Text(
-                "Как я могу описать день в одном предложении?",
+                "Напиши 3 главные победы дня",
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
-              SizedBox(height: Theme.of(context).mediumPaddingDouble),
+              SizedBox(height: Theme.of(context).largePaddingDouble),
+              Text(
+                "Победа 1",
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Theme.of(context).colorScheme.primary),
+              ),
+
+              AppTextField(),
+              SizedBox(height: Theme.of(context).largePaddingDouble),
+              Text(
+                "Победа 2",
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Theme.of(context).colorScheme.primary),
+              ),
+
+              AppTextField(),
+              SizedBox(height: Theme.of(context).largePaddingDouble),
+              Text(
+                "Победа 3",
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Theme.of(context).colorScheme.primary),
+              ),
               AppTextField(),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               Text(
-                "Какие эмоции сопровождали этот день?",
+                "Что мне помагало сегодня? (Привычка, человек, обстоятельство)",
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
               AppTextField(),
-              SizedBox(height: Theme.of(context).extraLargePaddingDouble),
-              Text(
-                "Что сегодня запомнилось больше всего?",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
-              ),
-              SizedBox(height: Theme.of(context).mediumPaddingDouble),
-              AppTextField(),
+
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               AppButton(
-                onClick: () => context.go("/home/daily_reflection/superficial_reflection/wins/"),
+                onClick: () => context.go("/home/daily_reflection/indepth_reflection/energy/wins/difficults/"),
                 text: "Пропустить",
               ),
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
               AppButton(
-                onClick: () => context.go("/home/daily_reflection/superficial_reflection/wins/"),
+                onClick: () => context.go("/home/daily_reflection/indepth_reflection/energy/wins/difficults/"),
                 text: "Далее",
               ),
             ],

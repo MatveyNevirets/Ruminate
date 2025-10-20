@@ -5,8 +5,8 @@ import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
 import 'package:ruminate/core/widgets/app_text_field.dart';
 
-class SuperficialReviewScreen extends StatelessWidget {
-  const SuperficialReviewScreen({super.key});
+class IndepthReloadScreen extends StatelessWidget {
+  const IndepthReloadScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,30 +19,24 @@ class SuperficialReviewScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Итоги дня",
+                "Восстановление | Личные границы",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               Text(
-                "Как я могу описать день в одном предложении?",
+                "Что мне нужно сделать прямо сейчас или чуть позже, чтобы восстановиться? (Если позже, то когда?)",
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
               AppTextField(),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               Text(
-                "Какие эмоции сопровождали этот день?",
+                "Нарушил(а) ли я сегодня свои границы? Если да, то как этого избежать в будущем?",
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
               AppTextField(),
-              SizedBox(height: Theme.of(context).extraLargePaddingDouble),
-              Text(
-                "Что сегодня запомнилось больше всего?",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
-              ),
-              SizedBox(height: Theme.of(context).mediumPaddingDouble),
-              AppTextField(),
+
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               AppButton(
                 onClick: () => context.go("/home/daily_reflection/superficial_reflection/wins/"),

@@ -5,8 +5,8 @@ import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
 import 'package:ruminate/core/widgets/app_text_field.dart';
 
-class SuperficialReviewScreen extends StatelessWidget {
-  const SuperficialReviewScreen({super.key});
+class IndepthThanksScreen extends StatelessWidget {
+  const IndepthThanksScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,40 +19,28 @@ class SuperficialReviewScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Итоги дня",
+                "Благодарность",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               Text(
-                "Как я могу описать день в одном предложении?",
+                "За что я благодарен(на) сегодня? (1-3 пункта)",
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
               AppTextField(),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               Text(
-                "Какие эмоции сопровождали этот день?",
+                "Что из сегодняшнего дня я хочу сохранить или повторить в будущем?",
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
               AppTextField(),
+
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
-              Text(
-                "Что сегодня запомнилось больше всего?",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
-              ),
+              AppButton(onClick: () => context.go("/home"), text: "Пропустить"),
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
-              AppTextField(),
-              SizedBox(height: Theme.of(context).extraLargePaddingDouble),
-              AppButton(
-                onClick: () => context.go("/home/daily_reflection/superficial_reflection/wins/"),
-                text: "Пропустить",
-              ),
-              SizedBox(height: Theme.of(context).mediumPaddingDouble),
-              AppButton(
-                onClick: () => context.go("/home/daily_reflection/superficial_reflection/wins/"),
-                text: "Далее",
-              ),
+              AppButton(onClick: () => context.go("/home"), text: "Далее"),
             ],
           ),
         ),
