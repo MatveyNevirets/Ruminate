@@ -12,6 +12,7 @@ import 'package:ruminate/features/daily_reflection/presentation/superficial/supe
 import 'package:ruminate/features/daily_reflection/presentation/superficial/superficial_review_screen.dart';
 import 'package:ruminate/features/daily_reflection/presentation/superficial/superficial_state_screen.dart';
 import 'package:ruminate/features/daily_reflection/presentation/superficial/superficial_wins_screen.dart';
+import 'package:ruminate/features/reflection/presentation/reflection_screen.dart';
 
 final routerConfig = GoRouter(
   initialLocation: "/home",
@@ -20,6 +21,7 @@ final routerConfig = GoRouter(
       path: "/home",
       builder: (BuildContext context, state) => MainPagesWidget(),
       routes: [
+        GoRoute(path: "/month_reflection", builder: (context, state) => ReflectionScreen()),
         GoRoute(
           path: "/daily_reflection",
           builder: (context, state) => StartDailyReflectionScreen(),

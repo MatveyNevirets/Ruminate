@@ -21,7 +21,8 @@ Map<String, dynamic> _$DailyReflectModelToJson(_DailyReflectModel instance) =>
     };
 
 const _$ReflectTypeEnumMap = {
-  ReflectType.daily: 'daily',
+  ReflectType.dailySuperficital: 'dailySuperficital',
+  ReflectType.dailyIndepth: 'dailyIndepth',
   ReflectType.weekly: 'weekly',
   ReflectType.month: 'month',
   ReflectType.year: 'year',

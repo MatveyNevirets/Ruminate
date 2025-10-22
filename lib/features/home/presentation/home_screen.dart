@@ -47,7 +47,10 @@ class HomeScreen extends ConsumerWidget {
                   SizedBox(height: Theme.of(context).mediumPaddingDouble),
                   SizedBox(
                     width: double.maxFinite,
-                    child: AppContainer(title: "Ежемесячная рефлексия"),
+                    child: AppContainer(
+                      title: "Ежемесячная рефлексия",
+                      onClick: () => context.go("/home/month_reflection/"),
+                    ),
                   ),
                   SizedBox(height: Theme.of(context).largePaddingDouble),
                   Text(
