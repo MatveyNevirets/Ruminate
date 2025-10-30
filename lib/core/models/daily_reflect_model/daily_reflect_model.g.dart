@@ -24,6 +24,6 @@ const _$ReflectTypeEnumMap = {
   ReflectType.dailySuperficital: 'dailySuperficital',
   ReflectType.dailyIndepth: 'dailyIndepth',
   ReflectType.weekly: 'weekly',
-  ReflectType.month: 'month',
+  ReflectType.monthly: 'month',
   ReflectType.year: 'year',
 };

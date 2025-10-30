@@ -9,7 +9,7 @@ class MonthlyReflection extends ReflectionModel {
         title: "Ежемесячная рефлексия",
         description:
             "Универсальная рефлексия, которую рекомендуется выполнять каждый месяц. Содержит достаточно глубокие и необходимые вопросы для самокопаний",
-        type: ReflectType.month,
+        type: ReflectType.monthly,
         steps: _createSteps(),
       );
 

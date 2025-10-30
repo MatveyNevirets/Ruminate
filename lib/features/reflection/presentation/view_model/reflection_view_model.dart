@@ -4,23 +4,46 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:ruminate/core/enums/reflect_type_enum.dart';
+import 'package:ruminate/features/reflection/data/model/reflection_model.dart';
 import 'package:ruminate/features/reflection/data/model/reflection_step_model.dart';
+import 'package:ruminate/features/reflection/domain/reflections/daily_reflection_indepth.dart';
 import 'package:ruminate/features/reflection/domain/reflections/daily_reflection_superficial.dart';
-import 'package:ruminate/features/reflection/domain/repository/reflection_repository.dart';
+import 'package:ruminate/features/reflection/domain/reflections/monthly_reflection.dart';
+import 'package:ruminate/features/reflection/domain/reflections/weekly_reflection.dart';
 
-class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> implements ReflectionRepository {
+class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
   final Ref ref;
   ReflectionStepModel? firstStep;
   ReflectionStepModel? lastStep;
 
-  ReflectionViewModel(this.ref, [super.initial]) {
-    final daily = ref.watch(dailySuperficialProvider);
+  ReflectionViewModel(this.ref, [super.initial]);
 
-    for (int i = 0; daily.steps.length > i; i++) {
-      insertStep(daily.steps[i]);
+  void setType(ReflectType type) {
+    ReflectionModel? currentModel;
+    final dailySuperficial = ref.read(dailySuperficialProvider);
+    final dailyIndepth = ref.read(dailyIndepthProvider);
+    final monthly = ref.read(monthlyProvider);
+    final weekly = ref.read(weeklyProvider);
+
+    switch (type) {
+      case ReflectType.dailySuperficital:
+        currentModel = dailySuperficial;
+      case ReflectType.dailyIndepth:
+        currentModel = dailyIndepth;
+      case ReflectType.monthly:
+        currentModel = monthly;
+      case ReflectType.weekly:
+        currentModel = weekly;
+
+      default:
+        throw Exception("Not found $type reflection type");
     }
 
-    state = firstStep!;
+    for (int i = 0; currentModel.steps.length > i; i++) {
+      insertStep(currentModel.steps[i]);
+    }
+
+    state = firstStep;
   }
 
   void insertStep(ReflectionStepModel? newStep) {
@@ -33,27 +56,21 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> implements
     lastStep = newStep;
   }
 
-  @override
   void nextStep() {
     if (state?.next == null) {
       completeReflection();
     } else {
       state = state!.next;
-      log("Title current step: ${state?.title}");
     }
   }
 
-  @override
   void prevStep() {
     if (state?.prev == null) {
-      log("Prev is null");
     } else {
       state = state!.prev;
-      log("Title current step: ${state?.title}");
     }
   }
 
-  @override
   void completeReflection() {
     log("Reflection completed");
   }
