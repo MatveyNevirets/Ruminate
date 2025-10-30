@@ -1,17 +1,10 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+class ReflectionStepModel {
+  final String title;
+  final String description;
+  final List<String> questions;
 
-part 'reflection_step_model.freezed.dart';
-part 'reflection_step_model.g.dart';
+  ReflectionStepModel? prev;
+  ReflectionStepModel? next;
 
-@freezed
-abstract class ReflectionStepModel with _$ReflectionStepModel {
-  const factory ReflectionStepModel({
-    required String title,
-    required String description,
-    required List<String> questions,
-    ReflectionStepModel? prev,
-    ReflectionStepModel? next,
-  }) = _ReflectionStepModel;
-
-  factory ReflectionStepModel.fromJson(Map<String, Object?> json) => _$ReflectionStepModelFromJson(json);
+  ReflectionStepModel({required this.title, required this.description, required this.questions, this.prev, this.next});
 }

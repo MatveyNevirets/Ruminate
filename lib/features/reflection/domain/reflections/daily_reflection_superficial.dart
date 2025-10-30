@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/core/enums/reflect_type_enum.dart';
 import 'package:ruminate/features/reflection/data/model/reflection_model.dart';
 import 'package:ruminate/features/reflection/data/model/reflection_step_model.dart';
@@ -52,3 +53,5 @@ class DailySuperficialReflection extends ReflectionModel {
     return steps;
   }
 }
+
+final dailySuperficialProvider = Provider<ReflectionModel>((ref) => DailySuperficialReflection());

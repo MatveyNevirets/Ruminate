@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:ruminate/core/enums/reflect_type_enum.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
@@ -12,8 +12,8 @@ class ReflectionScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentStepVM = ref.watch(dailySuperficialReflectionVM.notifier);
-    final currentStep = ref.watch(dailySuperficialReflectionVM);
+    final currentStepVM = ref.watch(reflectionVM.notifier);
+    final currentStep = ref.watch(reflectionVM);
 
     return Scaffold(
       appBar: createAppBar(context),
@@ -24,7 +24,7 @@ class ReflectionScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Итоги дня | ${currentStep?.title}",
+                currentStep?.title ?? "Что-то пошло не так",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
@@ -49,12 +49,9 @@ class ReflectionScreen extends ConsumerWidget {
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
               AppTextField(),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
-              AppButton(onClick: () => currentStepVM.nextStep(), text: "Пропустить"),
+              AppButton(onClick: () => currentStepVM.prevStep(), text: "Пропустить"),
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
-              AppButton(
-                onClick: () => context.go("/home/daily_reflection/superficial_reflection/wins/"),
-                text: "Далее",
-              ),
+              AppButton(onClick: () => currentStepVM.nextStep(), text: "Далее"),
             ],
           ),
         ),

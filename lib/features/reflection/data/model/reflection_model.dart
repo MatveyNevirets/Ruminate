@@ -7,6 +7,7 @@ class ReflectionModel {
   String description;
   ReflectType type;
   List<ReflectionStepModel> steps;
+  
   ReflectionModel({
     required this.title,
     required this.description,
