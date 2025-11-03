@@ -4,6 +4,8 @@ import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
 import 'package:ruminate/core/widgets/app_text_field.dart';
+import 'package:ruminate/features/reflection/data/datasources/local_reflection_datasource/local_reflection_datasource.dart';
+import 'package:ruminate/features/reflection/domain/reflections/monthly_reflection.dart';
 import 'package:ruminate/features/reflection/presentation/view_model/reflection_view_model.dart';
 
 class ReflectionScreen extends ConsumerWidget {
@@ -15,6 +17,9 @@ class ReflectionScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(reflectionVM.notifier);
     final currentStep = ref.watch(reflectionVM);
+
+    final localS = ref.watch(localStorage);
+    localS.readAllReflectionsFromDirectory();
 
     return Scaffold(
       appBar: createAppBar(context),
