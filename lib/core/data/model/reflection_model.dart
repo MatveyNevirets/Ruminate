@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 import 'package:ruminate/core/enums/reflect_type_enum.dart';
-import 'package:ruminate/features/reflection/data/model/reflection_step_model.dart';
+import 'package:ruminate/core/data/model/reflection_step_model.dart';
 
 class ReflectionModel {
   String title;

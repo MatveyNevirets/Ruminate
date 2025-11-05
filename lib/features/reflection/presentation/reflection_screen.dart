@@ -6,7 +6,7 @@ import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
 import 'package:ruminate/core/widgets/app_text_field.dart';
-import 'package:ruminate/features/reflection/data/model/reflection_step_model.dart';
+import 'package:ruminate/core/data/model/reflection_step_model.dart';
 import 'package:ruminate/features/reflection/presentation/providers/reflection_view_model_provider.dart';
 
 class ReflectionScreen extends ConsumerWidget {
@@ -66,7 +66,7 @@ class ReflectionScreen extends ConsumerWidget {
 }
 
 class _QuestionsWidget extends StatelessWidget {
-  const _QuestionsWidget({super.key, required this.currentStep, required this.controllers});
+  const _QuestionsWidget({required this.currentStep, required this.controllers});
 
   final ReflectionStepModel? currentStep;
   final List<TextEditingController> controllers;
@@ -86,7 +86,7 @@ class _QuestionsWidget extends StatelessWidget {
 }
 
 class _TitleWidget extends StatelessWidget {
-  const _TitleWidget({super.key, required this.currentStep});
+  const _TitleWidget({required this.currentStep});
 
   final ReflectionStepModel? currentStep;
 

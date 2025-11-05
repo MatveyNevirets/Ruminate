@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:ruminate/features/reflection/data/model/reflection_model.dart';
+import 'package:ruminate/core/data/model/reflection_model.dart';
 
 class LocalFileDataSource {
   Directory? _directory;

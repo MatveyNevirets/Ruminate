@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_container.dart';
@@ -34,7 +35,10 @@ class CompletedReflectionsScreen extends ConsumerWidget {
                   crossAxisSpacing: Theme.of(context).mediumPaddingDouble,
                 ),
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  return AppContainer(title: reflections[index].title);
+                  return AppContainer(
+                    title: reflections[index].title,
+                    onClick: () => context.go("/home/completed_reflections/details", extra: reflections[index]),
+                  );
                 }, childCount: reflections.length),
               ),
             ),
