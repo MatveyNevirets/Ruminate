@@ -11,8 +11,8 @@ class MainPagesWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(pageControllerProvider);
 
-    final navigationProvider = ref.watch(navigationNotifierProvider.notifier);
-    final navigationIndex = ref.watch(navigationNotifierProvider);
+    final navigationProvider = ref.watch(navigationViewModel.notifier);
+    final navigationIndex = ref.watch(navigationViewModel);
 
     return PageView(
       controller: controller,

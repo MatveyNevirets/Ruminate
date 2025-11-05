@@ -6,51 +6,80 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:ruminate/features/reflection/data/model/reflection_model.dart';
 
-class LocalReflectionDataSource {
-  Directory? directory;
-  LocalReflectionDataSource() {
+class LocalFileDataSource {
+  Directory? _directory;
+  LocalFileDataSource() {
     _initStorage();
   }
 
   Future<void> insertReflectionIntoDirectory(ReflectionModel reflection) async {
+    //Recieves a reflection map from model's method
     final reflectionMap = reflection.toMap();
 
-    final file = File(
-      "${directory?.path}/data/reflection_${reflection.title.replaceAll(" ", "")}${DateTime.now().millisecondsSinceEpoch}.md",
-    );
+    try {
+      //Recieves the file we create and fill out
+      final file = File(
+        "${_directory?.path}/data/reflection_${reflection.title.replaceAll(" ", "")}${DateTime.now().millisecondsSinceEpoch}.md",
+      );
 
-    await file.parent.create(recursive: true);
+      await file.parent.create(recursive: true);
 
-    await file.writeAsString(jsonEncode(reflectionMap));
-    final str = await file.readAsString();
-    log("Success inserted! Path: ${file.path} Data: $str");
+      //Write the reflection as json
+      await file.writeAsString(jsonEncode(reflectionMap));
+      log("Success write!");
+    } on Exception catch (e, stack) {
+      throw Exception(
+        "Exception at local reflection datasource. Method: insertReflectionIntoDirectory. Exception: $e StackTrace: $stack",
+      );
+    }
   }
 
   Future<List<ReflectionModel>> readAllReflectionsFromDirectory() async {
-    final directoryFile = Directory("${directory?.path}/data/");
+    try {
+      //In first we attempts fetch the directory of our reflections
+      final directoryFile = await _fetchDirectory();
 
-    final List<FileSystemEntity> files = await directoryFile.list().toList();
+      //Then attempts fetch our files like list
+      final List<FileSystemEntity> files = await directoryFile!.list().toList();
 
-    final reflectionFiles = files.whereType<File>().where((file) {
-      final fileTitle = file.path.split(Platform.pathSeparator).last;
-      return fileTitle.startsWith("reflection_") && fileTitle.endsWith(".md");
-    }).toList();
+      //Recieves reflection files
+      final reflectionFiles = files.whereType<File>().where((file) {
+        final fileTitle = file.path.split(Platform.pathSeparator).last;
+        return fileTitle.startsWith("reflection_") && fileTitle.endsWith(".md");
+      }).toList();
 
-    List<ReflectionModel> reflections = [];
+      List<ReflectionModel> reflections = [];
 
-    for (File file in reflectionFiles) {
-      final reflectionString = await file.readAsString();
-      final reflection = ReflectionModel.fromJson(reflectionString);
-      reflections.add(reflection);
-      log(reflection.title);
+      //Converts strings to a ReflectionModel, then returns reflections as a list
+      for (File file in reflectionFiles) {
+        final reflectionString = await file.readAsString();
+        final reflection = ReflectionModel.fromJson(reflectionString);
+        reflections.add(reflection);
+        log(reflection.title);
+      }
+
+      return reflections;
+    } on Exception catch (e, stack) {
+      throw Exception(
+        "Exception at local reflection datasource. Method: readAllReflectionsFromDirectory. Exception: $e StackTrace: $stack",
+      );
     }
-
-    return reflections;
   }
 
   Future<void> _initStorage() async {
-    directory = await getExternalStorageDirectory();
+    _directory = await getExternalStorageDirectory();
+  }
+
+  Future<Directory?> _fetchDirectory() async {
+    final directoryFile = Directory("${_directory?.path}/data/");
+    final directoyExists = await directoryFile.exists();
+
+    while (!directoyExists) {
+      await Future.delayed(Duration(seconds: 1));
+    }
+    log("Exists ${directoryFile.toString()}");
+    return directoryFile;
   }
 }
 
-final localStorage = Provider((ref) => LocalReflectionDataSource());
+

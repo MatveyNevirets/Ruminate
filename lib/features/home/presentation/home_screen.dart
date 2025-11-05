@@ -12,8 +12,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final navigationProvider = ref.watch(navigationNotifierProvider.notifier);
-    final navigationIndex = ref.watch(navigationNotifierProvider);
+    final navigationProvider = ref.watch(navigationViewModel.notifier);
+    final navigationIndex = ref.watch(navigationViewModel);
 
     return Scaffold(
       appBar: createAppBar(context),

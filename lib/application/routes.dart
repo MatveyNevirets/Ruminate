@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:ruminate/core/enums/reflect_type_enum.dart';
 import 'package:ruminate/core/widgets/main_pages_widget.dart';
 import 'package:ruminate/features/daily_reflection/presentation/start_daily_reflection_screen.dart';
+import 'package:ruminate/features/reflection/presentation/providers/reflection_view_model_provider.dart';
 import 'package:ruminate/features/reflection/presentation/reflection_screen.dart';
-import 'package:ruminate/features/reflection/presentation/view_model/reflection_view_model.dart';
 
 final routerConfig = GoRouter(
   initialLocation: "/home",

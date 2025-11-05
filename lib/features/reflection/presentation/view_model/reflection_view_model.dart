@@ -6,24 +6,24 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:ruminate/core/enums/reflect_type_enum.dart';
 import 'package:ruminate/features/reflection/data/model/reflection_model.dart';
 import 'package:ruminate/features/reflection/data/model/reflection_step_model.dart';
-import 'package:ruminate/features/reflection/domain/reflections/daily_reflection_indepth.dart';
-import 'package:ruminate/features/reflection/domain/reflections/daily_reflection_superficial.dart';
-import 'package:ruminate/features/reflection/domain/reflections/monthly_reflection.dart';
-import 'package:ruminate/features/reflection/domain/reflections/weekly_reflection.dart';
+import 'package:ruminate/features/reflection/domain/providers/daily_indepth_reflection_provider.dart';
+import 'package:ruminate/features/reflection/domain/providers/daily_superficial_reflection_provider.dart';
+import 'package:ruminate/features/reflection/domain/providers/monthly_reflection_provider.dart';
+import 'package:ruminate/features/reflection/domain/providers/weekly_reflection_provider.dart';
 
 class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
   final Ref ref;
   ReflectionStepModel? firstStep;
   ReflectionStepModel? lastStep;
+  ReflectionModel? currentModel;
 
   ReflectionViewModel(this.ref, [super.initial]);
 
   void setType(ReflectType type) {
-    ReflectionModel? currentModel;
-    final dailySuperficial = ref.read(dailySuperficialProvider);
-    final dailyIndepth = ref.read(dailyIndepthProvider);
-    final monthly = ref.read(monthlyProvider);
-    final weekly = ref.read(weeklyProvider);
+    final dailySuperficial = ref.read(dailySuperficialReflectionProvider);
+    final dailyIndepth = ref.read(dailyIndepthReflectionProvider);
+    final monthly = ref.read(monthlyReflectionProvider);
+    final weekly = ref.read(weeklyReflectionProvider);
 
     switch (type) {
       case ReflectType.dailySuperficital:
@@ -39,8 +39,9 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
         throw Exception("Not found $type reflection type");
     }
 
-    for (int i = 0; currentModel.steps.length > i; i++) {
-      insertStep(currentModel.steps[i]);
+    //A loop that creates a linked list
+    for (int i = 0; currentModel!.steps.length > i; i++) {
+      insertStep(currentModel!.steps[i]);
     }
 
     state = firstStep;
@@ -75,7 +76,3 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
     log("Reflection completed");
   }
 }
-
-final reflectionVM = StateNotifierProvider<ReflectionViewModel, ReflectionStepModel?>(
-  (ref) => ReflectionViewModel(ref),
-);

@@ -1,12 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
 import 'package:ruminate/core/widgets/app_text_field.dart';
-import 'package:ruminate/features/reflection/data/datasources/local_reflection_datasource/local_reflection_datasource.dart';
-import 'package:ruminate/features/reflection/domain/reflections/monthly_reflection.dart';
-import 'package:ruminate/features/reflection/presentation/view_model/reflection_view_model.dart';
+import 'package:ruminate/features/reflection/data/model/reflection_step_model.dart';
+import 'package:ruminate/features/reflection/presentation/providers/reflection_view_model_provider.dart';
 
 class ReflectionScreen extends ConsumerWidget {
   ReflectionScreen({super.key});
@@ -15,11 +16,14 @@ class ReflectionScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(reflectionVM.notifier);
+    final reflectionViewModel = ref.watch(reflectionVM.notifier);
     final currentStep = ref.watch(reflectionVM);
 
-    final localS = ref.watch(localStorage);
-    localS.readAllReflectionsFromDirectory();
+    //Generate input field controllers based on their number
+    List<TextEditingController> controllers = List.generate(
+      currentStep?.questionsAndAnswers.length ?? 0,
+      (int index) => TextEditingController(),
+    );
 
     return Scaffold(
       appBar: createAppBar(context),
@@ -30,29 +34,25 @@ class ReflectionScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                currentStep?.title ?? "Что-то пошло не так",
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
-              ),
+              _TitleWidget(currentStep: currentStep),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: currentStep?.questions.length ?? 0,
-                itemBuilder: (context, index) => _CreateQuestion(title: currentStep?.questions[index]),
-              ),
+              _QuestionsWidget(currentStep: currentStep, controllers: controllers),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               AppButton(
                 onClick: () {
-                  viewModel.prevStep();
+                  reflectionViewModel.prevStep();
                   scrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
                 },
-                text: "Пропустить",
+                text: "Назад",
               ),
               SizedBox(height: Theme.of(context).mediumPaddingDouble),
               AppButton(
                 onClick: () {
-                  viewModel.nextStep();
+                  for (TextEditingController controller in controllers) {
+                    //TODO: Implementation of saving the received text
+                    log(controller.text.toString());
+                  }
+                  reflectionViewModel.nextStep();
                   scrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
                 },
                 text: "Далее",
@@ -65,11 +65,46 @@ class ReflectionScreen extends ConsumerWidget {
   }
 }
 
+class _QuestionsWidget extends StatelessWidget {
+  const _QuestionsWidget({super.key, required this.currentStep, required this.controllers});
+
+  final ReflectionStepModel? currentStep;
+  final List<TextEditingController> controllers;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: currentStep?.questionsAndAnswers.length,
+      itemBuilder: (context, index) => _CreateQuestion(
+        title: currentStep?.questionsAndAnswers[index].keys.first,
+        textController: controllers[index],
+      ),
+    );
+  }
+}
+
+class _TitleWidget extends StatelessWidget {
+  const _TitleWidget({super.key, required this.currentStep});
+
+  final ReflectionStepModel? currentStep;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      currentStep?.title ?? "Что-то пошло не так",
+      style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
+    );
+  }
+}
+
 // ignore: must_be_immutable
 class _CreateQuestion extends StatelessWidget {
   String? title;
+  TextEditingController? textController;
 
-  _CreateQuestion({required this.title});
+  _CreateQuestion({required this.title, required this.textController});
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +116,7 @@ class _CreateQuestion extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
         ),
         SizedBox(height: Theme.of(context).mediumPaddingDouble),
-        AppTextField(),
+        AppTextField(controller: textController),
         SizedBox(height: Theme.of(context).largePaddingDouble),
       ],
     );

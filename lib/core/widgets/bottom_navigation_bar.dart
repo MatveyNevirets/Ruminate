@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ruminate/core/providers/navigation_providers.dart';
+import 'package:ruminate/core/view_models/navigation_view_model.dart';
 
 BottomNavigationBar createBottomNavigationBar(
   BuildContext context,
-  NavigationNotifier navigationProvider,
+  NavigationViewModel navigationProvider,
   int navigationIndex,
 ) {
   return BottomNavigationBar(

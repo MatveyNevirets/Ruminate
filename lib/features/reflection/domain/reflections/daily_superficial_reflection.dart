@@ -18,40 +18,41 @@ class DailySuperficialReflection extends ReflectionModel {
       ReflectionStepModel(
         title: "Итоги дня",
         description: "",
-        questions: [
-          "Как я могу описать день в одном предложении?",
-          "Какие эмоции сопровождали этот день?",
-          "Что мне сегоддня запомнилось больше всего?",
+        questionsAndAnswers: [
+          {"Как я могу описать день в одном предложении?": null},
+          {"Какие эмоции сопровождали этот день?": null},
+          {"Что мне сегодня запомнилось больше всего?": null},
         ],
       ),
       ReflectionStepModel(
         title: "Победы дня",
         description: "Напиши 3 главные победы",
-        questions: [
-          "Победа 1",
-          "Победа 2",
-          "Победа 3",
-          "За что я благодарен сегодняшнему дню?",
-          "Что сработало хорошо, помогло, дало ресурс?",
+        questionsAndAnswers: [
+          {"Победа 1": null},
+          {"Победа 2": null},
+          {"Победа 3": null},
+          {"За что я благодарен сегодняшнему дню?": null},
+          {"Что сработало хорошо, помогло, дало ресурс?": null},
         ],
       ),
       ReflectionStepModel(
         title: "Рост | Сложности",
         description: "",
-        questions: [
-          'Что не получилось или было сложно?',
-          "Что можно было бы изменить, если бы ты знал(а) это заранее?",
+        questionsAndAnswers: [
+          {"Что не получилось или было сложно?": null},
+          {"Что можно было бы изменить, если бы ты знал(а) это заранее?": null},
         ],
       ),
       ReflectionStepModel(
-        title: "Внуреннее состояние",
+        title: "Внутреннее состояние",
         description: "",
-        questions: ["Как я чувствую себя физически в теле?", "Прочее | Пиши сюда что хочешь"],
+        questionsAndAnswers: [
+          {"Как я чувствую себя физически в теле?": null},
+          {"Прочее | Пиши сюда что хочешь": null},
+        ],
       ),
     ];
 
     return steps;
   }
 }
-
-final dailySuperficialProvider = Provider<ReflectionModel>((ref) => DailySuperficialReflection());

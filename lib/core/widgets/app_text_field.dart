@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AppTextField extends StatelessWidget {
-  const AppTextField({super.key});
+  TextEditingController? controller;
+  AppTextField({super.key, this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       minLines: 1,
       maxLines: null,
       decoration: InputDecoration(
