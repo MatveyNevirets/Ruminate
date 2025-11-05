@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ruminate/core/enums/reflect_type_enum.dart';
 import 'package:ruminate/core/widgets/main_pages_widget.dart';
-import 'package:ruminate/features/daily_reflection/presentation/start_daily_reflection_screen.dart';
+import 'package:ruminate/features/completed_reflections/presentation/completed_reflections_screen.dart';
 import 'package:ruminate/features/reflection/presentation/providers/reflection_view_model_provider.dart';
 import 'package:ruminate/features/reflection/presentation/reflection_screen.dart';
+import 'package:ruminate/features/reflection/presentation/start_daily_reflection_screen.dart';
 
 final routerConfig = GoRouter(
   initialLocation: "/home",
@@ -14,6 +15,12 @@ final routerConfig = GoRouter(
       path: "/home",
       builder: (BuildContext context, state) => MainPagesWidget(),
       routes: [
+        GoRoute(
+          path: "/completed_reflections",
+          builder: (context, state) {
+            return CompletedReflectionsScreen();
+          },
+        ),
         GoRoute(
           path: "/month_reflection",
           builder: (context, state) {
