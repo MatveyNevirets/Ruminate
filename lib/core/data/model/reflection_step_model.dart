@@ -48,4 +48,12 @@ class ReflectionStepModel {
       questionsAndAnswers: convertedQuestionsAndAnswers,
     );
   }
+
+  ReflectionStepModel copyWith({String? title, String? description, List<Map<String, String?>>? questionsAndAnswers}) {
+    return ReflectionStepModel(
+      title: title ?? this.title,
+      description: description ?? this.description,
+      questionsAndAnswers: questionsAndAnswers ?? this.questionsAndAnswers,
+    );
+  }
 }

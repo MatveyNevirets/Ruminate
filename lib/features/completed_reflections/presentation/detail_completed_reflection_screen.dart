@@ -34,7 +34,7 @@ class DetailCompletedReflectionScreen extends StatelessWidget {
 }
 
 class _ReflectionDataWidget extends StatelessWidget {
-  const _ReflectionDataWidget({super.key, required this.reflection, required this.theme});
+  const _ReflectionDataWidget({required this.reflection, required this.theme});
 
   final ReflectionModel reflection;
   final ThemeData theme;
@@ -63,7 +63,7 @@ class _ReflectionDataWidget extends StatelessWidget {
 
 class _TitleStepWidget extends StatelessWidget {
   final int index;
-  const _TitleStepWidget({super.key, required this.reflection, required this.theme, required this.index});
+  const _TitleStepWidget({required this.reflection, required this.theme, required this.index});
 
   final ReflectionModel reflection;
   final ThemeData theme;
@@ -79,7 +79,7 @@ class _TitleStepWidget extends StatelessWidget {
 
 class _QNAWidget extends StatelessWidget {
   final Map<String, String?> qna;
-  const _QNAWidget({super.key, required this.theme, required this.qna});
+  const _QNAWidget({required this.theme, required this.qna});
 
   final ThemeData theme;
 
@@ -108,7 +108,7 @@ class _QNAWidget extends StatelessWidget {
 }
 
 class _DescriptionWidget extends StatelessWidget {
-  const _DescriptionWidget({super.key, required this.reflection, required this.theme});
+  const _DescriptionWidget({required this.reflection, required this.theme});
 
   final ReflectionModel reflection;
   final ThemeData theme;
@@ -125,7 +125,7 @@ class _DescriptionWidget extends StatelessWidget {
 }
 
 class _SeparatorWidget extends StatelessWidget {
-  const _SeparatorWidget({super.key, required this.theme});
+  const _SeparatorWidget({required this.theme});
 
   final ThemeData theme;
 
@@ -138,7 +138,7 @@ class _SeparatorWidget extends StatelessWidget {
 }
 
 class _TitleWidget extends StatelessWidget {
-  const _TitleWidget({super.key, required this.reflection, required this.theme});
+  const _TitleWidget({required this.reflection, required this.theme});
 
   final ReflectionModel reflection;
   final ThemeData theme;
