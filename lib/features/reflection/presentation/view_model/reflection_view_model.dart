@@ -22,6 +22,8 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
   ReflectionStepModel? lastStep;
   ReflectionModel? currentReflection;
 
+  List<String> personalVictories = [];
+
   ReflectionViewModel(this.ref, this.localFileDataSource, [super.initial]);
 
   void setType(ReflectType type) {
@@ -71,7 +73,16 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
     //Replacing null values ​​with the answers just entered by the user.
     for (int i = 0; i < answers.length; i++) {
       final qna = currentReflection!.steps[index].questionsAndAnswers[i];
-      qna[qna.keys.first] = answers[i];
+      final qnaKey = qna.keys.first;
+
+      qna[qnaKey] = answers[i];
+
+      //Checks the key for the word "victory"
+      if (qnaKey.contains("Побед")) {
+        //Then adds to the personalVictories list
+        personalVictories.add(answers[i]);
+      }
+
       //And we add them to a new list of questions and answers for future reference
       newQnaList.add(qna);
     }
