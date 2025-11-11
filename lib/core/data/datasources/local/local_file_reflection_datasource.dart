@@ -4,16 +4,18 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:ruminate/core/data/datasources/local/local_reflection_datasource.dart';
 import 'package:ruminate/core/data/model/reflection_model.dart';
 
-class LocalFileDataSource {
+class LocalFileReflectionDataSource implements LocalReflectionDatasource {
   Directory? _directory;
   List<ReflectionModel>? _cachedReflections;
 
-  LocalFileDataSource() {
-    _initStorage();
+  LocalFileReflectionDataSource() {
+    initDatasource();
   }
 
+  @override
   FutureOr<List<ReflectionModel>> fetchAllReflections() async {
     log("fetchAllReflections called");
     if (_cachedReflections == null) {
@@ -24,17 +26,18 @@ class LocalFileDataSource {
     return _cachedReflections!;
   }
 
-  Future<void> insertReflectionIntoDirectory(ReflectionModel reflection) async {
+  @override
+  Future<void> insertReflection(ReflectionModel reflection) async {
     //Recieves a reflection map from model's method
     final reflectionMap = reflection.toMap();
 
     try {
       //Check storage initialized
-      await _initStorage();
+      await initDatasource();
 
       //Recieves the file we create and fill out
       final file = File(
-        "${_directory?.path}/data/reflection_${reflection.title.replaceAll(" ", "")}${DateTime.now().millisecondsSinceEpoch}.md",
+        "${_directory?.path}/reflectionData/reflection_${reflection.title.replaceAll(" ", "")}${DateTime.now().millisecondsSinceEpoch}.md",
       );
 
       await file.parent.create(recursive: true);
@@ -83,15 +86,16 @@ class LocalFileDataSource {
   }
 
   Future<Directory?> _fetchDirectory() async {
-    await _initStorage();
+    await initDatasource();
 
-    final directoryFile = Directory("${_directory?.path}/data/");
+    final directoryFile = Directory("${_directory?.path}/reflectionData/");
     await directoryFile.create();
 
     return directoryFile;
   }
 
-  Future<void> _initStorage() async {
+  @override
+  Future<void> initDatasource() async {
     //If the storage is not initialized we will do this
     //If it is initialized, we'll simply return
     while (_directory == null) {

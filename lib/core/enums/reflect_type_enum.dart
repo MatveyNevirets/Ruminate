@@ -1,1 +1,1 @@
-enum ReflectType { dailySuperficital, dailyIndepth, weekly, monthly, year }
+enum ReflectType { dailySuperficital, dailyIndepth, weekly, monthly, year, testUnknown }

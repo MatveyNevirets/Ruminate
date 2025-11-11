@@ -1,13 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ruminate/core/data/datasources/local_reflection_datasource/local_reflection_datasource.dart';
 import 'package:ruminate/core/data/model/reflection_model.dart';
 import 'package:ruminate/core/data/model/reflection_step_model.dart';
+import 'package:ruminate/core/domain/reflection_repository.dart';
 import 'package:ruminate/core/enums/reflect_type_enum.dart';
 import 'package:ruminate/features/reflection/domain/providers/daily_indepth_reflection_provider.dart';
 import 'package:ruminate/features/reflection/domain/providers/daily_superficial_reflection_provider.dart';
@@ -16,7 +14,7 @@ import 'package:ruminate/features/reflection/domain/providers/weekly_reflection_
 
 class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
   final Ref ref;
-  final LocalFileDataSource localFileDataSource;
+  final ReflectionRepository reflectionRepository;
 
   ReflectionStepModel? firstStep;
   ReflectionStepModel? lastStep;
@@ -24,7 +22,7 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
 
   List<String> personalVictories = [];
 
-  ReflectionViewModel(this.ref, this.localFileDataSource, [super.initial]);
+  ReflectionViewModel(this.ref, this.reflectionRepository, [super.initial]);
 
   void setType(ReflectType type) {
     final dailySuperficial = ref.read(dailySuperficialReflectionProvider);
@@ -117,8 +115,7 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
   }
 
   void completeReflection(BuildContext context) {
-    localFileDataSource.insertReflectionIntoDirectory(currentReflection!);
+    reflectionRepository.insertReflection(currentReflection!);
     context.go("/home");
-    log("Reflection completed");
   }
 }
