@@ -16,8 +16,8 @@ class AppContainer extends StatelessWidget {
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         return GestureDetector(
           child: Container(
-            height: 150,
-            width: 150,
+            constraints: BoxConstraints(minHeight: 150),
+            width: double.maxFinite,
             decoration: BoxDecoration(borderRadius: Theme.of(context).mediumBorderRadius),
             child: Card(
               color: Theme.of(context).colorScheme.primaryContainer,

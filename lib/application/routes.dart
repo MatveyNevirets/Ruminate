@@ -6,6 +6,7 @@ import 'package:ruminate/core/enums/reflect_type_enum.dart';
 import 'package:ruminate/core/widgets/main_pages_widget.dart';
 import 'package:ruminate/features/completed_reflections/presentation/completed_reflections_screen.dart';
 import 'package:ruminate/features/completed_reflections/presentation/detail_completed_reflection_screen.dart';
+import 'package:ruminate/features/personal_victories/presentation/personal_victories_screen.dart';
 import 'package:ruminate/features/reflection/presentation/providers/reflection_view_model_provider.dart';
 import 'package:ruminate/features/reflection/presentation/reflection_screen.dart';
 import 'package:ruminate/features/reflection/presentation/start_daily_reflection_screen.dart';
@@ -17,6 +18,12 @@ final routerConfig = GoRouter(
       path: "/home",
       builder: (BuildContext context, state) => MainPagesWidget(),
       routes: [
+        GoRoute(
+          path: ("/personal_victories"),
+          builder: (context, state) {
+            return PersonalVictoriesScreen();
+          },
+        ),
         GoRoute(
           path: "/completed_reflections",
           builder: (context, state) {

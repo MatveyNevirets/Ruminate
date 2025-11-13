@@ -9,12 +9,12 @@ class VictoriesRepositoryImpl implements VictoriesRepository {
   VictoriesRepositoryImpl({required this.localVictoriesDatasource});
 
   @override
-  Future<void> addVictories(List<String> victories) async {
-    await localVictoriesDatasource.addVictories(victories);
+  Future<void> insertVictories(List<String> victories) async {
+    await localVictoriesDatasource.insertVictories(victories);
   }
 
   @override
-  Future<List<String>> fetchVictories() async {
+  Future<List<String>?> fetchVictories() async {
     return await localVictoriesDatasource.fetchVictories();
   }
 }

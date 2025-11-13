@@ -15,37 +15,33 @@ class LocalVictoriesFileDatasource implements LocalVictoriesDatasource {
   }
 
   @override
-  Future<void> addVictories(List<String> victories) async {
+  Future<void> insertVictories(List<String> victories) async {
     try {
       await initDatasource();
 
       // Recieves file
       final file = File("${_directory!.path}/victoriesData/personal_victories.md");
       await file.parent.create(recursive: true);
+      await file.create(recursive: true);
 
-      // The first write will without recieving last data
-      if (!await file.exists()) {
+      // Recieve the data to check in future
+      final jsonVictories = await file.readAsString();
+
+      // Write if first data
+      if (!await file.exists() || jsonVictories.isEmpty) {
         final victoriesMap = {"victories": victories};
         await file.writeAsString(jsonEncode(victoriesMap));
       } else {
         // If we have some data into file
         // In first, we'll recieve last data
-        final jsonVictories = await file.readAsString();
         final mapVictories = jsonDecode(jsonVictories) as Map<String, dynamic>;
         final recievedVictories = mapVictories['victories'] as List<dynamic>;
 
         // Then creates new list for victories
-        List<String> newVictories = [];
+        final List<String> newVictories = [...recievedVictories, ...victories];
 
-        for (String recievedVictory in recievedVictories) {
-          // Adds into the list our past victories
-          newVictories.add(recievedVictory);
-        }
-
-        for (String newVictory in victories) {
-          // Adds into the list our new victories
-          newVictories.add(newVictory);
-        }
+        // Clear cache because the user must will see updated data
+        _cachedVictories = null;
 
         // In end, we have full updated victories
         final newMap = {'victories': newVictories};
@@ -59,7 +55,7 @@ class LocalVictoriesFileDatasource implements LocalVictoriesDatasource {
   }
 
   @override
-  FutureOr<List<String>> fetchVictories() async {
+  FutureOr<List<String>?> fetchVictories() async {
     try {
       if (_cachedVictories == null) {
         await initDatasource();
@@ -67,9 +63,16 @@ class LocalVictoriesFileDatasource implements LocalVictoriesDatasource {
         // Recieves file
         final file = File("${_directory!.path}/victoriesData/personal_victories.md");
         await file.parent.create(recursive: true);
+        await file.create(recursive: true);
 
         // Recieves last data
         final jsonVictories = await file.readAsString();
+
+        // If we have a whole file created
+        // But there is an empty string -> just returns
+        // To show the user a screen with a message
+        if (jsonVictories.isEmpty) return null;
+
         final mapVictories = jsonDecode(jsonVictories) as Map<String, dynamic>;
         final victories = mapVictories['victories'] as List<dynamic>;
 

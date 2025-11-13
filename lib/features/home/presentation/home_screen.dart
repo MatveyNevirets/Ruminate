@@ -70,7 +70,7 @@ class HomeScreen extends ConsumerWidget {
                 SizedBox(height: Theme.of(context).mediumPaddingDouble),
                 SizedBox(
                   width: double.maxFinite,
-                  child: AppContainer(title: "Личные победы"),
+                  child: AppContainer(title: "Личные победы", onClick: () => context.go("/home/personal_victories")),
                 ),
                 SizedBox(height: Theme.of(context).largePaddingDouble),
               ],

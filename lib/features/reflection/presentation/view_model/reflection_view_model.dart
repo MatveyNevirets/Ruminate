@@ -7,6 +7,7 @@ import 'package:ruminate/core/data/model/reflection_model.dart';
 import 'package:ruminate/core/data/model/reflection_step_model.dart';
 import 'package:ruminate/core/domain/reflection_repository.dart';
 import 'package:ruminate/core/enums/reflect_type_enum.dart';
+import 'package:ruminate/features/personal_victories/presentation/viewmodel/personal_victories_view_model.dart';
 import 'package:ruminate/features/reflection/domain/providers/daily_indepth_reflection_provider.dart';
 import 'package:ruminate/features/reflection/domain/providers/daily_superficial_reflection_provider.dart';
 import 'package:ruminate/features/reflection/domain/providers/monthly_reflection_provider.dart';
@@ -15,6 +16,7 @@ import 'package:ruminate/features/reflection/domain/providers/weekly_reflection_
 class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
   final Ref ref;
   final ReflectionRepository reflectionRepository;
+  final PersonalVictoriesViewModel personalVictoriesViewModel;
 
   ReflectionStepModel? firstStep;
   ReflectionStepModel? lastStep;
@@ -22,9 +24,11 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
 
   List<String> personalVictories = [];
 
-  ReflectionViewModel(this.ref, this.reflectionRepository, [super.initial]);
+  ReflectionViewModel(this.ref, this.reflectionRepository, this.personalVictoriesViewModel, [super.initial]);
 
   void setType(ReflectType type) {
+    currentReflection = null;
+
     final dailySuperficial = ref.read(dailySuperficialReflectionProvider);
     final dailyIndepth = ref.read(dailyIndepthReflectionProvider);
     final monthly = ref.read(monthlyReflectionProvider);
@@ -73,10 +77,10 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
       final qna = currentReflection!.steps[index].questionsAndAnswers[i];
       final qnaKey = qna.keys.first;
 
-      qna[qnaKey] = answers[i];
+      qna[qnaKey] = answers[i].isEmpty ? null : answers[i];
 
       //Checks the key for the word "victory"
-      if (qnaKey.contains("Побед")) {
+      if (qnaKey.contains("Побед") && answers[i].isNotEmpty) {
         //Then adds to the personalVictories list
         personalVictories.add(answers[i]);
       }
@@ -116,6 +120,7 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
 
   void completeReflection(BuildContext context) {
     reflectionRepository.insertReflection(currentReflection!);
+    personalVictoriesViewModel.insertVictories(personalVictories);
     context.go("/home");
   }
 }

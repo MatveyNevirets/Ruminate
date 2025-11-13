@@ -4,5 +4,5 @@ import 'package:ruminate/features/personal_victories/domain/repository/victories
 import 'package:ruminate/features/personal_victories/provider/victories_local_file_datasource_provider.dart';
 
 final victoriesRepositoryProvider = Provider<VictoriesRepository>(
-  (ref) => VictoriesRepositoryImpl(localVictoriesDatasource: ref.read(localVictoriesFileDatasourceProvider)),
+  (ref) => VictoriesRepositoryImpl(localVictoriesDatasource: ref.watch(localVictoriesFileDatasourceProvider)),
 );
