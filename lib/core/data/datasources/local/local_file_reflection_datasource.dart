@@ -3,15 +3,18 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:ruminate/core/data/datasources/local/local_reflection_datasource.dart';
 import 'package:ruminate/core/data/model/reflection_model.dart';
+import 'package:ruminate/core/services/path_service.dart';
 
 class LocalFileReflectionDataSource implements LocalReflectionDatasource {
   Directory? _directory;
+  final PathService pathService;
   List<ReflectionModel>? _cachedReflections;
 
-  LocalFileReflectionDataSource() {
+  LocalFileReflectionDataSource({required this.pathService}) {
     initDatasource();
   }
 
@@ -52,6 +55,7 @@ class LocalFileReflectionDataSource implements LocalReflectionDatasource {
     }
   }
 
+  @visibleForTesting
   Future<List<ReflectionModel>> _fetchAllReflectionsFromFile() async {
     try {
       //In first we attempts fetch the directory of our reflections
@@ -99,7 +103,7 @@ class LocalFileReflectionDataSource implements LocalReflectionDatasource {
     //If the storage is not initialized we will do this
     //If it is initialized, we'll simply return
     while (_directory == null) {
-      _directory = await getExternalStorageDirectory();
+      _directory = await pathService.getExternalStorageDirectory();
     }
   }
 }
