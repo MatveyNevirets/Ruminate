@@ -5,7 +5,7 @@ import 'package:ruminate/core/data/model/reflection_step_model.dart';
 class DailySuperficialReflection extends ReflectionModel {
   DailySuperficialReflection()
     : super(
-        title: "Ежедневная поверхностная рефлексия",
+        title: "Ежедневная поверхностная рефлексия",      reflectionDate: DateTime.now(),
         description:
             "Ежеденевная поверхностная рефлексия отлично подойдет в моменты, когда совершенно нет настроения что либо заполнять. Только самые необходимые вопросы",
         type: ReflectType.dailySuperficital,

@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
@@ -28,6 +30,9 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
 
   void setType(ReflectType type) {
     currentReflection = null;
+    state = null;
+    firstStep = null;
+    lastStep = null;
 
     final dailySuperficial = ref.read(dailySuperficialReflectionProvider);
     final dailyIndepth = ref.read(dailyIndepthReflectionProvider);

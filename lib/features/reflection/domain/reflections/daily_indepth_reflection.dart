@@ -5,7 +5,7 @@ import 'package:ruminate/core/data/model/reflection_step_model.dart';
 class DailyIndepthReflection extends ReflectionModel {
   DailyIndepthReflection()
     : super(
-        title: "Ежедневная глубокая рефлексия",
+        title: "Ежедневная глубокая рефлексия",      reflectionDate: DateTime.now(),
         description: "Глубокая рефлексия включает в себя 30 вопросов. Позволит закопаться глубоко в недры дня",
         type: ReflectType.dailyIndepth,
         steps: _createStepsLinks(),

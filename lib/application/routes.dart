@@ -10,6 +10,7 @@ import 'package:ruminate/features/personal_victories/presentation/personal_victo
 import 'package:ruminate/features/reflection/presentation/providers/reflection_view_model_provider.dart';
 import 'package:ruminate/features/reflection/presentation/reflection_screen.dart';
 import 'package:ruminate/features/reflection/presentation/start_daily_reflection_screen.dart';
+import 'package:ruminate/features/you_thought/presentation/you_thought_screen.dart';
 
 final routerConfig = GoRouter(
   initialLocation: "/home",
@@ -18,6 +19,12 @@ final routerConfig = GoRouter(
       path: "/home",
       builder: (BuildContext context, state) => MainPagesWidget(),
       routes: [
+        GoRoute(
+          path: "/you_tought",
+          builder: (context, state) {
+            return YouThoughtScreen();
+          },
+        ),
         GoRoute(
           path: ("/personal_victories"),
           builder: (context, state) {

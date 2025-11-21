@@ -35,7 +35,13 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(
-      ReflectionModel(title: "title", description: "description", type: ReflectType.testUnknown, steps: []),
+      ReflectionModel(
+        title: "title",
+        description: "description",
+        reflectionDate: DateTime.now(),
+        type: ReflectType.testUnknown,
+        steps: [],
+      ),
     );
   });
 
@@ -113,6 +119,7 @@ void main() {
           title: 'Test',
           steps: steps,
           type: ReflectType.dailySuperficital,
+          reflectionDate: DateTime.now(),
           description: '',
         );
 
@@ -151,6 +158,7 @@ void main() {
         final testModel = ReflectionModel(
           title: 'Test',
           steps: steps,
+          reflectionDate: DateTime.now(),
           type: ReflectType.dailySuperficital,
           description: '',
         );
@@ -239,6 +247,7 @@ void main() {
       title: "title",
       description: "",
       type: ReflectType.dailySuperficital,
+      reflectionDate: DateTime.now(),
       steps: steps,
     );
     final viewModel = container.read(reflectionVM.notifier);

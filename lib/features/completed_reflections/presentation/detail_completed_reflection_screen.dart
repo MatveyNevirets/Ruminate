@@ -143,11 +143,21 @@ class _TitleWidget extends StatelessWidget {
   final ReflectionModel reflection;
   final ThemeData theme;
 
+  String _reciveDataFromReflectionModel(ReflectionModel reflection) {
+    String date;
+
+    date = reflection.reflectionDate == null
+        ? "Тут пусто"
+        : "${reflection.reflectionDate?.day.toString()}.${reflection.reflectionDate?.month}.${reflection.reflectionDate?.year}";
+
+    return date;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Text(
-        "Рефлексия: ${reflection.title}",
+        "Рефлексия: ${reflection.title} | Дата: ${_reciveDataFromReflectionModel(reflection)}",
         style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.primary),
       ),
     );

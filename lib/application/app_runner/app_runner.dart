@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/application/app_runner/app_env.dart';
 import 'package:ruminate/application/application.dart';
+import 'package:ruminate/application/provider/app_env_provider.dart';
 
 class AppRunner {
   final AppEnv env;
@@ -14,9 +15,7 @@ class AppRunner {
       () async {
         await _init();
 
-        final appEnvProvider = Provider<AppEnv>((ref) => env);
-
-        runApp(ProviderScope(overrides: [appEnvProvider], child: Application()));
+        runApp(ProviderScope(overrides: [appEnvProvider.overrideWithValue(env)], child: Application()));
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           WidgetsBinding.instance.allowFirstFrame();

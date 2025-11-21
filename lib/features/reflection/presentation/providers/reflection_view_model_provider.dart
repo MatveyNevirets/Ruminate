@@ -5,6 +5,9 @@ import 'package:ruminate/features/personal_victories/presentation/viewmodel/pers
 import 'package:ruminate/features/reflection/presentation/view_model/reflection_view_model.dart';
 
 final reflectionVM = StateNotifierProvider<ReflectionViewModel, ReflectionStepModel?>(
-  (ref) =>
-      ReflectionViewModel(ref, ref.read(reflectionRepositoryProvider), ref.read(personalVictoriesVMProvider.notifier)),
+  (ref) => ReflectionViewModel(
+    ref,
+    ref.watch(reflectionRepositoryProvider),
+    ref.watch(personalVictoriesVMProvider.notifier),
+  ),
 );

@@ -5,7 +5,7 @@ import 'package:ruminate/core/enums/reflect_type_enum.dart';
 class MonthlyReflection extends ReflectionModel {
   MonthlyReflection()
     : super(
-        title: "Ежемесячная рефлексия",
+        title: "Ежемесячная рефлексия",      reflectionDate: DateTime.now(),
         description:
             "Универсальная рефлексия, которую рекомендуется выполнять каждый месяц. Содержит достаточно глубокие и необходимые вопросы для самокопаний",
         type: ReflectType.monthly,
