@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:ruminate/core/data/model/reflection_model.dart';
 import 'package:ruminate/core/data/providers/local_file_datasource_provider.dart';
 
-class CompletedReflectionsViewModel extends StateNotifier<AsyncValue<List<ReflectionModel>>> {
+class CompletedReflectionsViewModel extends StateNotifier<AsyncValue<List<ReflectionModel>?>> {
   final Ref _ref;
   bool _isLoading = false;
 
@@ -34,6 +34,6 @@ class CompletedReflectionsViewModel extends StateNotifier<AsyncValue<List<Reflec
 }
 
 final completedReflectionsProvider =
-    StateNotifierProvider<CompletedReflectionsViewModel, AsyncValue<List<ReflectionModel>>>(
+    StateNotifierProvider<CompletedReflectionsViewModel, AsyncValue<List<ReflectionModel>?>>(
       (ref) => CompletedReflectionsViewModel(ref),
     );

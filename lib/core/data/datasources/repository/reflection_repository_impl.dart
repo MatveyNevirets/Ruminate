@@ -10,7 +10,7 @@ class ReflectionRepositoryImpl implements ReflectionRepository {
   ReflectionRepositoryImpl({required this.localReflectionDatasource});
 
   @override
-  Future<List<ReflectionModel>> fetchAllReflections() async {
+  Future<List<ReflectionModel>?> fetchAllReflections() async {
     try {
       final result = await localReflectionDatasource.fetchAllReflections();
       return result;

@@ -14,7 +14,7 @@ class MockLocalFileReflectionDataSource implements LocalReflectionDatasource {
   }
 
   @override
-  FutureOr<List<ReflectionModel>> fetchAllReflections() async {
+  FutureOr<List<ReflectionModel>?> fetchAllReflections() async {
     log("Cache $_cachedReflections");
     log("Mock $_mockReflections");
     log("fetchAllReflections called");
@@ -23,7 +23,7 @@ class MockLocalFileReflectionDataSource implements LocalReflectionDatasource {
       _cachedReflections = reflections;
     }
     log("Fetched reflections count: ${_cachedReflections?.length}");
-    return _cachedReflections!;
+    return _cachedReflections;
   }
 
   @override
@@ -39,7 +39,7 @@ class MockLocalFileReflectionDataSource implements LocalReflectionDatasource {
       _mockReflections!.add(reflection);
       log(_mockReflections.toString());
 
-      await fetchAllReflections();
+      _cachedReflections = null;
 
       log("Success wrote!");
     } on Exception catch (e, stack) {
@@ -49,11 +49,11 @@ class MockLocalFileReflectionDataSource implements LocalReflectionDatasource {
     }
   }
 
-  Future<List<ReflectionModel>> _fetchAllReflectionsFromFile() async {
+  Future<List<ReflectionModel>?> _fetchAllReflectionsFromFile() async {
     try {
       await Future.delayed(Duration(seconds: 3));
       log("Try fetch");
-      return _mockReflections ?? [];
+      return _mockReflections;
     } on Exception catch (e, stack) {
       throw Exception(
         "Exception at local reflection datasource. Method: readAllReflectionsFromDirectory. Exception: $e StackTrace: $stack",

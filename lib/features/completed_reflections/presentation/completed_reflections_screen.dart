@@ -14,33 +14,43 @@ class CompletedReflectionsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final reflectionVMProvider = ref.watch(completedReflectionsProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: createAppBar(context),
       body: CustomScrollView(
         slivers: [
-          SliverPadding(padding: EdgeInsets.symmetric(vertical: Theme.of(context).largePaddingDouble)),
+          SliverPadding(padding: EdgeInsets.symmetric(vertical: theme.largePaddingDouble)),
           SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: Theme.of(context).largePaddingDouble),
+            padding: EdgeInsets.symmetric(horizontal: theme.largePaddingDouble),
             sliver: reflectionVMProvider.when(
               loading: () => SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
               error: (e, stack) {
                 log("Exception at completed reflection screen. Exception: $e StackTrace: $stack");
                 return SliverToBoxAdapter(child: Center(child: Text("Что-то пошло не так :(")));
               },
-              data: (reflections) => SliverGrid(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: Theme.of(context).mediumPaddingDouble,
-                  crossAxisSpacing: Theme.of(context).mediumPaddingDouble,
-                ),
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  return AppContainer(
-                    title: reflections[index].title,
-                    onClick: () => context.go("/home/completed_reflections/details", extra: reflections[index]),
-                  );
-                }, childCount: reflections.length),
-              ),
+              data: (reflections) => reflections == null
+                  ? SliverToBoxAdapter(
+                      child: Center(
+                        child: Text(
+                          "Тут пока ничего нет",
+                          style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.primary),
+                        ),
+                      ),
+                    )
+                  : SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: theme.mediumPaddingDouble,
+                        crossAxisSpacing: theme.mediumPaddingDouble,
+                      ),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        return AppContainer(
+                          title: reflections[index].title,
+                          onClick: () => context.go("/home/completed_reflections/details", extra: reflections[index]),
+                        );
+                      }, childCount: reflections.length),
+                    ),
             ),
           ),
         ],

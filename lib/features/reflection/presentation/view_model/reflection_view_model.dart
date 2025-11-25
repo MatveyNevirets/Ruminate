@@ -1,6 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
@@ -9,6 +7,7 @@ import 'package:ruminate/core/data/model/reflection_model.dart';
 import 'package:ruminate/core/data/model/reflection_step_model.dart';
 import 'package:ruminate/core/domain/reflection_repository.dart';
 import 'package:ruminate/core/enums/reflect_type_enum.dart';
+import 'package:ruminate/features/home/providers/completed_reflections_view_model.dart';
 import 'package:ruminate/features/personal_victories/presentation/viewmodel/personal_victories_view_model.dart';
 import 'package:ruminate/features/reflection/domain/providers/daily_indepth_reflection_provider.dart';
 import 'package:ruminate/features/reflection/domain/providers/daily_superficial_reflection_provider.dart';
@@ -123,9 +122,10 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
     }
   }
 
-  void completeReflection(BuildContext context) {
-    reflectionRepository.insertReflection(currentReflection!);
-    personalVictoriesViewModel.insertVictories(personalVictories);
+  Future<void> completeReflection(BuildContext context) async {
     context.go("/home");
+    await reflectionRepository.insertReflection(currentReflection!);
+    await personalVictoriesViewModel.insertVictories(personalVictories);
+    await ref.read(completedReflectionsProvider.notifier).refresh();
   }
 }

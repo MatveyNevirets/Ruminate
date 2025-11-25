@@ -18,14 +18,14 @@ class LocalFileReflectionDataSource implements LocalReflectionDatasource {
   }
 
   @override
-  FutureOr<List<ReflectionModel>> fetchAllReflections() async {
+  FutureOr<List<ReflectionModel>?> fetchAllReflections() async {
     log("fetchAllReflections called");
     if (_cachedReflections == null) {
       final reflections = await _fetchAllReflectionsFromFile();
       _cachedReflections = reflections;
     }
     log("Fetched reflections count: ${_cachedReflections?.length}");
-    return _cachedReflections!;
+    return _cachedReflections;
   }
 
   @override
@@ -46,6 +46,8 @@ class LocalFileReflectionDataSource implements LocalReflectionDatasource {
 
       //Write the reflection as json
       await file.writeAsString(jsonEncode(reflectionMap));
+
+      _cachedReflections = null;
       log("Success wrote!");
     } on Exception catch (e, stack) {
       throw Exception(
@@ -54,7 +56,7 @@ class LocalFileReflectionDataSource implements LocalReflectionDatasource {
     }
   }
 
-  Future<List<ReflectionModel>> _fetchAllReflectionsFromFile() async {
+  Future<List<ReflectionModel>?> _fetchAllReflectionsFromFile() async {
     try {
       //In first we attempts fetch the directory of our reflections
       final directoryFile = await _fetchDirectory();
@@ -63,6 +65,8 @@ class LocalFileReflectionDataSource implements LocalReflectionDatasource {
 
       //Then attempts fetch our files like list
       final List<FileSystemEntity> files = await directoryFile!.list().toList();
+
+      if (files.isEmpty) return null;
 
       //Recieves reflection files
       final reflectionFiles = files.whereType<File>().where((file) {
