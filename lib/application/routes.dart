@@ -10,7 +10,6 @@ import 'package:ruminate/features/personal_victories/presentation/personal_victo
 import 'package:ruminate/features/reflection/presentation/providers/reflection_view_model_provider.dart';
 import 'package:ruminate/features/reflection/presentation/reflection_screen.dart';
 import 'package:ruminate/features/reflection/presentation/start_daily_reflection_screen.dart';
-import 'package:ruminate/features/you_thought/presentation/you_thought_screen.dart';
 
 final routerConfig = GoRouter(
   initialLocation: "/home",
@@ -20,9 +19,10 @@ final routerConfig = GoRouter(
       builder: (BuildContext context, state) => MainPagesWidget(),
       routes: [
         GoRoute(
-          path: "/you_tought",
+          path: "/details",
           builder: (context, state) {
-            return YouThoughtScreen();
+            final reflection = state.extra as ReflectionModel;
+            return DetailCompletedReflectionScreen(reflection: reflection);
           },
         ),
         GoRoute(
@@ -36,15 +36,6 @@ final routerConfig = GoRouter(
           builder: (context, state) {
             return CompletedReflectionsScreen();
           },
-          routes: [
-            GoRoute(
-              path: "/details",
-              builder: (context, state) {
-                final reflection = state.extra as ReflectionModel;
-                return DetailCompletedReflectionScreen(reflection: reflection);
-              },
-            ),
-          ],
         ),
         GoRoute(
           path: "/month_reflection",

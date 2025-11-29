@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:ruminate/core/data/model/reflection_model.dart';
-import 'package:ruminate/core/data/providers/local_file_datasource_provider.dart';
+import 'package:ruminate/core/providers/reflection_datasource_repository_provider.dart';
 
 class CompletedReflectionsViewModel extends StateNotifier<AsyncValue<List<ReflectionModel>?>> {
   final Ref _ref;
@@ -18,8 +18,8 @@ class CompletedReflectionsViewModel extends StateNotifier<AsyncValue<List<Reflec
     state = AsyncValue.loading();
 
     try {
-      final localReflectionDataSource = _ref.read(localFileDataSourceProvider);
-      final reflections = await localReflectionDataSource.fetchAllReflections();
+      final reflectionsRepsoitory = _ref.read(reflectionRepositoryProvider);
+      final reflections = await reflectionsRepsoitory.fetchAllReflections();
       state = AsyncValue.data(reflections);
     } on Exception catch (e, stack) {
       state = AsyncValue.error(e, stack);

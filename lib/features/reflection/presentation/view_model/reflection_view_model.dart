@@ -7,7 +7,7 @@ import 'package:ruminate/core/data/model/reflection_model.dart';
 import 'package:ruminate/core/data/model/reflection_step_model.dart';
 import 'package:ruminate/core/domain/reflection_repository.dart';
 import 'package:ruminate/core/enums/reflect_type_enum.dart';
-import 'package:ruminate/features/home/providers/completed_reflections_view_model.dart';
+import 'package:ruminate/features/completed_reflections/presentation/providers/completed_reflections_view_model.dart';
 import 'package:ruminate/features/personal_victories/presentation/viewmodel/personal_victories_view_model.dart';
 import 'package:ruminate/features/reflection/domain/providers/daily_indepth_reflection_provider.dart';
 import 'package:ruminate/features/reflection/domain/providers/daily_superficial_reflection_provider.dart';

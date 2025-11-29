@@ -36,8 +36,8 @@ class HomeScreen extends ConsumerWidget {
                   sliver: SliverToBoxAdapter(child: AppContainer(title: "Что-то пошло не так :(")),
                 );
               },
-              data: (randomizedQNA) {
-                return randomizedQNA == null
+              data: (youThoughtList) {
+                return youThoughtList?[1] == null
                     ? SliverToBoxAdapter(child: Container())
                     : SliverPadding(
                         padding: theme.largePadding,
@@ -45,8 +45,9 @@ class HomeScreen extends ConsumerWidget {
                           backgroundColor: theme.scaffoldBackgroundColor,
                           expandedHeight: appBarExpandedHeight,
                           flexibleSpace: AppContainer(
+                            onClick: () => context.go("/home/details/", extra: youThoughtList[0]),
                             title:
-                                "${Utils.fetchTextDateFromReflection(youThoughtVM.reflection!)} ты отвечал на вопрос: ${Utils.cutStringByChars(randomizedQNA.keys.first, 40)}\nДата: ${Utils.fetchDateFromReflection(youThoughtVM.reflection!)}\nТвой ответ: ${Utils.cutStringByChars(randomizedQNA.values.first.toString(), 40)}",
+                                "${Utils.fetchTextDateFromReflection(youThoughtVM.reflection!)} ты отвечал на вопрос: ${Utils.cutStringByChars(youThoughtList![1].keys.first, 40)}\nДата: ${Utils.fetchDateFromReflection(youThoughtVM.reflection!)}\nТвой ответ: ${Utils.cutStringByChars(youThoughtList[1].values.first.toString(), 40)}",
                           ),
                         ),
                       );
@@ -59,6 +60,7 @@ class HomeScreen extends ConsumerWidget {
               sliver: SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       "Рефлексируй!",
@@ -121,6 +123,7 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
           ],
+          scrollDirection: Axis.vertical,
         ),
       ),
       bottomNavigationBar: createBottomNavigationBar(context, navigationProvider, navigationIndex),

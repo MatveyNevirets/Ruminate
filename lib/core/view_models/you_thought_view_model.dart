@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer' show log;
 import 'dart:math' hide log;
 
@@ -8,7 +9,7 @@ import 'package:ruminate/core/data/model/reflection_step_model.dart';
 import 'package:ruminate/core/domain/reflection_repository.dart';
 import 'package:ruminate/core/providers/reflection_datasource_repository_provider.dart';
 
-class YouThoughtViewModel extends StateNotifier<AsyncValue<Map<String, String?>?>> {
+class YouThoughtViewModel extends StateNotifier<AsyncValue<List<dynamic>?>> {
   final ReflectionRepository _reflectionRepository;
   final Random random = Random();
   ReflectionModel? _reflectionModel;
@@ -50,7 +51,7 @@ class YouThoughtViewModel extends StateNotifier<AsyncValue<Map<String, String?>?
         final currentRandomQNA = _fetchRandomQNA(currentRandomStep);
         log("currentRandomQNA: ${currentRandomQNA.toString()}");
 
-        state = AsyncValue.data(currentRandomQNA);
+        state = AsyncValue.data([_reflectionModel, currentRandomQNA]);
       }
     } on Exception catch (e, stack) {
       state = AsyncValue.error(e, stack);
@@ -58,30 +59,20 @@ class YouThoughtViewModel extends StateNotifier<AsyncValue<Map<String, String?>?
     }
   }
 
-  Map<String, String?> _fetchRandomQNA(ReflectionStepModel step) {
-    bool isEmptyAnswer = true;
-    late Map<String, String?> currentRandomQNA;
+  Map<String, String?>? _fetchRandomQNA(ReflectionStepModel step) {
+    log("Fetch random");
 
-    while (isEmptyAnswer) {
-      final randomQNAInt = random.nextInt(step.questionsAndAnswers.length);
-      log("randomQNAInt: ${randomQNAInt.toString()}");
-      currentRandomQNA = step.questionsAndAnswers[randomQNAInt];
-      log("currentRandomQNA: ${currentRandomQNA.toString()}");
+    final randomQNAInt = random.nextInt(step.questionsAndAnswers.length);
+    final currentRandomQNA = step.questionsAndAnswers[randomQNAInt];
 
-      if (currentRandomQNA.values.first == null) {
-        isEmptyAnswer = true;
-        log("isEmptyAnswer: ${isEmptyAnswer.toString()}");
-      } else {
-        log("isEmptyAnswer: ${isEmptyAnswer.toString()}");
-        isEmptyAnswer = false;
-        break;
-      }
+    if (currentRandomQNA.values.first == null) {
+      return null;
     }
-    log("Return: ${currentRandomQNA.toString()}");
+
     return currentRandomQNA;
   }
 }
 
-final youThoughtVMProvider = StateNotifierProvider<YouThoughtViewModel, AsyncValue<Map<String, String?>?>>(
+final youThoughtVMProvider = StateNotifierProvider<YouThoughtViewModel, AsyncValue<List<dynamic>?>>(
   (ref) => YouThoughtViewModel(ref.read(reflectionRepositoryProvider)),
 );

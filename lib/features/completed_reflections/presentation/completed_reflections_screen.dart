@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_container.dart';
-import 'package:ruminate/features/home/providers/completed_reflections_view_model.dart';
+import 'package:ruminate/features/completed_reflections/presentation/providers/completed_reflections_view_model.dart';
 
 class CompletedReflectionsScreen extends ConsumerWidget {
   const CompletedReflectionsScreen({super.key});
@@ -47,7 +47,7 @@ class CompletedReflectionsScreen extends ConsumerWidget {
                       delegate: SliverChildBuilderDelegate((context, index) {
                         return AppContainer(
                           title: reflections[index].title,
-                          onClick: () => context.go("/home/completed_reflections/details", extra: reflections[index]),
+                          onClick: () => context.go("/home/details", extra: reflections[index]),
                         );
                       }, childCount: reflections.length),
                     ),

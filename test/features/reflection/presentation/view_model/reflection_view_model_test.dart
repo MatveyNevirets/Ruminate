@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:ruminate/core/data/datasources/local/local_file_reflection_datasource.dart';
+import 'package:ruminate/application/app_runner/app_env.dart';
+import 'package:ruminate/application/provider/app_env_provider.dart';
+import 'package:ruminate/core/data/datasources/local/local_reflection_datasource.dart';
+import 'package:ruminate/core/data/datasources/local/mock_local_file_reflection_datasource.dart';
+import 'package:ruminate/core/data/datasources/repository/reflection_repository_impl.dart';
 import 'package:ruminate/core/data/model/reflection_model.dart';
 import 'package:ruminate/core/data/model/reflection_step_model.dart';
 import 'package:ruminate/core/data/providers/local_file_datasource_provider.dart';
@@ -15,23 +19,19 @@ import 'package:ruminate/features/reflection/domain/providers/monthly_reflection
 import 'package:ruminate/features/reflection/domain/providers/weekly_reflection_provider.dart';
 import 'package:ruminate/features/reflection/presentation/providers/reflection_view_model_provider.dart';
 
-class MockFileDataSource extends Mock implements LocalFileReflectionDataSource {}
-
 class MockReflectionModel extends Mock implements ReflectionModel {}
 
 class MockBuildContext extends Mock implements BuildContext {}
 
-class MockReflectionRepository extends Mock implements ReflectionRepository {}
-
 void main() {
   late ProviderContainer container;
-  late MockFileDataSource mockFileDataSource;
   late MockReflectionModel mockDailySuperficialReflection,
       mockDailyIndepthReflection,
       mockWeeklyReflection,
       mockMonthlyReflection;
-  late MockReflectionRepository mockReflectionRepository;
   late MockBuildContext mockContext;
+  late ReflectionRepository mockReflectionRepository;
+  late LocalReflectionDatasource mockLocalReflectionDataSource;
 
   setUpAll(() {
     registerFallbackValue(
@@ -46,31 +46,35 @@ void main() {
   });
 
   setUp(() {
-    mockFileDataSource = MockFileDataSource();
     mockDailySuperficialReflection = MockReflectionModel();
     mockDailyIndepthReflection = MockReflectionModel();
     mockWeeklyReflection = MockReflectionModel();
     mockMonthlyReflection = MockReflectionModel();
     mockContext = MockBuildContext();
-    mockReflectionRepository = MockReflectionRepository();
+    mockLocalReflectionDataSource = MockLocalFileReflectionDataSource();
+
+    mockReflectionRepository = ReflectionRepositoryImpl(localReflectionDatasource: mockLocalReflectionDataSource);
 
     when(() => mockDailySuperficialReflection.steps).thenReturn([]);
     when(() => mockDailyIndepthReflection.steps).thenReturn([]);
     when(() => mockWeeklyReflection.steps).thenReturn([]);
     when(() => mockMonthlyReflection.steps).thenReturn([]);
-    when(() => mockReflectionRepository.insertReflection(any())).thenAnswer((_) => Future.value());
 
     container = ProviderContainer(
       overrides: [
-        localFileDataSourceProvider.overrideWithValue(mockFileDataSource),
+        appEnvProvider.overrideWithValue(AppEnv.test),
+        localFileDataSourceProvider.overrideWithValue(mockLocalReflectionDataSource),
+        reflectionRepositoryProvider.overrideWithValue(mockReflectionRepository),
         dailySuperficialReflectionProvider.overrideWithValue(mockDailySuperficialReflection),
         dailyIndepthReflectionProvider.overrideWithValue(mockDailyIndepthReflection),
         weeklyReflectionProvider.overrideWithValue(mockWeeklyReflection),
         monthlyReflectionProvider.overrideWithValue(mockMonthlyReflection),
-        reflectionRepositoryProvider.overrideWithValue(mockReflectionRepository),
       ],
     );
-    addTearDown(container.dispose);
+  });
+
+  tearDownAll(() {
+    container.dispose();
   });
 
   group('Reflection ViewModel', () {
@@ -231,7 +235,7 @@ void main() {
     });
   });
 
-  test('Testing complete method', () {
+  test('Testing complete method', () async {
     // Arrange
     final steps = [
       ReflectionStepModel(
@@ -250,19 +254,14 @@ void main() {
       reflectionDate: DateTime.now(),
       steps: steps,
     );
-    final viewModel = container.read(reflectionVM.notifier);
-
-    when(() => mockDailySuperficialReflection.steps).thenReturn(steps);
-    when(() => mockDailySuperficialReflection.copyWith(steps: any(named: "steps"))).thenReturn(testModel);
 
     // Act
-    viewModel.setType(ReflectType.dailySuperficital);
+    await container.read(reflectionRepositoryProvider).insertReflection(testModel);
 
-    expect(viewModel.currentReflection, isNotNull);
-
-    mockReflectionRepository.insertReflection(viewModel.currentReflection!);
+    final result = await container.read(reflectionRepositoryProvider).fetchAllReflections();
 
     // Assert
-    verify(() => mockReflectionRepository.insertReflection(any())).called(1);
+    expect(result, isNotNull);
+    expect(result![0].title, testModel.title);
   });
 }

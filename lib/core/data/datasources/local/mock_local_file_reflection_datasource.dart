@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:mocktail/mocktail.dart';
 import 'package:ruminate/core/data/datasources/local/local_reflection_datasource.dart';
 import 'package:ruminate/core/data/model/reflection_model.dart';
 
-class MockLocalFileReflectionDataSource implements LocalReflectionDatasource {
+class MockLocalFileReflectionDataSource extends Mock implements LocalReflectionDatasource {
   bool? directoryExists;
   List<ReflectionModel>? _cachedReflections;
   List<ReflectionModel>? _mockReflections;
@@ -12,6 +13,8 @@ class MockLocalFileReflectionDataSource implements LocalReflectionDatasource {
   MockLocalFileReflectionDataSource() {
     initDatasource();
   }
+
+  List<ReflectionModel>? get mockReflections => _mockReflections;
 
   @override
   FutureOr<List<ReflectionModel>?> fetchAllReflections() async {
