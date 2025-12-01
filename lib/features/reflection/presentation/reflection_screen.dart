@@ -34,12 +34,19 @@ class ReflectionScreen extends ConsumerWidget {
             children: [
               _TitleWidget(currentStep: currentStep),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
-              _QuestionsWidget(currentStep: currentStep, controllers: controllers),
+              _QuestionsWidget(
+                currentStep: currentStep,
+                controllers: controllers,
+              ),
               SizedBox(height: Theme.of(context).extraLargePaddingDouble),
               AppButton(
                 onClick: () {
                   reflectionViewModel.prevStep();
-                  scrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+                  scrollController.animateTo(
+                    0,
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                  );
                 },
                 text: "Назад",
               ),
@@ -51,7 +58,11 @@ class ReflectionScreen extends ConsumerWidget {
                     answers.add(controller.text);
                   }
                   reflectionViewModel.nextStep(answers, context);
-                  scrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+                  scrollController.animateTo(
+                    0,
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                  );
                 },
                 text: "Далее",
               ),
@@ -64,7 +75,10 @@ class ReflectionScreen extends ConsumerWidget {
 }
 
 class _QuestionsWidget extends StatelessWidget {
-  const _QuestionsWidget({required this.currentStep, required this.controllers});
+  const _QuestionsWidget({
+    required this.currentStep,
+    required this.controllers,
+  });
 
   final ReflectionStepModel? currentStep;
   final List<TextEditingController> controllers;
@@ -76,7 +90,9 @@ class _QuestionsWidget extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: currentStep?.questionsAndAnswers.length ?? 0,
       itemBuilder: (context, index) => _CreateQuestion(
-        title: currentStep?.questionsAndAnswers[index].keys.first ?? "Что-то пошло не так :(",
+        title:
+            currentStep?.questionsAndAnswers[index].keys.first ??
+            "Что-то пошло не так :(",
         textController: controllers[index],
       ),
     );
@@ -92,7 +108,9 @@ class _TitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       currentStep?.title ?? "Что-то пошло не так",
-      style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
+      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+        color: Theme.of(context).colorScheme.primary,
+      ),
     );
   }
 }
@@ -111,7 +129,9 @@ class _CreateQuestion extends StatelessWidget {
         SizedBox(height: Theme.of(context).largePaddingDouble),
         Text(
           title ?? "Что-то пошло не так",
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary),
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         SizedBox(height: Theme.of(context).mediumPaddingDouble),
         AppTextField(controller: textController),
