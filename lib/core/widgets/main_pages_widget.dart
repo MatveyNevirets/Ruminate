@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/core/providers/navigation_providers.dart';
 import 'package:ruminate/core/widgets/bottom_navigation_bar.dart';
 import 'package:ruminate/features/home/presentation/home_screen.dart';
+import 'package:ruminate/features/statistics/presentation/statistics_screen.dart';
 
 class MainPagesWidget extends ConsumerWidget {
   const MainPagesWidget({super.key});
@@ -19,15 +20,7 @@ class MainPagesWidget extends ConsumerWidget {
 
       children: [
         HomeScreen(),
-        Scaffold(
-          body: Center(
-            child: Text(
-              "Здесь будет статистика",
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
-            ),
-          ),
-          bottomNavigationBar: createBottomNavigationBar(context, navigationProvider, navigationIndex),
-        ),
+       StatisticsScreen(),
         Scaffold(
           body: Center(
             child: Text(
