@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:developer';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,8 @@ import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_container.dart';
 import 'package:ruminate/core/widgets/bottom_navigation_bar.dart';
+import 'package:ruminate/features/statistics/data/models/statistics_model.dart';
+import 'package:ruminate/features/statistics/presentation/view_model/statistics_view_model.dart';
 
 class StatisticsScreen extends ConsumerWidget {
   const StatisticsScreen({super.key});
@@ -17,97 +19,114 @@ class StatisticsScreen extends ConsumerWidget {
     final navigationProvider = ref.watch(navigationViewModel.notifier);
     final navigationIndex = ref.watch(navigationViewModel);
 
+    final statisticsViewModel = ref.watch(statisticsViewModelProvider.notifier);
+    final state = ref.watch(statisticsViewModelProvider);
+
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: createAppBar(context),
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: theme.largePadding,
-            sliver: SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Статистика рефлексий',
-                    style: theme.textTheme.bodyLarge!.copyWith(
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                  SizedBox(height: theme.largePaddingDouble),
-                  AppChartWidget(
-                    title: "Рефлексии за всё время: N",
-                    anyData: List.generate(7, (i) => ""),
-                  ),
-                  SizedBox(height: theme.largePaddingDouble),
-                  Text(
-                    'Всего личных побед: N',
-                    style: theme.textTheme.bodyMedium!.copyWith(
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                  SizedBox(height: theme.extraLargePaddingDouble),
-                  SizedBox(
-                    height: 1.5,
-                    width: double.maxFinite,
-                    child: ColoredBox(color: theme.colorScheme.primary),
-                  ),
-                  SizedBox(height: theme.extraLargePaddingDouble),
-                  Text(
-                    'Энергия',
-                    style: theme.textTheme.bodyLarge!.copyWith(
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                  SizedBox(height: theme.largePaddingDouble),
-                  Row(
+
+      body: state.when(
+        data: (List<StatisticsModel>? data) {
+          log(data.toString());
+          return CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: theme.largePadding,
+                sliver: SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: AppContainer(title: "Генераторы твоей\nэнергии"),
-                      ),
-                      Expanded(
-                        child: AppContainer(
-                          title: "Черные дыры твоей\nэнергии",
+                      Text(
+                        'Статистика рефлексий',
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                          color: theme.colorScheme.primary,
                         ),
                       ),
+                      SizedBox(height: theme.largePaddingDouble),
+                      AppChartWidget(
+                        title: "Рефлексии за всё время: N",
+                        anyData: List.generate(7, (i) => ""),
+                      ),
+                      SizedBox(height: theme.largePaddingDouble),
+                      Text(
+                        'Всего личных побед: N',
+                        style: theme.textTheme.bodyMedium!.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      SizedBox(height: theme.extraLargePaddingDouble),
+                      SizedBox(
+                        height: 1.5,
+                        width: double.maxFinite,
+                        child: ColoredBox(color: theme.colorScheme.primary),
+                      ),
+                      SizedBox(height: theme.extraLargePaddingDouble),
+                      Text(
+                        'Энергия',
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      SizedBox(height: theme.largePaddingDouble),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AppContainer(
+                              title: "Генераторы твоей\nэнергии",
+                            ),
+                          ),
+                          Expanded(
+                            child: AppContainer(
+                              title: "Черные дыры твоей\nэнергии",
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: theme.extraLargePaddingDouble),
+
+                      SizedBox(
+                        height: 1.5,
+                        width: double.maxFinite,
+                        child: ColoredBox(color: theme.colorScheme.primary),
+                      ),
+                      SizedBox(height: theme.extraLargePaddingDouble),
+
+                      Text(
+                        'На улучшение',
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      SizedBox(height: theme.largePaddingDouble),
+                      AppContainer(title: "Важно над этим поработать"),
+                      SizedBox(height: theme.largePaddingDouble),
+                      AppChartWidget(
+                        anyData: List.generate(32, (i) => ""),
+                        title: "Твой средний уровень уверенности\nN/10",
+                      ),
+                      SizedBox(height: theme.largePaddingDouble),
+                      Text(
+                        'Нам всем бывает страшно',
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      AppContainer(title: "Все твои страхи"),
                     ],
                   ),
-                  SizedBox(height: theme.extraLargePaddingDouble),
-
-                  SizedBox(
-                    height: 1.5,
-                    width: double.maxFinite,
-                    child: ColoredBox(color: theme.colorScheme.primary),
-                  ),
-                  SizedBox(height: theme.extraLargePaddingDouble),
-
-                  Text(
-                    'На улучшение',
-                    style: theme.textTheme.bodyLarge!.copyWith(
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                  SizedBox(height: theme.largePaddingDouble),
-                  AppContainer(title: "Важно над этим поработать"),
-                  SizedBox(height: theme.largePaddingDouble),
-                  AppChartWidget(
-                    anyData: List.generate(32, (i) => ""),
-                    title: "Твой средний уровень уверенности\nN/10",
-                  ),
-                  SizedBox(height: theme.largePaddingDouble),
-                  Text(
-                    'Нам всем бывает страшно',
-                    style: theme.textTheme.bodyLarge!.copyWith(
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                  AppContainer(title: "Все твои страхи"),
-                ],
+                ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
+        error: (Object error, StackTrace stackTrace) {
+          return null;
+        },
+        loading: () {
+          return Center(child: CircularProgressIndicator());
+        },
       ),
       bottomNavigationBar: createBottomNavigationBar(
         context,
