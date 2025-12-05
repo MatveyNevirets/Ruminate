@@ -21,14 +21,10 @@ class MockLocalFileStatisticsDatasource extends Mock
     ];
 
     _mockData = newStatistics;
-
-    print("$_mockData");
-    print("Success!");
   }
 
   @override
   FutureOr<List<StatisticsModel>?> fetchData() async {
-    print("Try to fetch $_mockData");
     return _mockData;
   }
 }

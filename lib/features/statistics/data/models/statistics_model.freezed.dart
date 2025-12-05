@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StatisticsModel {
 
- DateTime get date; int get totalReflections; int get totalVictories; List<String> get energyGenerators; List<String> get energyKillers; List<String> get importantToWork; List<String> get fears;
+ DateTime get date; int get totalReflections; int get totalVictories; String? get energyGenerators; String? get energyKillers; String? get importantToWork; String? get fears;
 /// Create a copy of StatisticsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,12 +26,12 @@ $StatisticsModelCopyWith<StatisticsModel> get copyWith => _$StatisticsModelCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatisticsModel&&(identical(other.date, date) || other.date == date)&&(identical(other.totalReflections, totalReflections) || other.totalReflections == totalReflections)&&(identical(other.totalVictories, totalVictories) || other.totalVictories == totalVictories)&&const DeepCollectionEquality().equals(other.energyGenerators, energyGenerators)&&const DeepCollectionEquality().equals(other.energyKillers, energyKillers)&&const DeepCollectionEquality().equals(other.importantToWork, importantToWork)&&const DeepCollectionEquality().equals(other.fears, fears));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatisticsModel&&(identical(other.date, date) || other.date == date)&&(identical(other.totalReflections, totalReflections) || other.totalReflections == totalReflections)&&(identical(other.totalVictories, totalVictories) || other.totalVictories == totalVictories)&&(identical(other.energyGenerators, energyGenerators) || other.energyGenerators == energyGenerators)&&(identical(other.energyKillers, energyKillers) || other.energyKillers == energyKillers)&&(identical(other.importantToWork, importantToWork) || other.importantToWork == importantToWork)&&(identical(other.fears, fears) || other.fears == fears));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,totalReflections,totalVictories,const DeepCollectionEquality().hash(energyGenerators),const DeepCollectionEquality().hash(energyKillers),const DeepCollectionEquality().hash(importantToWork),const DeepCollectionEquality().hash(fears));
+int get hashCode => Object.hash(runtimeType,date,totalReflections,totalVictories,energyGenerators,energyKillers,importantToWork,fears);
 
 @override
 String toString() {
@@ -46,7 +46,7 @@ abstract mixin class $StatisticsModelCopyWith<$Res>  {
   factory $StatisticsModelCopyWith(StatisticsModel value, $Res Function(StatisticsModel) _then) = _$StatisticsModelCopyWithImpl;
 @useResult
 $Res call({
- DateTime date, int totalReflections, int totalVictories, List<String> energyGenerators, List<String> energyKillers, List<String> importantToWork, List<String> fears
+ DateTime date, int totalReflections, int totalVictories, String? energyGenerators, String? energyKillers, String? importantToWork, String? fears
 });
 
 
@@ -63,16 +63,16 @@ class _$StatisticsModelCopyWithImpl<$Res>
 
 /// Create a copy of StatisticsModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? totalReflections = null,Object? totalVictories = null,Object? energyGenerators = null,Object? energyKillers = null,Object? importantToWork = null,Object? fears = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? totalReflections = null,Object? totalVictories = null,Object? energyGenerators = freezed,Object? energyKillers = freezed,Object? importantToWork = freezed,Object? fears = freezed,}) {
   return _then(StatisticsModel(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,totalReflections: null == totalReflections ? _self.totalReflections : totalReflections // ignore: cast_nullable_to_non_nullable
 as int,totalVictories: null == totalVictories ? _self.totalVictories : totalVictories // ignore: cast_nullable_to_non_nullable
-as int,energyGenerators: null == energyGenerators ? _self.energyGenerators : energyGenerators // ignore: cast_nullable_to_non_nullable
-as List<String>,energyKillers: null == energyKillers ? _self.energyKillers : energyKillers // ignore: cast_nullable_to_non_nullable
-as List<String>,importantToWork: null == importantToWork ? _self.importantToWork : importantToWork // ignore: cast_nullable_to_non_nullable
-as List<String>,fears: null == fears ? _self.fears : fears // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as int,energyGenerators: freezed == energyGenerators ? _self.energyGenerators : energyGenerators // ignore: cast_nullable_to_non_nullable
+as String?,energyKillers: freezed == energyKillers ? _self.energyKillers : energyKillers // ignore: cast_nullable_to_non_nullable
+as String?,importantToWork: freezed == importantToWork ? _self.importantToWork : importantToWork // ignore: cast_nullable_to_non_nullable
+as String?,fears: freezed == fears ? _self.fears : fears // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

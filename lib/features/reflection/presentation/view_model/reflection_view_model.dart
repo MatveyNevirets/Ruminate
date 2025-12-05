@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
@@ -13,19 +15,30 @@ import 'package:ruminate/features/reflection/domain/providers/daily_indepth_refl
 import 'package:ruminate/features/reflection/domain/providers/daily_superficial_reflection_provider.dart';
 import 'package:ruminate/features/reflection/domain/providers/monthly_reflection_provider.dart';
 import 'package:ruminate/features/reflection/domain/providers/weekly_reflection_provider.dart';
+import 'package:ruminate/features/statistics/data/models/statistics_model.dart';
+import 'package:ruminate/features/statistics/domain/repository/statistics_repository.dart';
+import 'package:ruminate/features/statistics/presentation/view_model/statistics_view_model.dart';
 
 class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
   final Ref ref;
   final ReflectionRepository reflectionRepository;
   final PersonalVictoriesViewModel personalVictoriesViewModel;
+  final StatisticsRepository statisticsRepository;
 
   ReflectionStepModel? firstStep;
   ReflectionStepModel? lastStep;
   ReflectionModel? currentReflection;
 
   List<String> personalVictories = [];
+  String? energyGenerator, energyKiller, importantToWork, confident, fears;
 
-  ReflectionViewModel(this.ref, this.reflectionRepository, this.personalVictoriesViewModel, [super.initial]);
+  ReflectionViewModel(
+    this.ref,
+    this.reflectionRepository,
+    this.personalVictoriesViewModel,
+    this.statisticsRepository, [
+    super.initial,
+  ]);
 
   void setType(ReflectType type) {
     currentReflection = null;
@@ -87,6 +100,15 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
       if (qnaKey.contains("Побед") && answers[i].isNotEmpty) {
         //Then adds to the personalVictories list
         personalVictories.add(answers[i]);
+      } else if (qnaKey.contains("стра") ||
+          qnaKey.contains("боюс") && answers[i].isNotEmpty) {
+        fears = answers[i];
+      } else if (qnaKey.contains("ресу") ||
+          qnaKey.contains("больше всего энергии") && answers[i].isNotEmpty) {
+        energyGenerator = answers[i];
+      } else if (qnaKey.contains("энергетическим вампиром") &&
+          answers[i].isNotEmpty) {
+        energyKiller = answers[i];
       }
 
       //And we add them to a new list of questions and answers for future reference
@@ -126,6 +148,22 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
     context.go("/home");
     await reflectionRepository.insertReflection(currentReflection!);
     await personalVictoriesViewModel.insertVictories(personalVictories);
+
+    final newStatisticsModel = StatisticsModel(
+      date: DateTime.now(),
+      totalReflections: 0,
+      totalVictories: 0,
+      energyGenerators: energyGenerator,
+      energyKillers: energyKiller,
+      importantToWork: importantToWork,
+      fears: fears,
+    );
+
+    log(newStatisticsModel.toString());
+
+    await statisticsRepository.insertData(newStatisticsModel);
+    await ref.read(statisticsViewModelProvider.notifier).fetchData();
+
     await ref.read(completedReflectionsProvider.notifier).refresh();
   }
 }

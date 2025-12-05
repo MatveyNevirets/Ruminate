@@ -29,6 +29,10 @@ void main() {
     container = ProviderContainer(overrides: [victoriesRepositoryProvider.overrideWithValue(mockVictoriesRepository)]);
   });
 
+  tearDownAll(() {
+    container.dispose();
+  });
+
   group('Testing personal victories', () {
     test('Testing insertVictories method', () async {
       final List<String> fakeVictories = ["v1", "v2"];

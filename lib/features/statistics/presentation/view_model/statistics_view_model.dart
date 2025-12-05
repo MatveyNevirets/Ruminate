@@ -6,11 +6,12 @@ import 'package:ruminate/features/statistics/providers/statistics_repository_pro
 
 class StatisticsViewModel
     extends StateNotifier<AsyncValue<List<StatisticsModel>?>> {
-  final StatisticsRepository statisticsRepository;
+  final StatisticsRepository _statisticsRepository;
   bool _isLoading = false;
 
-  StatisticsViewModel({required this.statisticsRepository})
-    : super(const AsyncValue.loading()) {
+  StatisticsViewModel({required StatisticsRepository statisticsRepository})
+    : _statisticsRepository = statisticsRepository,
+      super(const AsyncValue.loading()) {
     fetchData();
   }
 
@@ -21,7 +22,7 @@ class StatisticsViewModel
       _isLoading = true;
       state = AsyncValue.loading();
 
-      final statisticsList = await statisticsRepository.fetchData();
+      final statisticsList = await _statisticsRepository.fetchData();
       _isLoading = false;
 
       state = AsyncValue.data(statisticsList);
@@ -33,7 +34,7 @@ class StatisticsViewModel
 
   Future<void> insertData(StatisticsModel model) async {
     try {
-      await statisticsRepository.insertData(model);
+      await _statisticsRepository.insertData(model);
     } on Object catch (e, stack) {
       state = AsyncValue.error(e, stack);
       throw Exception("Exception: $e StackTrace: $stack");

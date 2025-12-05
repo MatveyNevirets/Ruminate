@@ -15,20 +15,31 @@ void main() {
   setUp(() {
     mockLocalReflectionDataSource = MockLocalFileReflectionDataSource();
 
-    mockReflectionRepository = ReflectionRepositoryImpl(localReflectionDatasource: mockLocalReflectionDataSource);
+    mockReflectionRepository = ReflectionRepositoryImpl(
+      localReflectionDatasource: mockLocalReflectionDataSource,
+    );
 
     container = ProviderContainer(
       overrides: [
-        localFileDataSourceProvider.overrideWithValue(mockLocalReflectionDataSource),
-        reflectionRepositoryProvider.overrideWithValue(mockReflectionRepository),
+        localFileDataSourceProvider.overrideWithValue(
+          mockLocalReflectionDataSource,
+        ),
+        reflectionRepositoryProvider.overrideWithValue(
+          mockReflectionRepository,
+        ),
       ],
     );
-    addTearDown(container.dispose);
+  });
+
+  tearDownAll(() {
+    container.dispose();
   });
 
   group('Testing completed reflections feature', () {
     test('Try to fetch reflections', () async {
-      final reflections = await container.read(reflectionRepositoryProvider).fetchAllReflections();
+      final reflections = await container
+          .read(reflectionRepositoryProvider)
+          .fetchAllReflections();
 
       expect(reflections, null);
     });

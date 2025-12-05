@@ -25,55 +25,29 @@ import 'package:ruminate/features/statistics/providers/statistics_repository_pro
 
 void main() {
   late final ProviderContainer container;
-  late final StatisticsRepository statisticsRepository;
-  late final LocalStatisticsDatasource mockStatisitcsDatasource;
-  late final VictoriesRepository victoriesRepository;
-  late final ReflectionRepository reflectionRepository;
-  late final LocalReflectionDatasource mockReflectionDatasource;
-  late final LocalVictoriesDatasource mockVictoriesDatasource;
 
   final mockModel = StatisticsModel(
     date: DateTime.now(),
     totalReflections: 0,
     totalVictories: 0,
-    energyGenerators: ["energyGenerators"],
-    energyKillers: ["energyKillers"],
-    importantToWork: ["importantToWork"],
-    fears: ["fears"],
+    energyGenerators: "energyGenerators",
+    energyKillers: "energyKillers",
+    importantToWork: "importantToWork",
+    fears: "fears",
   );
 
   setUp(() {
-    mockReflectionDatasource = MockLocalFileReflectionDataSource();
-
-    reflectionRepository = ReflectionRepositoryImpl(
-      localReflectionDatasource: mockReflectionDatasource,
-    );
-
-    mockVictoriesDatasource = MockLocalVictoriesFileDatasource();
-
-    victoriesRepository = VictoriesRepositoryImpl(
-      localVictoriesDatasource: mockVictoriesDatasource,
-    );
-
-    mockStatisitcsDatasource = MockLocalFileStatisticsDatasource();
-
-    statisticsRepository = StatisticsRepositoryImpl(
-      localStatisticsDatasource: mockStatisitcsDatasource,
-      victoriesRepository: victoriesRepository,
-      reflectionRepsoitory: reflectionRepository,
-    );
     container = ProviderContainer(
-      overrides: [
-        appEnvProvider.overrideWithValue(AppEnv.test),
-        statisticsRepositoryProvider.overrideWithValue(statisticsRepository),
-        victoriesRepositoryProvider.overrideWithValue(victoriesRepository),
-        reflectionRepositoryProvider.overrideWithValue(reflectionRepository),
-      ],
+      overrides: [appEnvProvider.overrideWithValue(AppEnv.test)],
     );
   });
 
   setUpAll(() {
     registerFallbackValue(mockModel);
+  });
+
+  tearDownAll(() {
+    container.dispose();
   });
 
   test('Testing statistic feature initial state is true', () {

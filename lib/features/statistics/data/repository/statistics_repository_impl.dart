@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 
 import 'package:ruminate/core/domain/reflection_repository.dart';
@@ -28,6 +29,7 @@ class StatisticsRepositoryImpl implements StatisticsRepository {
         totalReflections: reflections?.length ?? 0,
         totalVictories: victories?.length ?? 0,
       );
+      log(newModel.toString());
 
       await localStatisticsDatasource.insertData(newModel);
     } on Object catch (e, stack) {

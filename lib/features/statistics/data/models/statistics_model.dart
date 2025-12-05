@@ -27,20 +27,19 @@ class StatisticsModel with _$StatisticsModel {
   final int totalVictories;
 
   @override
-  final List<String> energyGenerators;
+  final String? energyGenerators;
 
   @override
-  final List<String> energyKillers;
+  final String? energyKillers;
 
   @override
-  final List<String> importantToWork;
+  final String? importantToWork;
 
   @override
-  final List<String> fears;
+  final String? fears;
 
   factory StatisticsModel.fromJson(Map<String, Object?> json) =>
       _$StatisticsModelFromJson(json);
 
-  @override
   Map<String, Object?> toJson() => _$StatisticsModelToJson(this);
 }

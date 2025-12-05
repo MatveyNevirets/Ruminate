@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ruminate/core/providers/navigation_providers.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
@@ -28,8 +29,7 @@ class StatisticsScreen extends ConsumerWidget {
       appBar: createAppBar(context),
 
       body: state.when(
-        data: (List<StatisticsModel>? data) {
-          log(data.toString());
+        data: (data) {
           return CustomScrollView(
             slivers: [
               SliverPadding(
@@ -46,12 +46,13 @@ class StatisticsScreen extends ConsumerWidget {
                       ),
                       SizedBox(height: theme.largePaddingDouble),
                       AppChartWidget(
-                        title: "Рефлексии за всё время: N",
+                        title:
+                            "Рефлексии за всё время: ${data?.last.totalReflections ?? 0}",
                         anyData: List.generate(7, (i) => ""),
                       ),
                       SizedBox(height: theme.largePaddingDouble),
                       Text(
-                        'Всего личных побед: N',
+                        'Всего личных побед: ${data?.last.totalVictories ?? 0}',
                         style: theme.textTheme.bodyMedium!.copyWith(
                           color: theme.colorScheme.primary,
                         ),
@@ -75,11 +76,34 @@ class StatisticsScreen extends ConsumerWidget {
                           Expanded(
                             child: AppContainer(
                               title: "Генераторы твоей\nэнергии",
+                              onClick: () => context.go(
+                                "/home/strings_list",
+                                extra: [
+                                  data?.map((statisticModel) {
+                                    if (statisticModel.energyGenerators !=
+                                        null) {
+                                      return statisticModel.energyGenerators;
+                                        }
+                                  }).toList(),
+                                  "Ты получил(а) энергию благодаря: ",
+                                ],
+                              ),
                             ),
                           ),
                           Expanded(
                             child: AppContainer(
                               title: "Черные дыры твоей\nэнергии",
+                              onClick: () => context.go(
+                                "/home/strings_list",
+                                extra: [
+                                  data?.map((statisticModel) {
+                                    if (statisticModel.energyKillers != null) {
+                                     return statisticModel.energyKillers;
+                                    }
+                                  }).toList(),
+                                  "Эти вещи больше всего забирали твою энергию:",
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -100,7 +124,20 @@ class StatisticsScreen extends ConsumerWidget {
                         ),
                       ),
                       SizedBox(height: theme.largePaddingDouble),
-                      AppContainer(title: "Важно над этим поработать"),
+                      AppContainer(
+                        title: "Важно над этим поработать",
+                        onClick: () => context.go(
+                          "/home/strings_list",
+                          extra: [
+                            data?.map((statisticModel) {
+                              if (statisticModel.importantToWork != null) {
+                                return statisticModel.importantToWork;
+                              } 
+                            }).toList(),
+                            "Ты отмечал(а), что хотел(а) бы над этим поработать:",
+                          ],
+                        ),
+                      ),
                       SizedBox(height: theme.largePaddingDouble),
                       AppChartWidget(
                         anyData: List.generate(32, (i) => ""),
@@ -113,7 +150,20 @@ class StatisticsScreen extends ConsumerWidget {
                           color: theme.colorScheme.primary,
                         ),
                       ),
-                      AppContainer(title: "Все твои страхи"),
+                      AppContainer(
+                        title: "Все твои страхи",
+                        onClick: () => context.go(
+                          "/home/strings_list",
+                          extra: [
+                            data?.map((statisticModel) {
+                              if (statisticModel.fears != null) {
+                              return  statisticModel.fears;
+                              }
+                            }).toList(),
+                            "Подумай что ты можешь сделать со своими страхами:",
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),

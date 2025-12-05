@@ -20,10 +20,10 @@ class LocalFileStatisticsDatasource implements LocalStatisticsDatasource {
       List<StatisticsModel>? newStatisticsList;
 
       final statisticsList = await fetchData();
-
+      _cachedStatisticsModels = null;
       newStatisticsList = [...statisticsList ?? [], model];
 
-      _cachedStatisticsModels = null;
+      log(newStatisticsList.toString());
 
       await _file!.writeAsString(jsonEncode(newStatisticsList));
     } on Object catch (e, stack) {
@@ -33,22 +33,23 @@ class LocalFileStatisticsDatasource implements LocalStatisticsDatasource {
 
   @override
   FutureOr<List<StatisticsModel>?> fetchData() async {
-    log("Fetch Data");
-
     _cachedStatisticsModels ??= await _fetchDataFromFile();
     return _cachedStatisticsModels;
   }
 
   Future<List<StatisticsModel>?> _fetchDataFromFile() async {
     try {
-      if (_file == null) await [_fetchFile()].wait;
+      if (_file == null) await _fetchFile();
 
       final stringStatistics = await _file!.readAsString();
+      log(stringStatistics);
       if (stringStatistics.isEmpty) return null;
       final jsonStatistics = jsonDecode(stringStatistics) as List<dynamic>;
       final statisticsList = jsonStatistics
           .map((json) => StatisticsModel.fromJson(json))
           .toList();
+
+      log(statisticsList.toString());
 
       return statisticsList;
     } on Object catch (e, stack) {
@@ -63,7 +64,7 @@ class LocalFileStatisticsDatasource implements LocalStatisticsDatasource {
       _file = File("${_directory!.path}/statisticsData/statistics.md");
       await _file!.parent.create(recursive: true);
       await _file!.create(recursive: true);
-      return null;
+      return _file;
     } on Object catch (e, stack) {
       throw Exception("Exception $e StackTrace: $stack");
     }
