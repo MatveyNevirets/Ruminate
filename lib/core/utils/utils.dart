@@ -9,10 +9,39 @@ abstract class Utils {
     }
   }
 
+  static List<int> convertStringsAsInt(List<String> strings) {
+    final List<int> intList = [];
+
+    for (String string in strings) {
+      intList.add(int.tryParse(string) ?? 0);
+    }
+
+    return intList;
+  }
+
+  static List<String> getWeekdaysAsString() {
+    final currentDay = DateTime.now().day;
+    final currentWeekday = DateTime.now().weekday - 1;
+
+    List<String> weekdayList = [];
+
+    for (int i = currentWeekday; i > 0; i--) {
+      weekdayList.add((currentDay - i).toString());
+    }
+    for (int i = 0; i < 7 - currentWeekday; i++) {
+      weekdayList.add((currentDay + i).toString());
+    }
+
+    return weekdayList;
+  }
+
   static String fetchDateFromReflection(ReflectionModel reflection) {
-    final day = reflection.reflectionDate?.day.toString().padLeft(2, '0') ?? "DD";
-    final month = reflection.reflectionDate?.month.toString().padLeft(2, '0') ?? "MM";
-    final year = reflection.reflectionDate?.year.toString().padLeft(2, '0') ?? "YYYY";
+    final day =
+        reflection.reflectionDate?.day.toString().padLeft(2, '0') ?? "DD";
+    final month =
+        reflection.reflectionDate?.month.toString().padLeft(2, '0') ?? "MM";
+    final year =
+        reflection.reflectionDate?.year.toString().padLeft(2, '0') ?? "YYYY";
 
     final result = "$day.$month.$year";
     return result;

@@ -4,8 +4,11 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ruminate/core/data/model/reflection_model.dart';
 import 'package:ruminate/core/providers/navigation_providers.dart';
+import 'package:ruminate/core/providers/reflection_datasource_repository_provider.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
+import 'package:ruminate/core/utils/utils.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_container.dart';
 import 'package:ruminate/core/widgets/bottom_navigation_bar.dart';
@@ -15,13 +18,38 @@ import 'package:ruminate/features/statistics/presentation/view_model/statistics_
 class StatisticsScreen extends ConsumerWidget {
   const StatisticsScreen({super.key});
 
+  Future<List<ReflectionModel>?> fetchReflectionsAsFuture(WidgetRef ref) async {
+    final reflectionsRepository = ref.watch(reflectionRepositoryProvider);
+    final reflections = await reflectionsRepository.fetchAllReflections();
+
+    return reflections;
+  }
+
+  List<int> getReflectionCounts(
+    List<ReflectionModel>? reflections,
+    List<int> weekdayInts,
+  ) {
+    List<int> reflectionsCounts = List.generate(6, (i) => 0);
+
+    for (int i = 0; i < weekdayInts.length; i++) {
+      for (ReflectionModel reflection in reflections!) {
+        if (reflection.reflectionDate?.day == weekdayInts[i] &&
+            reflection.reflectionDate?.month == DateTime.now().month) {
+          reflectionsCounts[i] += 1;
+        }
+      }
+    }
+
+    return reflectionsCounts;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final navigationProvider = ref.watch(navigationViewModel.notifier);
     final navigationIndex = ref.watch(navigationViewModel);
 
-    final statisticsViewModel = ref.watch(statisticsViewModelProvider.notifier);
     final state = ref.watch(statisticsViewModelProvider);
+    final weekdayInts = Utils.convertStringsAsInt(Utils.getWeekdaysAsString());
 
     final theme = Theme.of(context);
 
@@ -45,10 +73,25 @@ class StatisticsScreen extends ConsumerWidget {
                         ),
                       ),
                       SizedBox(height: theme.largePaddingDouble),
-                      AppChartWidget(
-                        title:
-                            "Рефлексии за всё время: ${data?.last.totalReflections ?? 0}",
-                        anyData: List.generate(7, (i) => ""),
+                      FutureBuilder(
+                        future: fetchReflectionsAsFuture(ref),
+                        builder: (context, asyncSnapshot) {
+                          if (asyncSnapshot.hasData) {
+                            final reflections = asyncSnapshot.data;
+
+                            return AppChartWidget(
+                              bottomInts: weekdayInts,
+                              title:
+                                  "Рефлексии за всё время: ${data?.last.totalReflections ?? 0}",
+                              columnsHeight: getReflectionCounts(
+                                reflections,
+                                weekdayInts,
+                              ),
+                            );
+                          } else {
+                            return CircularProgressIndicator();
+                          }
+                        },
                       ),
                       SizedBox(height: theme.largePaddingDouble),
                       Text(
@@ -83,7 +126,7 @@ class StatisticsScreen extends ConsumerWidget {
                                     if (statisticModel.energyGenerators !=
                                         null) {
                                       return statisticModel.energyGenerators;
-                                        }
+                                    }
                                   }).toList(),
                                   "Ты получил(а) энергию благодаря: ",
                                 ],
@@ -98,7 +141,7 @@ class StatisticsScreen extends ConsumerWidget {
                                 extra: [
                                   data?.map((statisticModel) {
                                     if (statisticModel.energyKillers != null) {
-                                     return statisticModel.energyKillers;
+                                      return statisticModel.energyKillers;
                                     }
                                   }).toList(),
                                   "Эти вещи больше всего забирали твою энергию:",
@@ -132,7 +175,7 @@ class StatisticsScreen extends ConsumerWidget {
                             data?.map((statisticModel) {
                               if (statisticModel.importantToWork != null) {
                                 return statisticModel.importantToWork;
-                              } 
+                              }
                             }).toList(),
                             "Ты отмечал(а), что хотел(а) бы над этим поработать:",
                           ],
@@ -140,7 +183,7 @@ class StatisticsScreen extends ConsumerWidget {
                       ),
                       SizedBox(height: theme.largePaddingDouble),
                       AppChartWidget(
-                        anyData: List.generate(32, (i) => ""),
+                        columnsHeight: [21, 2, 23, 1, 43, 2, 53, 5],
                         title: "Твой средний уровень уверенности\nN/10",
                       ),
                       SizedBox(height: theme.largePaddingDouble),
@@ -157,7 +200,7 @@ class StatisticsScreen extends ConsumerWidget {
                           extra: [
                             data?.map((statisticModel) {
                               if (statisticModel.fears != null) {
-                              return  statisticModel.fears;
+                                return statisticModel.fears;
                               }
                             }).toList(),
                             "Подумай что ты можешь сделать со своими страхами:",
@@ -188,9 +231,15 @@ class StatisticsScreen extends ConsumerWidget {
 }
 
 class AppChartWidget extends StatelessWidget {
-  const AppChartWidget({super.key, required this.title, required this.anyData});
+  const AppChartWidget({
+    super.key,
+    required this.title,
+    required this.columnsHeight,
+    this.bottomInts,
+  });
   final String title;
-  final List<dynamic> anyData;
+  final List<int> columnsHeight;
+  final List<int>? bottomInts;
 
   @override
   Widget build(BuildContext context) {
@@ -217,7 +266,9 @@ class AppChartWidget extends StatelessWidget {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: BarChart(mainBarData(theme)),
+                      child: BarChart(
+                        mainBarData(theme, bottomInts: bottomInts),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -232,13 +283,22 @@ class AppChartWidget extends StatelessWidget {
 
   BarChartGroupData makeGroupData(
     double y,
+    int? x,
     ThemeData theme, {
     Color? barColor,
     double width = 22,
     List<int> showTooltips = const [2],
   }) {
+    int maxHeight = 0;
+
+    for (int i = 0; i < columnsHeight.length; i++) {
+      if (maxHeight < columnsHeight[i]) {
+        maxHeight = columnsHeight[i];
+      }
+    }
+
     return BarChartGroupData(
-      x: 1,
+      x: x ?? 0,
       barRods: [
         BarChartRodData(
           color: theme.colorScheme.secondary,
@@ -246,7 +306,7 @@ class AppChartWidget extends StatelessWidget {
           toY: y,
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
-            toY: 100,
+            toY: maxHeight.toDouble(),
             color: theme.scaffoldBackgroundColor,
           ),
         ),
@@ -255,18 +315,57 @@ class AppChartWidget extends StatelessWidget {
     );
   }
 
-  List<BarChartGroupData> showingGroups(ThemeData theme) =>
-      List.generate(anyData.length, (i) => makeGroupData((i + 1) * 3, theme));
+  List<BarChartGroupData> showingGroups(ThemeData theme) {
+    List<int>? newBottomItems;
 
-  BarChartData mainBarData(ThemeData theme) {
+    if (bottomInts != null) {
+      newBottomItems ??= [];
+      newBottomItems.addAll(bottomInts!);
+      if (columnsHeight.length > bottomInts!.length) {
+        for (int i = bottomInts!.length; i <= columnsHeight.length; i++) {
+          newBottomItems.add(i);
+        }
+      }
+    }
+
+    log(newBottomItems.toString());
+
+    return List.generate(
+      columnsHeight.length,
+      (i) => makeGroupData(
+        columnsHeight[i].toDouble(),
+        bottomInts == null ? null : newBottomItems![i],
+        theme,
+      ),
+    );
+  }
+
+  BarChartData mainBarData(ThemeData theme, {List<int?>? bottomInts}) {
     return BarChartData(
+      barTouchData: BarTouchData(
+        enabled: true,
+        touchTooltipData: BarTouchTooltipData(
+          getTooltipColor: (_) => theme.colorScheme.primary,
+          tooltipHorizontalAlignment: FLHorizontalAlignment.right,
+          tooltipMargin: -10,
+          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+            return BarTooltipItem(
+              ((rod.toY).toStringAsFixed(1)).toString(),
+              TextStyle(
+                color: theme.colorScheme.onPrimary,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            );
+          },
+        ),
+      ),
       titlesData: FlTitlesData(
-        show: true,
+        show: bottomInts == null ? false : true,
         rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        bottomTitles: AxisTitles(),
         leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
       borderData: FlBorderData(show: false),

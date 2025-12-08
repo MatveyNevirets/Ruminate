@@ -147,6 +147,7 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
   Future<void> completeReflection(BuildContext context) async {
     context.go("/home");
     await reflectionRepository.insertReflection(currentReflection!);
+
     await personalVictoriesViewModel.insertVictories(personalVictories);
 
     final newStatisticsModel = StatisticsModel(

@@ -15,7 +15,8 @@ class YouThoughtViewModel extends StateNotifier<AsyncValue<List<dynamic>?>> {
   ReflectionModel? _reflectionModel;
   bool _isLoading = false;
 
-  YouThoughtViewModel(this._reflectionRepository) : super(const AsyncValue.loading()) {
+  YouThoughtViewModel(this._reflectionRepository)
+    : super(const AsyncValue.loading()) {
     fetchRandomThought();
   }
 
@@ -55,7 +56,9 @@ class YouThoughtViewModel extends StateNotifier<AsyncValue<List<dynamic>?>> {
       }
     } on Exception catch (e, stack) {
       state = AsyncValue.error(e, stack);
-      throw Exception("Exception YouThoughtScreen in method fetchRandomThought: $e StackTrace: $stack");
+      throw Exception(
+        "Exception YouThoughtScreen in method fetchRandomThought: $e StackTrace: $stack",
+      );
     }
   }
 
@@ -73,6 +76,7 @@ class YouThoughtViewModel extends StateNotifier<AsyncValue<List<dynamic>?>> {
   }
 }
 
-final youThoughtVMProvider = StateNotifierProvider<YouThoughtViewModel, AsyncValue<List<dynamic>?>>(
-  (ref) => YouThoughtViewModel(ref.read(reflectionRepositoryProvider)),
-);
+final youThoughtVMProvider =
+    StateNotifierProvider<YouThoughtViewModel, AsyncValue<List<dynamic>?>>(
+      (ref) => YouThoughtViewModel(ref.read(reflectionRepositoryProvider)),
+    );
