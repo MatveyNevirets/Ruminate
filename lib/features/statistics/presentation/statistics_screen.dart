@@ -12,7 +12,6 @@ import 'package:ruminate/core/utils/utils.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_container.dart';
 import 'package:ruminate/core/widgets/bottom_navigation_bar.dart';
-import 'package:ruminate/features/statistics/data/models/statistics_model.dart';
 import 'package:ruminate/features/statistics/presentation/view_model/statistics_view_model.dart';
 
 class StatisticsScreen extends ConsumerWidget {
@@ -29,7 +28,7 @@ class StatisticsScreen extends ConsumerWidget {
     List<ReflectionModel>? reflections,
     List<int> weekdayInts,
   ) {
-    List<int> reflectionsCounts = List.generate(6, (i) => 0);
+    List<int> reflectionsCounts = List.generate(7, (i) => 0);
 
     for (int i = 0; i < weekdayInts.length; i++) {
       for (ReflectionModel reflection in reflections!) {
@@ -39,6 +38,8 @@ class StatisticsScreen extends ConsumerWidget {
         }
       }
     }
+
+    log(reflectionsCounts.toString());
 
     return reflectionsCounts;
   }
@@ -68,6 +69,7 @@ class StatisticsScreen extends ConsumerWidget {
                     children: [
                       Text(
                         'Статистика рефлексий',
+
                         style: theme.textTheme.bodyLarge!.copyWith(
                           color: theme.colorScheme.primary,
                         ),
@@ -81,6 +83,7 @@ class StatisticsScreen extends ConsumerWidget {
 
                             return AppChartWidget(
                               bottomInts: weekdayInts,
+                              subtitle: "Статистика за текущую\nНеделю:",
                               title:
                                   "Рефлексии за всё время: ${data?.last.totalReflections ?? 0}",
                               columnsHeight: getReflectionCounts(
@@ -182,9 +185,31 @@ class StatisticsScreen extends ConsumerWidget {
                         ),
                       ),
                       SizedBox(height: theme.largePaddingDouble),
-                      AppChartWidget(
-                        columnsHeight: [21, 2, 23, 1, 43, 2, 53, 5],
-                        title: "Твой средний уровень уверенности\nN/10",
+                      Card(
+                        color: theme.colorScheme.tertiary,
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              height: MediaQuery.sizeOf(context).height / 2.5,
+                              width: MediaQuery.sizeOf(context).width / 1.15,
+                              child: Center(
+                                child: Text(
+                                  "Скоро",
+                                  style: theme.textTheme.bodyLarge!.copyWith(
+                                    color: theme.scaffoldBackgroundColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Opacity(
+                              opacity: 0.5,
+                              child: AppChartWidget(
+                                columnsHeight: [21, 2, 23, 1, 43, 2, 53, 5],
+                                title: "Твой средний уровень уверенности\nN/10",
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(height: theme.largePaddingDouble),
                       Text(
@@ -235,9 +260,11 @@ class AppChartWidget extends StatelessWidget {
     super.key,
     required this.title,
     required this.columnsHeight,
+    this.subtitle,
     this.bottomInts,
   });
   final String title;
+  final String? subtitle;
   final List<int> columnsHeight;
   final List<int>? bottomInts;
 
@@ -262,7 +289,16 @@ class AppChartWidget extends StatelessWidget {
                       color: theme.colorScheme.primary,
                     ),
                   ),
-                  const SizedBox(height: 38),
+                  const SizedBox(height: 5),
+                  subtitle == null
+                      ? Container()
+                      : Text(
+                          subtitle!,
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                  const SizedBox(height: 35),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -316,25 +352,11 @@ class AppChartWidget extends StatelessWidget {
   }
 
   List<BarChartGroupData> showingGroups(ThemeData theme) {
-    List<int>? newBottomItems;
-
-    if (bottomInts != null) {
-      newBottomItems ??= [];
-      newBottomItems.addAll(bottomInts!);
-      if (columnsHeight.length > bottomInts!.length) {
-        for (int i = bottomInts!.length; i <= columnsHeight.length; i++) {
-          newBottomItems.add(i);
-        }
-      }
-    }
-
-    log(newBottomItems.toString());
-
     return List.generate(
       columnsHeight.length,
       (i) => makeGroupData(
         columnsHeight[i].toDouble(),
-        bottomInts == null ? null : newBottomItems![i],
+        bottomInts == null ? null : bottomInts![i],
         theme,
       ),
     );
@@ -360,6 +382,7 @@ class AppChartWidget extends StatelessWidget {
           },
         ),
       ),
+
       titlesData: FlTitlesData(
         show: bottomInts == null ? false : true,
         rightTitles: const AxisTitles(
@@ -367,7 +390,28 @@ class AppChartWidget extends StatelessWidget {
         ),
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (double value, TitleMeta meta) {
+              // Преобразуем числовое значение в текст дня недели
+              String text = value.toInt().toString();
+              return Padding(
+                padding: theme.mediumPadding,
+                child: Text(
+                  text,
+                  style: theme.textTheme.bodyLarge!.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              );
+            },
+            reservedSize: 45, // Место для подписей
+          ),
+        ),
       ),
+
       borderData: FlBorderData(show: false),
       barGroups: showingGroups(theme),
       gridData: const FlGridData(show: false),

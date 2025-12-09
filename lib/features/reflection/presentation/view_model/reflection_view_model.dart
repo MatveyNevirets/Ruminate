@@ -30,7 +30,11 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
   ReflectionModel? currentReflection;
 
   List<String> personalVictories = [];
-  String? energyGenerator, energyKiller, importantToWork, confident, fears;
+  String? energyGenerator,
+      energyKiller,
+      importantToWork,
+      averageConfident,
+      fears;
 
   ReflectionViewModel(
     this.ref,
@@ -97,18 +101,28 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
       qna[qnaKey] = answers[i].isEmpty ? null : answers[i];
 
       //Checks the key for the word "victory"
-      if (qnaKey.contains("Побед") && answers[i].isNotEmpty) {
+      if ((qnaKey.contains("Побед") || qnaKey.contains("стал(а) лучше")) &&
+          answers[i].isNotEmpty) {
         //Then adds to the personalVictories list
         personalVictories.add(answers[i]);
+        //Then adds to the fears list
       } else if (qnaKey.contains("стра") ||
           qnaKey.contains("боюс") && answers[i].isNotEmpty) {
         fears = answers[i];
+        //Then adds to the energy generators list
       } else if (qnaKey.contains("ресу") ||
+          qnaKey.contains("помогало сегодня") ||
           qnaKey.contains("больше всего энергии") && answers[i].isNotEmpty) {
         energyGenerator = answers[i];
+        //Then adds to the energy killers list
       } else if (qnaKey.contains("энергетическим вампиром") &&
           answers[i].isNotEmpty) {
         energyKiller = answers[i];
+        //Then adds to the important to work list
+      } else if (qnaKey.contains("конкретный шаг") ||
+          qnaKey.contains("начну делать по-другому") ||
+          qnaKey.contains("я откажусь") && answers[i].isNotEmpty) {
+        importantToWork = answers[i];
       }
 
       //And we add them to a new list of questions and answers for future reference

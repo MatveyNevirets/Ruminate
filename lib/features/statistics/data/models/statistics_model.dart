@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ruminate/core/data/model/reflection_model.dart';
 
 part 'statistics_model.freezed.dart';
 part 'statistics_model.g.dart';

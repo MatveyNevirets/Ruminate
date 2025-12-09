@@ -1,11 +1,8 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_container.dart';
-import 'package:ruminate/features/personal_victories/presentation/viewmodel/personal_victories_view_model.dart';
 
 class StringListScreen extends StatelessWidget {
   const StringListScreen({

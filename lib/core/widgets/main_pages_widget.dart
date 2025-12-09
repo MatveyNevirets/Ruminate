@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/core/providers/navigation_providers.dart';
 import 'package:ruminate/core/widgets/bottom_navigation_bar.dart';
 import 'package:ruminate/features/home/presentation/home_screen.dart';
+import 'package:ruminate/features/profile/presentation/profile_screen.dart';
 import 'package:ruminate/features/statistics/presentation/statistics_screen.dart';
 
 class MainPagesWidget extends ConsumerWidget {
@@ -12,25 +13,9 @@ class MainPagesWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(pageControllerProvider);
 
-    final navigationProvider = ref.watch(navigationViewModel.notifier);
-    final navigationIndex = ref.watch(navigationViewModel);
-
     return PageView(
       controller: controller,
-
-      children: [
-        HomeScreen(),
-       StatisticsScreen(),
-        Scaffold(
-          body: Center(
-            child: Text(
-              "Здесь будет профиль",
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
-            ),
-          ),
-          bottomNavigationBar: createBottomNavigationBar(context, navigationProvider, navigationIndex),
-        ),
-      ],
+      children: [HomeScreen(), StatisticsScreen(), ProfileScreen()],
     );
   }
 }

@@ -5,7 +5,8 @@ import 'package:ruminate/core/data/model/reflection_step_model.dart';
 class DailySuperficialReflection extends ReflectionModel {
   DailySuperficialReflection()
     : super(
-        title: "Ежедневная поверхностная рефлексия",      reflectionDate: DateTime.now(),
+        title: "Ежедневная поверхностная рефлексия",
+        reflectionDate: DateTime.now(),
         description:
             "Ежеденевная поверхностная рефлексия отлично подойдет в моменты, когда совершенно нет настроения что либо заполнять. Только самые необходимые вопросы",
         type: ReflectType.dailySuperficital,
@@ -39,7 +40,15 @@ class DailySuperficialReflection extends ReflectionModel {
         description: "",
         questionsAndAnswers: [
           {"Что не получилось или было сложно?": null},
+          {
+            "Заметил(а) ли ты какой-нибудь свой страх сегодня? (Если нет, оставь поле пустым)":
+                null,
+          },
           {"Что можно было бы изменить, если бы ты знал(а) это заранее?": null},
+          {
+            "Какой один конкретный шаг ты можешь сделать завтра, чтобы улучшить качество дня на 30+%?":
+                null,
+          },
         ],
       ),
       ReflectionStepModel(
