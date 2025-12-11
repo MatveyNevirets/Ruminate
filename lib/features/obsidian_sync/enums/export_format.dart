@@ -1,0 +1,1 @@
+enum ExportFormat { zip, oneFile }
