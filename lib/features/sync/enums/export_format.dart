@@ -10,6 +10,7 @@ enum ExportFormat {
 
   final String name;
 
+  // Its fabric that creates exporters
   DataExporter createExporter() {
     return switch (this) {
       ExportFormat.zip => ZipDataExporter(),

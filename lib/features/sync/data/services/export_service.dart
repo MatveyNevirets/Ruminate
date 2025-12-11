@@ -5,12 +5,10 @@ import 'package:ruminate/features/sync/enums/export_format.dart';
 
 class ExporterService {
   final ReflectionRepository reflectionRepository;
-  final VictoriesRepository victoriesRepository;
   final StatisticsRepository statisticsRepository;
 
   ExporterService({
     required this.reflectionRepository,
-    required this.victoriesRepository,
     required this.statisticsRepository,
   });
 
@@ -19,13 +17,11 @@ class ExporterService {
       final exporter = format.createExporter();
 
       final reflections = await reflectionRepository.fetchAllReflections();
-      final victories = await victoriesRepository.fetchVictories();
       final statistics = await statisticsRepository.fetchData();
 
       await exporter.export(
         reflections: reflections ?? [],
         statistics: statistics ?? [],
-        victories: victories ?? [],
       );
 
       return "";

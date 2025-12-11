@@ -5,7 +5,6 @@ abstract class DataExporter {
   const DataExporter();
   Future<void> export({
     required List<ReflectionModel> reflections,
-    required List<String> victories,
     required List<StatisticsModel> statistics,
   });
 }

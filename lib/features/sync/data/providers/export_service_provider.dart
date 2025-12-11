@@ -7,7 +7,6 @@ import 'package:ruminate/features/sync/data/services/export_service.dart';
 final exporterServiceProvider = Provider<ExporterService>(
   (ref) => ExporterService(
     reflectionRepository: ref.watch(reflectionRepositoryProvider),
-    victoriesRepository: ref.watch(victoriesRepositoryProvider),
     statisticsRepository: ref.watch(statisticsRepositoryProvider),
   ),
 );

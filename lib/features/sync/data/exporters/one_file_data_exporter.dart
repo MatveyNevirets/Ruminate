@@ -8,8 +8,10 @@ class OneFileDataExporter implements DataExporter {
   const OneFileDataExporter();
 
   @override
-  Future<void> export({required List<ReflectionModel> reflections, required List<String> victories, required List<StatisticsModel> statistics}) async {
-      log("One file export");
+  Future<void> export({
+    required List<ReflectionModel> reflections,
+    required List<StatisticsModel> statistics,
+  }) async {
+    log("One file export");
   }
-
 }

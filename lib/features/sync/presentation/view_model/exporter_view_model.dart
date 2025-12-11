@@ -9,7 +9,11 @@ class ExporterViewModel extends StateNotifier<String> {
   ExporterViewModel(this._exporterService) : super("");
 
   Future<void> export(ExportFormat format) async {
-    await _exporterService.export(format);
+    try {
+      await _exporterService.export(format);
+    } on Object catch (e, stack) {
+      throw Exception("$e StackTrace: $stack");
+    }
   }
 }
 
