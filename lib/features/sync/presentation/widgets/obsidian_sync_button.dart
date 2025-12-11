@@ -12,7 +12,7 @@ class ObsidianSyncButton extends StatelessWidget {
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         final exporterVM = ref.watch(exporterViewModelProvider.notifier);
         return OutlinedButton(
-          onPressed: () => exporterVM.export(ExportFormat.oneFile),
+          onPressed: () => exporterVM.export(ExportFormat.zip),
           child: Text("Синхронизировать с Obsidian"),
         );
       },
