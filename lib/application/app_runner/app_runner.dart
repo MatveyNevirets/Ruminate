@@ -15,7 +15,12 @@ class AppRunner {
       () async {
         await _init();
 
-        runApp(ProviderScope(overrides: [appEnvProvider.overrideWithValue(env)], child: Application()));
+        runApp(
+          ProviderScope(
+            overrides: [appEnvProvider.overrideWithValue(env)],
+            child: Application(),
+          ),
+        );
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           WidgetsBinding.instance.allowFirstFrame();
