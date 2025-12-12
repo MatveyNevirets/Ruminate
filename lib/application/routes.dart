@@ -49,52 +49,68 @@ final firstStartConfigRouter = GoRouter(
 );
 
 final routerConfig = GoRouter(
-  initialLocation: "/login/home",
+  initialLocation: "/home",
   routes: [
+    GoRoute(path: "/login", builder: (context, state) => LoginScreen()),
     GoRoute(
-      path: "/login",
-      builder: (context, state) => LoginScreen(),
+      path: "/home",
+      builder: (BuildContext context, state) => MainPagesWidget(),
       routes: [
         GoRoute(
-          path: "/home",
-          builder: (BuildContext context, state) => MainPagesWidget(),
+          path: "/strings_list",
+          builder: (context, state) {
+            final extra = state.extra as List<Object?>;
+            final strings = extra[0] as List<String?>;
+            final title = extra[1] as String;
+            return StringListScreen(strings: strings, title: title);
+          },
+        ),
+        GoRoute(
+          path: "/details",
+          builder: (context, state) {
+            final reflection = state.extra as ReflectionModel;
+            return DetailCompletedReflectionScreen(reflection: reflection);
+          },
+        ),
+        GoRoute(
+          path: ("/personal_victories"),
+          builder: (context, state) {
+            return PersonalVictoriesScreen();
+          },
+        ),
+        GoRoute(
+          path: "/completed_reflections",
+          builder: (context, state) {
+            return CompletedReflectionsScreen();
+          },
+        ),
+        GoRoute(
+          path: "/month_reflection",
+          builder: (context, state) {
+            return Consumer(
+              builder: (context, ref, child) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  final viewModel = ref.watch(reflectionVM.notifier);
+                  viewModel.setType(ReflectType.monthly);
+                });
+
+                return ReflectionScreen();
+              },
+            );
+          },
+        ),
+        GoRoute(
+          path: "/daily_reflection",
+          builder: (context, state) => StartDailyReflectionScreen(),
           routes: [
             GoRoute(
-              path: "/strings_list",
-              builder: (context, state) {
-                final extra = state.extra as List<Object?>;
-                final strings = extra[0] as List<String?>;
-                final title = extra[1] as String;
-                return StringListScreen(strings: strings, title: title);
-              },
-            ),
-            GoRoute(
-              path: "/details",
-              builder: (context, state) {
-                final reflection = state.extra as ReflectionModel;
-                return DetailCompletedReflectionScreen(reflection: reflection);
-              },
-            ),
-            GoRoute(
-              path: ("/personal_victories"),
-              builder: (context, state) {
-                return PersonalVictoriesScreen();
-              },
-            ),
-            GoRoute(
-              path: "/completed_reflections",
-              builder: (context, state) {
-                return CompletedReflectionsScreen();
-              },
-            ),
-            GoRoute(
-              path: "/month_reflection",
+              path: "/indepth_reflection",
               builder: (context, state) {
                 return Consumer(
                   builder: (context, ref, child) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       final viewModel = ref.watch(reflectionVM.notifier);
-                      viewModel.setType(ReflectType.monthly);
+                      viewModel.setType(ReflectType.dailyIndepth);
                     });
 
                     return ReflectionScreen();
@@ -102,42 +118,21 @@ final routerConfig = GoRouter(
                 );
               },
             ),
+
             GoRoute(
-              path: "/daily_reflection",
-              builder: (context, state) => StartDailyReflectionScreen(),
-              routes: [
-                GoRoute(
-                  path: "/indepth_reflection",
-                  builder: (context, state) {
-                    return Consumer(
-                      builder: (context, ref, child) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          final viewModel = ref.watch(reflectionVM.notifier);
-                          viewModel.setType(ReflectType.dailyIndepth);
-                        });
+              path: "/superficial_reflection",
+              builder: (context, state) {
+                return Consumer(
+                  builder: (context, ref, child) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      final viewModel = ref.watch(reflectionVM.notifier);
+                      viewModel.setType(ReflectType.dailySuperficital);
+                    });
 
-                        return ReflectionScreen();
-                      },
-                    );
+                    return ReflectionScreen();
                   },
-                ),
-
-                GoRoute(
-                  path: "/superficial_reflection",
-                  builder: (context, state) {
-                    return Consumer(
-                      builder: (context, ref, child) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          final viewModel = ref.watch(reflectionVM.notifier);
-                          viewModel.setType(ReflectType.dailySuperficital);
-                        });
-
-                        return ReflectionScreen();
-                      },
-                    );
-                  },
-                ),
-              ],
+                );
+              },
             ),
           ],
         ),
