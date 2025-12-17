@@ -39,9 +39,7 @@ class HomeScreen extends ConsumerWidget {
                 );
               },
               data: (youThoughtList) {
-                return youThoughtList != null &&
-                        youThoughtList.isNotEmpty &&
-                        youThoughtList[1] == null
+                return youThoughtList == null || youThoughtList[1] == null
                     ? SliverToBoxAdapter(child: Container())
                     : SliverPadding(
                         padding: theme.largePadding,
@@ -54,7 +52,7 @@ class HomeScreen extends ConsumerWidget {
                               extra: youThoughtList[0],
                             ),
                             title:
-                                "${Utils.fetchTextDateFromReflection(youThoughtVM.reflection!)} ты отвечал на вопрос: ${Utils.cutStringByChars(youThoughtList![1].keys.first, 40)}\nДата: ${Utils.fetchDateFromReflection(youThoughtVM.reflection!)}\nТвой ответ: ${Utils.cutStringByChars(youThoughtList[1].values.first.toString(), 40)}",
+                                "${Utils.fetchTextDateFromReflection(youThoughtVM.reflection!)} ты отвечал на вопрос: ${Utils.cutStringByChars(youThoughtList[1].keys.first, 40)}\nДата: ${Utils.fetchDateFromReflection(youThoughtVM.reflection!)}\nТвой ответ: ${Utils.cutStringByChars(youThoughtList[1].values.first.toString(), 40)}",
                           ),
                         ),
                       );

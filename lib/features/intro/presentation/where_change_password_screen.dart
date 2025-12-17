@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
 
 class WhereChangePasswordScreen extends StatelessWidget {
@@ -8,7 +9,7 @@ class WhereChangePasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: AppButton(onClick: () => (), text: "дальше"),
+        child: AppButton(onClick: () {}, text: "wH CHAN дальше"),
       ),
     );
   }

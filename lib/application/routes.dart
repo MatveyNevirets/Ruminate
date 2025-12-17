@@ -10,7 +10,12 @@ import 'package:ruminate/core/widgets/main_pages_widget.dart';
 import 'package:ruminate/core/widgets/string_list_screen.dart';
 import 'package:ruminate/features/completed_reflections/presentation/completed_reflections_screen.dart';
 import 'package:ruminate/features/completed_reflections/presentation/detail_completed_reflection_screen.dart';
+import 'package:ruminate/features/intro/presentation/before_start_screen.dart';
+import 'package:ruminate/features/intro/presentation/login_screen.dart';
+import 'package:ruminate/features/intro/presentation/password_set_screen.dart';
+import 'package:ruminate/features/intro/presentation/registration_screen.dart';
 import 'package:ruminate/features/intro/presentation/welcome_screen.dart';
+import 'package:ruminate/features/intro/presentation/where_change_password_screen.dart';
 import 'package:ruminate/features/personal_victories/presentation/personal_victories_screen.dart';
 import 'package:ruminate/features/reflection/presentation/providers/reflection_view_model_provider.dart';
 import 'package:ruminate/features/reflection/presentation/reflection_screen.dart';
@@ -27,6 +32,9 @@ final routerConfigProvider = Provider<GoRouter>((ref) {
 
     switch (startState) {
       case AuthState.onBoarding:
+        if (currentLocation.startsWith("/onBoarding/")) {
+          return null;
+        }
         return "/onBoarding";
 
       case AuthState.password:
@@ -50,6 +58,35 @@ final routerConfigProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: '/onBoarding',
+        routes: [
+          GoRoute(
+            path: "/before_start",
+            builder: (context, state) => BeforeStartScreen(),
+            routes: [
+              GoRoute(
+                path: "/login",
+                builder: (context, state) => LoginScreen(),
+                routes: [
+                  GoRoute(
+                    path: "/registration",
+                    builder: (context, state) => RegistrationScreen(),
+                  ),
+                  GoRoute(
+                    path: "/password_set",
+                    builder: (context, state) => PasswordSetScreen(),
+                    routes: [
+                      GoRoute(
+                        path: "/where_change",
+                        builder: (context, state) =>
+                            WhereChangePasswordScreen(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
         builder: (context, state) {
           return WelcomeScreen();
         },
