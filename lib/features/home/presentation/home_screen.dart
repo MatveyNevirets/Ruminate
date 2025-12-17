@@ -33,11 +33,15 @@ class HomeScreen extends ConsumerWidget {
                 return SliverPadding(
                   padding: theme.largePadding,
 
-                  sliver: SliverToBoxAdapter(child: AppContainer(title: "Что-то пошло не так :(")),
+                  sliver: SliverToBoxAdapter(
+                    child: AppContainer(title: "Что-то пошло не так :("),
+                  ),
                 );
               },
               data: (youThoughtList) {
-                return youThoughtList?[1] == null
+                return youThoughtList != null &&
+                        youThoughtList.isNotEmpty &&
+                        youThoughtList[1] == null
                     ? SliverToBoxAdapter(child: Container())
                     : SliverPadding(
                         padding: theme.largePadding,
@@ -45,7 +49,10 @@ class HomeScreen extends ConsumerWidget {
                           backgroundColor: theme.scaffoldBackgroundColor,
                           expandedHeight: appBarExpandedHeight,
                           flexibleSpace: AppContainer(
-                            onClick: () => context.go("/home/details/", extra: youThoughtList[0]),
+                            onClick: () => context.go(
+                              "/home/details/",
+                              extra: youThoughtList[0],
+                            ),
                             title:
                                 "${Utils.fetchTextDateFromReflection(youThoughtVM.reflection!)} ты отвечал на вопрос: ${Utils.cutStringByChars(youThoughtList![1].keys.first, 40)}\nДата: ${Utils.fetchDateFromReflection(youThoughtVM.reflection!)}\nТвой ответ: ${Utils.cutStringByChars(youThoughtList[1].values.first.toString(), 40)}",
                           ),
@@ -54,7 +61,9 @@ class HomeScreen extends ConsumerWidget {
               },
             ),
 
-            SliverToBoxAdapter(child: SizedBox(height: theme.extraLargePaddingDouble)),
+            SliverToBoxAdapter(
+              child: SizedBox(height: theme.extraLargePaddingDouble),
+            ),
             SliverPadding(
               padding: theme.largePadding,
               sliver: SliverToBoxAdapter(
@@ -64,9 +73,9 @@ class HomeScreen extends ConsumerWidget {
                   children: [
                     Text(
                       "Рефлексируй!",
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                     SizedBox(height: Theme.of(context).mediumPaddingDouble),
                     Row(
@@ -78,7 +87,9 @@ class HomeScreen extends ConsumerWidget {
                           ),
                         ),
                         SizedBox(width: Theme.of(context).mediumPaddingDouble),
-                        Expanded(child: AppContainer(title: "Создать рефлексию")),
+                        Expanded(
+                          child: AppContainer(title: "Создать рефлексию"),
+                        ),
                       ],
                     ),
                     SizedBox(height: Theme.of(context).mediumPaddingDouble),
@@ -92,9 +103,9 @@ class HomeScreen extends ConsumerWidget {
                     SizedBox(height: Theme.of(context).largePaddingDouble),
                     Text(
                       "Вспомни!",
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                     SizedBox(height: Theme.of(context).mediumPaddingDouble),
                     Row(
@@ -102,11 +113,16 @@ class HomeScreen extends ConsumerWidget {
                         Expanded(
                           child: AppContainer(
                             title: "Все рефлексии",
-                            onClick: () => context.go("/home/completed_reflections"),
+                            onClick: () =>
+                                context.go("/home/completed_reflections"),
                           ),
                         ),
                         SizedBox(width: Theme.of(context).mediumPaddingDouble),
-                        Expanded(child: AppContainer(title: "Неделю назад ты думал о..")),
+                        Expanded(
+                          child: AppContainer(
+                            title: "Неделю назад ты думал о..",
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(height: Theme.of(context).mediumPaddingDouble),
@@ -126,7 +142,11 @@ class HomeScreen extends ConsumerWidget {
           scrollDirection: Axis.vertical,
         ),
       ),
-      bottomNavigationBar: createBottomNavigationBar(context, navigationProvider, navigationIndex),
+      bottomNavigationBar: createBottomNavigationBar(
+        context,
+        navigationProvider,
+        navigationIndex,
+      ),
     );
   }
 }

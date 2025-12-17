@@ -1,5 +1,5 @@
-import 'package:ruminate/features/start_screen/data/datasource/start_datasource.dart';
-import 'package:ruminate/features/start_screen/domain/repository/start_repository.dart';
+import 'package:ruminate/features/start/data/datasource/start_datasource.dart';
+import 'package:ruminate/features/start/domain/repository/start_repository.dart';
 
 class StartRepositoryImpl implements StartRepository {
   late final StartDatasource startDatasource;

@@ -43,16 +43,21 @@ class YouThoughtViewModel extends StateNotifier<AsyncValue<List<dynamic>?>> {
         _reflectionModel = reflections[randomReflectionInt];
         log("_reflectionModel: ${_reflectionModel.toString()}");
 
-        final randomStepInt = random.nextInt(_reflectionModel!.steps.length);
-        log("randomStepInt: ${randomStepInt.toString()}");
+        if (_reflectionModel?.steps != null &&
+            _reflectionModel!.steps.isNotEmpty) {
+          final randomStepInt = random.nextInt(_reflectionModel!.steps.length);
+          log("randomStepInt: ${randomStepInt.toString()}");
 
-        final currentRandomStep = _reflectionModel!.steps[randomStepInt];
-        log("currentRandomStep: ${currentRandomStep.toString()}");
+          final currentRandomStep = _reflectionModel!.steps[randomStepInt];
+          log("currentRandomStep: ${currentRandomStep.toString()}");
 
-        final currentRandomQNA = _fetchRandomQNA(currentRandomStep);
-        log("currentRandomQNA: ${currentRandomQNA.toString()}");
+          final currentRandomQNA = _fetchRandomQNA(currentRandomStep);
+          log("currentRandomQNA: ${currentRandomQNA.toString()}");
 
-        state = AsyncValue.data([_reflectionModel, currentRandomQNA]);
+          state = AsyncValue.data([_reflectionModel, currentRandomQNA]);
+        } else {
+          state = AsyncValue.data([]);
+        }
       }
     } on Exception catch (e, stack) {
       state = AsyncValue.error(e, stack);

@@ -63,7 +63,6 @@ class ZipDataExporter implements DataExporter {
     // Here we creates output stream to create .zip file
     final outputStream = OutputFileStream(
       "${tempDir.path}/ruminate_export.zip",
-      bufferSize: 2048,
     );
 
     // Then into this stream we writes our bytes data
@@ -181,8 +180,8 @@ class ZipDataExporter implements DataExporter {
       for (Map<String, String?> qna in step.questionsAndAnswers) {
         // If we have answer to question
         if (qna.values.first != null) {
-          buffer.writeln("Вопрос: ${qna.keys.first}");
-          buffer.writeln("Твой ответ: ${qna.values.first}");
+          buffer.writeln("*Вопрос:* ${qna.keys.first}");
+          buffer.writeln("*Твой ответ:* ${qna.values.first}");
           buffer.writeln();
         }
       }

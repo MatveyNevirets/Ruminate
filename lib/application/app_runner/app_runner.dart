@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/application/app_runner/app_env.dart';
 import 'package:ruminate/application/application.dart';
 import 'package:ruminate/application/provider/app_env_provider.dart';
+import 'package:ruminate/core/providers/start_provider.dart';
 
 class AppRunner {
   final AppEnv env;
@@ -14,6 +15,7 @@ class AppRunner {
     runZonedGuarded(
       () async {
         await _init();
+
 
         runApp(
           ProviderScope(
