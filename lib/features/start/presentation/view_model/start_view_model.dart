@@ -4,14 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:ruminate/core/providers/start_provider.dart';
 import 'package:ruminate/features/start/domain/repository/start_repository.dart';
-import 'package:ruminate/features/start/enum/auth_state.dart';
+import 'package:ruminate/features/start/enum/start_state.dart';
 import 'package:ruminate/features/start/providers/start_repository_provider.dart';
 
-class StartViewModel extends StateNotifier<AuthState> {
+class StartViewModel extends StateNotifier<StartState> {
   final Ref ref;
   bool _isLoading = false;
 
-  StartViewModel(this.ref) : super(AuthState.loading) {
+  StartViewModel(this.ref) : super(StartState.loading) {
     fetchDataValue();
   }
 
@@ -20,17 +20,17 @@ class StartViewModel extends StateNotifier<AuthState> {
       if (_isLoading) return;
 
       _isLoading = true;
-      state = AuthState.loading;
+      state = StartState.loading;
 
       final isFirstEnter = ref.watch(isFirstStartProvider);
       final isHavePassword = ref.watch(isHavePasswordProvider);
 
       if (isFirstEnter && !isHavePassword) {
-        state = AuthState.onBoarding;
+        state = StartState.onBoarding;
       } else if (!isFirstEnter && isHavePassword) {
-        state = AuthState.password;
+        state = StartState.password;
       } else if (!isFirstEnter && !isHavePassword) {
-        state = AuthState.authenticated;
+        state = StartState.authenticated;
       }
 
       _isLoading = false;
@@ -58,6 +58,7 @@ class StartViewModel extends StateNotifier<AuthState> {
   }
 }
 
-final startViewModelProvider = StateNotifierProvider<StartViewModel, AuthState>(
-  (ref) => StartViewModel(ref),
-);
+final startViewModelProvider =
+    StateNotifierProvider<StartViewModel, StartState>(
+      (ref) => StartViewModel(ref),
+    );

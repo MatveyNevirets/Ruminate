@@ -20,10 +20,10 @@ class WelcomeScreen extends ConsumerWidget {
           vertical: theme.extraLargePaddingDouble * 4,
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Добро\nПожаловать!",
-              textAlign: TextAlign.center,
               style: theme.textTheme.headlineLarge!.copyWith(
                 color: theme.colorScheme.primary,
               ),

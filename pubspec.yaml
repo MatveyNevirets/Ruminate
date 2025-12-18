@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   archive: ^4.0.7
+  firebase_core: ^4.3.0
   fl_chart: ^1.1.1
   flutter:
     sdk: flutter

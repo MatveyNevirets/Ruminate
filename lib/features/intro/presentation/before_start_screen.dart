@@ -18,6 +18,7 @@ class BeforeStartScreen extends ConsumerWidget {
           vertical: theme.extraLargePaddingDouble * 4,
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Перед тем как\nНачать",

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "158801590958",
+    "project_id": "ruminate-001",
+    "storage_bucket": "ruminate-001.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:158801590958:android:39c0c636c5e1f540224b3f",
+        "android_client_info": {
+          "package_name": "com.example.ruminate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "158801590958-ira2ihmvcv1jrdm7ki528ahvoltub8g7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAMDw1OBgigjbj4VgICRtBxglXzgHeA8M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "158801590958-ira2ihmvcv1jrdm7ki528ahvoltub8g7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

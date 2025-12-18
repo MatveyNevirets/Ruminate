@@ -20,7 +20,7 @@ import 'package:ruminate/features/personal_victories/presentation/personal_victo
 import 'package:ruminate/features/reflection/presentation/providers/reflection_view_model_provider.dart';
 import 'package:ruminate/features/reflection/presentation/reflection_screen.dart';
 import 'package:ruminate/features/reflection/presentation/start_daily_reflection_screen.dart';
-import 'package:ruminate/features/start/enum/auth_state.dart';
+import 'package:ruminate/features/start/enum/start_state.dart';
 import 'package:ruminate/features/start/presentation/view_model/start_view_model.dart';
 
 final routerConfigProvider = Provider<GoRouter>((ref) {
@@ -31,19 +31,19 @@ final routerConfigProvider = Provider<GoRouter>((ref) {
     log("$currentLocation redirrreeect");
 
     switch (startState) {
-      case AuthState.onBoarding:
+      case StartState.onBoarding:
         if (currentLocation.startsWith("/onBoarding/")) {
           return null;
         }
         return "/onBoarding";
 
-      case AuthState.password:
+      case StartState.password:
         return "/password";
 
-      case AuthState.loading:
+      case StartState.loading:
         return "/splash";
 
-      case AuthState.authenticated:
+      case StartState.authenticated:
         if (currentLocation.startsWith("/home/")) {
           return null;
         } else {
