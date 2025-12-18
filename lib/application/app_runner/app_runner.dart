@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/application/app_runner/app_env.dart';
 import 'package:ruminate/application/application.dart';
 import 'package:ruminate/application/provider/app_env_provider.dart';
-import 'package:ruminate/core/providers/start_provider.dart';
 import 'package:ruminate/firebase_options.dart';
 
 class AppRunner {
@@ -18,9 +17,13 @@ class AppRunner {
       () async {
         await _init();
 
-        await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        );
+        try {
+          await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+        } on Object catch (e, stack) {
+          throw Exception("$e StackTrace: $stack");
+        }
 
         runApp(
           ProviderScope(
