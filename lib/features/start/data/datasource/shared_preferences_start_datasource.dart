@@ -33,7 +33,7 @@ class SharedPreferencesStartDatasource implements StartDatasource {
 
       log("$isFirstEnter $isHavePassword");
 
-      return [true, isHavePassword];
+      return [isFirstEnter, isHavePassword];
     } on Object catch (e, stack) {
       throw Exception("$e StackTrace: $stack");
     }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +10,62 @@ import 'package:ruminate/core/view_models/you_thought_view_model.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_container.dart';
 import 'package:ruminate/core/widgets/bottom_navigation_bar.dart';
+
+// ignore: must_be_immutable
+class YouThoughtSliverWidget extends StatefulWidget {
+  YouThoughtSliverWidget({
+    super.key,
+    required this.youThoughtList,
+    required this.youThoughtVM,
+  });
+
+  List<dynamic> youThoughtList;
+  YouThoughtViewModel youThoughtVM;
+
+  @override
+  State<YouThoughtSliverWidget> createState() => _YouThoughtSliverWidgetState();
+}
+
+class _YouThoughtSliverWidgetState extends State<YouThoughtSliverWidget> {
+  final _youThoughtKey = GlobalKey();
+  double? expandedHeight;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final RenderBox? renderBox =
+          _youThoughtKey.currentContext?.findRenderObject() as RenderBox?;
+      if (renderBox != null && mounted) {
+        setState(() {
+          expandedHeight = renderBox.size.height;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    log(expandedHeight.toString());
+
+    return SliverPadding(
+      padding: theme.largePadding,
+      sliver: SliverAppBar(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        expandedHeight: expandedHeight ?? 200,
+        flexibleSpace: AppContainer(
+          key: _youThoughtKey,
+          onClick: () =>
+              context.go("/home/details/", extra: widget.youThoughtList[0]),
+          title:
+              "${Utils.fetchTextDateFromReflection(widget.youThoughtVM.reflection!)} ты отвечал на вопрос: ${Utils.cutStringByChars(widget.youThoughtList[1]?.keys.first, 40)}\nДата: ${Utils.fetchDateFromReflection(widget.youThoughtVM.reflection!)}\nТвой ответ: ${Utils.cutStringByChars(widget.youThoughtList[1].values.first.toString(), 40)}",
+        ),
+      ),
+    );
+  }
+}
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -20,10 +78,10 @@ class HomeScreen extends ConsumerWidget {
     final youThought = ref.watch(youThoughtVMProvider);
 
     final theme = Theme.of(context);
-    final appBarExpandedHeight = MediaQuery.of(context).size.height / 3.5;
+    // final appBarExpandedHeight = MediaQuery.of(context).size.height / 3.5;
 
     return Scaffold(
-      appBar: createAppBar(context),
+      appBar: createAppBar(context, title: "Ruminate"),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -39,29 +97,16 @@ class HomeScreen extends ConsumerWidget {
                 );
               },
               data: (youThoughtList) {
-                return youThoughtList == null || youThoughtList[1] == null
+                log(youThoughtList.toString());
+                return youThoughtList == null
                     ? SliverToBoxAdapter(child: Container())
-                    : SliverPadding(
-                        padding: theme.largePadding,
-                        sliver: SliverAppBar(
-                          backgroundColor: theme.scaffoldBackgroundColor,
-                          expandedHeight: appBarExpandedHeight,
-                          flexibleSpace: AppContainer(
-                            onClick: () => context.go(
-                              "/home/details/",
-                              extra: youThoughtList[0],
-                            ),
-                            title:
-                                "${Utils.fetchTextDateFromReflection(youThoughtVM.reflection!)} ты отвечал на вопрос: ${Utils.cutStringByChars(youThoughtList[1].keys.first, 40)}\nДата: ${Utils.fetchDateFromReflection(youThoughtVM.reflection!)}\nТвой ответ: ${Utils.cutStringByChars(youThoughtList[1].values.first.toString(), 40)}",
-                          ),
-                        ),
+                    : YouThoughtSliverWidget(
+                        youThoughtList: youThoughtList,
+                        youThoughtVM: youThoughtVM,
                       );
               },
             ),
 
-            SliverToBoxAdapter(
-              child: SizedBox(height: theme.extraLargePaddingDouble),
-            ),
             SliverPadding(
               padding: theme.largePadding,
               sliver: SliverToBoxAdapter(

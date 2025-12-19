@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
+import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
-import 'package:ruminate/features/start/presentation/view_model/start_view_model.dart';
 
 class BeforeStartScreen extends ConsumerWidget {
   const BeforeStartScreen({super.key});
@@ -12,6 +12,7 @@ class BeforeStartScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     return Scaffold(
+      appBar: createAppBar(context),
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: theme.extraLargePaddingDouble,
@@ -36,7 +37,7 @@ class BeforeStartScreen extends ConsumerWidget {
                 color: theme.colorScheme.primary,
               ),
             ),
-            SizedBox(height: theme.largePaddingDouble),
+            Expanded(child: SizedBox()),
             AppButton(
               onClick: () {
                 context.go("/onBoarding/before_start/password_set/");

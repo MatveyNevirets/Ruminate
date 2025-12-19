@@ -30,16 +30,16 @@ class StatisticsScreen extends ConsumerWidget {
   ) {
     List<int> reflectionsCounts = List.generate(7, (i) => 0);
 
-    for (int i = 0; i < weekdayInts.length; i++) {
-      for (ReflectionModel reflection in reflections!) {
-        if (reflection.reflectionDate?.day == weekdayInts[i] &&
-            reflection.reflectionDate?.month == DateTime.now().month) {
-          reflectionsCounts[i] += 1;
+    if (reflections != null) {
+      for (int i = 0; i < weekdayInts.length; i++) {
+        for (ReflectionModel reflection in reflections) {
+          if (reflection.reflectionDate?.day == weekdayInts[i] &&
+              reflection.reflectionDate?.month == DateTime.now().month) {
+            reflectionsCounts[i] += 1;
+          }
         }
       }
     }
-
-    log(reflectionsCounts.toString());
 
     return reflectionsCounts;
   }
@@ -55,7 +55,7 @@ class StatisticsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: createAppBar(context),
+      appBar: createAppBar(context, title: "Ruminate"),
 
       body: state.when(
         data: (data) {
@@ -78,7 +78,8 @@ class StatisticsScreen extends ConsumerWidget {
                       FutureBuilder(
                         future: fetchReflectionsAsFuture(ref),
                         builder: (context, asyncSnapshot) {
-                          if (asyncSnapshot.hasData) {
+                          if (asyncSnapshot.hasData ||
+                              asyncSnapshot.data == null) {
                             final reflections = asyncSnapshot.data;
 
                             return AppChartWidget(
@@ -325,7 +326,7 @@ class AppChartWidget extends StatelessWidget {
     double width = 22,
     List<int> showTooltips = const [2],
   }) {
-    int maxHeight = 0;
+    int maxHeight = 1;
 
     for (int i = 0; i < columnsHeight.length; i++) {
       if (maxHeight < columnsHeight[i]) {

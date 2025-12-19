@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
 import 'package:ruminate/core/widgets/app_text_field.dart';
+import 'package:ruminate/features/start/presentation/view_model/start_view_model.dart';
 
-class PasswordSetScreen extends StatelessWidget {
+class PasswordSetScreen extends ConsumerWidget {
   const PasswordSetScreen({super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final startProvider = ref.watch(startViewModelProvider.notifier);
     return Scaffold(
       appBar: createAppBar(context),
       body: SingleChildScrollView(
@@ -58,6 +61,7 @@ class PasswordSetScreen extends StatelessWidget {
                 Expanded(flex: 2, child: SizedBox()),
                 AppButton(
                   onClick: () {
+                    startProvider.setFirstEnter(false);
                     context.go(
                       "/onBoarding/before_start/password_set/where_change/",
                     );
@@ -67,6 +71,7 @@ class PasswordSetScreen extends StatelessWidget {
                 SizedBox(height: theme.largePaddingDouble),
                 AppButton(
                   onClick: () {
+                    startProvider.setFirstEnter(false);
                     context.go(
                       "/onBoarding/before_start/password_set/where_change/",
                     );

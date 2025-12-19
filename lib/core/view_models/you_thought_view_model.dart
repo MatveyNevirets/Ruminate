@@ -54,9 +54,13 @@ class YouThoughtViewModel extends StateNotifier<AsyncValue<List<dynamic>?>> {
           final currentRandomQNA = _fetchRandomQNA(currentRandomStep);
           log("currentRandomQNA: ${currentRandomQNA.toString()}");
 
-          state = AsyncValue.data([_reflectionModel, currentRandomQNA]);
+          if (currentRandomQNA != null) {
+            state = AsyncValue.data([_reflectionModel, currentRandomQNA]);
+          } else {
+            state = AsyncValue.data(null);
+          }
         } else {
-          state = AsyncValue.data([]);
+          state = AsyncValue.data(null);
         }
       }
     } on Exception catch (e, stack) {

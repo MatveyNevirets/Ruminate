@@ -14,7 +14,7 @@ class ProfileScreen extends ConsumerWidget {
     final navigationIndex = ref.watch(navigationViewModel);
 
     return Scaffold(
-      appBar: createAppBar(context),
+      appBar: createAppBar(context, title: "Ruminate"),
       body: Center(child: ObsidianSyncButton()),
       bottomNavigationBar: createBottomNavigationBar(
         context,

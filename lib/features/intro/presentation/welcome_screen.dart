@@ -3,21 +3,22 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
+import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
 import 'package:ruminate/features/start/presentation/view_model/start_view_model.dart';
 
-class WelcomeScreen extends ConsumerWidget {
+class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final startProvider = ref.watch(startViewModelProvider.notifier);
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      appBar: createAppBar(context),
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: theme.extraLargePaddingDouble,
-          vertical: theme.extraLargePaddingDouble * 4,
+          vertical: theme.extraLargePaddingDouble,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,9 +29,9 @@ class WelcomeScreen extends ConsumerWidget {
                 color: theme.colorScheme.primary,
               ),
             ),
-            Expanded(flex: 2, child: SizedBox()),
+            Expanded(flex: 1, child: SizedBox()),
             Expanded(
-              flex: 3,
+              flex: 10,
               child: Text(
                 '''Ruminate - ваш личный
 помощник, позволяющий
@@ -46,7 +47,6 @@ class WelcomeScreen extends ConsumerWidget {
             AppButton(
               onClick: () {
                 context.go("/onBoarding/before_start/");
-                startProvider.setFirstEnter(false);
               },
               text: "Изменить свою жизнь",
             ),
