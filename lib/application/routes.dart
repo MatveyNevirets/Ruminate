@@ -11,6 +11,7 @@ import 'package:ruminate/core/widgets/string_list_screen.dart';
 import 'package:ruminate/features/completed_reflections/presentation/completed_reflections_screen.dart';
 import 'package:ruminate/features/completed_reflections/presentation/detail_completed_reflection_screen.dart';
 import 'package:ruminate/features/intro/presentation/before_start_screen.dart';
+import 'package:ruminate/features/intro/presentation/password_screen.dart';
 import 'package:ruminate/features/intro/presentation/password_set_screen.dart';
 import 'package:ruminate/features/intro/presentation/welcome_screen.dart';
 import 'package:ruminate/features/intro/presentation/where_change_password_screen.dart';
@@ -39,6 +40,9 @@ final routerConfigProvider = Provider<GoRouter>((ref) {
         return "/onBoarding";
 
       case StartState.password:
+        if (currentLocation.contains("/go_home")) {
+          return "/home";
+        }
         return "/password";
 
       case StartState.loading:
@@ -57,6 +61,7 @@ final routerConfigProvider = Provider<GoRouter>((ref) {
     redirect: redirect,
     initialLocation: "/splash",
     routes: [
+      GoRoute(path: "/password", builder: (context, state) => PasswordScreen()),
       GoRoute(
         path: '/onBoarding',
         routes: [
