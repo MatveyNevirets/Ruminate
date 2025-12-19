@@ -4,8 +4,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ruminate/core/data/model/reflection_model.dart';
-import 'package:ruminate/core/enums/reflect_type_enum.dart';
+import 'package:ruminate/core/reflection/data/model/reflection_model.dart';
+import 'package:ruminate/core/reflection/enums/reflect_type_enum.dart';
 import 'package:ruminate/core/widgets/main_pages_widget.dart';
 import 'package:ruminate/core/widgets/string_list_screen.dart';
 import 'package:ruminate/features/completed_reflections/presentation/completed_reflections_screen.dart';
@@ -102,7 +102,7 @@ final routerConfigProvider = Provider<GoRouter>((ref) {
             path: "/strings_list",
             builder: (context, state) {
               final extra = state.extra as List<Object?>;
-              final strings = extra[0] as List<String?>;
+              final strings = extra[0] as List<String?>?;
               final title = extra[1] as String;
               return StringListScreen(strings: strings, title: title);
             },

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:mocktail/mocktail.dart';
-import 'package:ruminate/core/data/datasources/local/local_reflection_datasource.dart';
-import 'package:ruminate/core/data/model/reflection_model.dart';
+import 'package:ruminate/core/reflection/data/datasources/local/local_reflection_datasource.dart';
+import 'package:ruminate/core/reflection/data/model/reflection_model.dart';
 
 class MockLocalFileReflectionDataSource extends Mock implements LocalReflectionDatasource {
   bool? directoryExists;

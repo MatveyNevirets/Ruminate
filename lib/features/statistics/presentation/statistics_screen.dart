@@ -4,7 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ruminate/core/data/model/reflection_model.dart';
+import 'package:ruminate/core/reflection/data/model/reflection_model.dart';
 import 'package:ruminate/core/providers/navigation_providers.dart';
 import 'package:ruminate/core/providers/reflection_datasource_repository_provider.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';

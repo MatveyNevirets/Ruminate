@@ -4,9 +4,9 @@ import 'dart:math' hide log;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:ruminate/core/data/model/reflection_model.dart';
-import 'package:ruminate/core/data/model/reflection_step_model.dart';
-import 'package:ruminate/core/domain/reflection_repository.dart';
+import 'package:ruminate/core/reflection/data/model/reflection_model.dart';
+import 'package:ruminate/core/reflection/data/model/reflection_step_model.dart';
+import 'package:ruminate/core/reflection/domain/reflection_repository.dart';
 import 'package:ruminate/core/providers/reflection_datasource_repository_provider.dart';
 
 class YouThoughtViewModel extends StateNotifier<AsyncValue<List<dynamic>?>> {

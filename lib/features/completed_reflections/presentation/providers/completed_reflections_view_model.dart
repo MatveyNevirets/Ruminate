@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:ruminate/core/data/model/reflection_model.dart';
+import 'package:ruminate/core/reflection/data/model/reflection_model.dart';
 import 'package:ruminate/core/providers/reflection_datasource_repository_provider.dart';
 
 class CompletedReflectionsViewModel extends StateNotifier<AsyncValue<List<ReflectionModel>?>> {

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 
-import 'package:ruminate/core/domain/reflection_repository.dart';
+import 'package:ruminate/core/reflection/domain/reflection_repository.dart';
 import 'package:ruminate/features/personal_victories/domain/repository/victories_repository.dart';
 import 'package:ruminate/features/statistics/data/datasources/local/local_statistics_datasource.dart';
 import 'package:ruminate/features/statistics/data/models/statistics_model.dart';

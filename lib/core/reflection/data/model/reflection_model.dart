@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:ruminate/core/data/model/reflection_step_model.dart';
-import 'package:ruminate/core/enums/reflect_type_enum.dart';
+import 'package:ruminate/core/reflection/data/model/reflection_step_model.dart';
+import 'package:ruminate/core/reflection/enums/reflect_type_enum.dart';
 
 class ReflectionModel {
   String title;

@@ -1,4 +1,4 @@
-import 'package:ruminate/core/domain/reflection_repository.dart';
+import 'package:ruminate/core/reflection/domain/reflection_repository.dart';
 import 'package:ruminate/features/statistics/domain/repository/statistics_repository.dart';
 import 'package:ruminate/features/sync/enums/export_format.dart';
 

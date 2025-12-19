@@ -1,6 +1,6 @@
-import 'package:ruminate/core/enums/reflect_type_enum.dart';
-import 'package:ruminate/core/data/model/reflection_model.dart';
-import 'package:ruminate/core/data/model/reflection_step_model.dart';
+import 'package:ruminate/core/reflection/enums/reflect_type_enum.dart';
+import 'package:ruminate/core/reflection/data/model/reflection_model.dart';
+import 'package:ruminate/core/reflection/data/model/reflection_step_model.dart';
 
 class DailyIndepthReflection extends ReflectionModel {
   DailyIndepthReflection()

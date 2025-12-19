@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:ruminate/core/consts/start_consts.dart';
+import 'package:ruminate/core/consts/app_consts.dart';
 import 'package:ruminate/features/start/providers/start_repository_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

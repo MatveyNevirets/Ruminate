@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:ruminate/core/data/datasources/local/local_reflection_datasource.dart';
-import 'package:ruminate/core/data/model/reflection_model.dart';
-import 'package:ruminate/core/domain/reflection_repository.dart';
+import 'package:ruminate/core/reflection/data/datasources/local/local_reflection_datasource.dart';
+import 'package:ruminate/core/reflection/data/model/reflection_model.dart';
+import 'package:ruminate/core/reflection/domain/reflection_repository.dart';
 
 class ReflectionRepositoryImpl implements ReflectionRepository {
   final LocalReflectionDatasource localReflectionDatasource;

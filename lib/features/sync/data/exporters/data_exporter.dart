@@ -1,4 +1,4 @@
-import 'package:ruminate/core/data/model/reflection_model.dart';
+import 'package:ruminate/core/reflection/data/model/reflection_model.dart';
 import 'package:ruminate/features/statistics/data/models/statistics_model.dart';
 
 abstract class DataExporter {

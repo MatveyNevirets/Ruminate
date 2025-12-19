@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
@@ -11,7 +10,7 @@ class StringListScreen extends StatelessWidget {
     required this.title,
   });
 
-  final List<String?> strings;
+  final List<String?>? strings;
   final String title;
 
   @override
@@ -20,34 +19,46 @@ class StringListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: createAppBar(context),
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: theme.largePadding.copyWith(
-              top: theme.largePadding.top * 2,
-            ),
-            sliver: SliverToBoxAdapter(
+      body: strings == null
+          ? Center(
               child: Text(
-                title,
-                style: theme.textTheme.bodyLarge!.copyWith(
+                "Тут пока ничего нет",
+                style: theme.textTheme.headlineMedium!.copyWith(
                   color: theme.colorScheme.primary,
                 ),
               ),
+            )
+          : CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: theme.largePadding.copyWith(
+                    top: theme.largePadding.top * 2,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: Text(
+                      title,
+                      style: theme.textTheme.bodyLarge!.copyWith(
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
+                SliverPadding(
+                  padding: theme.largePadding,
+                  sliver: SliverList.builder(
+                    itemCount: strings!.length,
+                    itemBuilder: (context, index) {
+                      return strings![index] == null || strings![index]!.isEmpty
+                          ? Container()
+                          : AppContainer(
+                              title: strings![index],
+                              onClick: () => (),
+                            );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-          SliverPadding(
-            padding: theme.largePadding,
-            sliver: SliverList.builder(
-              itemCount: strings.length,
-              itemBuilder: (context, index) {
-                return strings[index] == null || strings[index]!.isEmpty
-                    ? Container()
-                    : AppContainer(title: strings[index], onClick: () => ());
-              },
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

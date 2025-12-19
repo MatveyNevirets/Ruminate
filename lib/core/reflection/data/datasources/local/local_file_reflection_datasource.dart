@@ -4,8 +4,8 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:ruminate/core/data/datasources/local/local_reflection_datasource.dart';
-import 'package:ruminate/core/data/model/reflection_model.dart';
+import 'package:ruminate/core/reflection/data/datasources/local/local_reflection_datasource.dart';
+import 'package:ruminate/core/reflection/data/model/reflection_model.dart';
 import 'package:ruminate/core/services/path_service.dart';
 
 class LocalFileReflectionDataSource implements LocalReflectionDatasource {

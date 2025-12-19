@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ruminate/features/start/data/datasource/shared_preferences_start_datasource.dart';
-import 'package:ruminate/features/start/data/datasource/start_datasource.dart';
+import 'package:ruminate/core/key_value_storage/data/datasource/shared_preferences_start_datasource.dart';
+import 'package:ruminate/core/key_value_storage/data/datasource/key_value_storage.dart';
 
-final startDatasourceProvider = Provider<StartDatasource>((ref) => SharedPreferencesStartDatasource());
+final startDatasourceProvider = Provider<KeyValueStorage>(
+  (ref) => SharedPreferencesStorage(),
+);
