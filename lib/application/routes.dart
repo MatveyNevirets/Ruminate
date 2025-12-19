@@ -32,8 +32,11 @@ final routerConfigProvider = Provider<GoRouter>((ref) {
 
     switch (startState) {
       case StartState.onBoarding:
-        if (currentLocation.startsWith("/onBoarding/")) {
+        if (currentLocation.startsWith("/onBoarding/") &&
+            !currentLocation.contains("/go_home")) {
           return null;
+        } else if (currentLocation.contains("/go_home")) {
+          return '/home';
         }
         return "/onBoarding";
 
@@ -64,21 +67,18 @@ final routerConfigProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => BeforeStartScreen(),
             routes: [
               GoRoute(
-                path: "/login",
-                builder: (context, state) => LoginScreen(),
+                path: "/password_set",
+                builder: (context, state) => PasswordSetScreen(),
                 routes: [
                   GoRoute(
-                    path: "/registration",
-                    builder: (context, state) => RegistrationScreen(),
-                  ),
-                  GoRoute(
-                    path: "/password_set",
-                    builder: (context, state) => PasswordSetScreen(),
+                    path: "/where_change",
+                    builder: (context, state) => WhereChangePasswordScreen(),
                     routes: [
                       GoRoute(
-                        path: "/where_change",
-                        builder: (context, state) =>
-                            WhereChangePasswordScreen(),
+                        path: "/go_home",
+                        builder: (context, state) => Scaffold(
+                          body: Center(child: CircularProgressIndicator()),
+                        ),
                       ),
                     ],
                   ),

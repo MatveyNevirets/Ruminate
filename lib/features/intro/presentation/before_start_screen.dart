@@ -15,7 +15,7 @@ class BeforeStartScreen extends ConsumerWidget {
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: theme.extraLargePaddingDouble,
-          vertical: theme.extraLargePaddingDouble * 4,
+          vertical: theme.extraLargePaddingDouble,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +39,7 @@ class BeforeStartScreen extends ConsumerWidget {
             SizedBox(height: theme.largePaddingDouble),
             AppButton(
               onClick: () {
-                context.go("/onBoarding/before_start/login/");
+                context.go("/onBoarding/before_start/password_set/");
               },
               text: "Понятно",
             ),
