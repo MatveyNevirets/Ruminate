@@ -39,6 +39,10 @@ class StartViewModel extends StateNotifier<StartState> {
     }
   }
 
+  void changeState(StartState newState) {
+    state = newState;
+  }
+
   Future<void> setFirstEnter(bool value) async {
     try {
       final startRepository = ref.read(startRepositoryProvider);

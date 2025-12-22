@@ -5,6 +5,7 @@ import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
 import 'package:ruminate/core/widgets/app_text_field.dart';
+import 'package:ruminate/core/widgets/snack_bar.dart';
 import 'package:ruminate/features/intro/presentation/view_model/password_view_model.dart';
 import 'package:ruminate/features/start/presentation/view_model/start_view_model.dart';
 
@@ -78,9 +79,7 @@ class PasswordSetScreen extends ConsumerWidget {
 
                       passwordVMState.when(
                         data: (data) {
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(SnackBar(content: Text("Success!")));
+                          showSnackBar(context, "Пароль успешно установлен!");
                           context.go(
                             "/onBoarding/before_start/password_set/where_change/",
                           );
@@ -95,9 +94,11 @@ class PasswordSetScreen extends ConsumerWidget {
                     } else {
                       firstPasswordController.text = "";
                       secondPasswordController.text = "";
-                      ScaffoldMessenger.of(
+                      showSnackBar(
                         context,
-                      ).showSnackBar(SnackBar(content: Text("Error!")));
+                        "Пароли должны совпадать!",
+                        duration: Durations.long3,
+                      );
                     }
                   },
                   text: "Установить пароль",

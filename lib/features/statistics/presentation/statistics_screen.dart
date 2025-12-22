@@ -55,7 +55,7 @@ class StatisticsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: createAppBar(context, title: "Ruminate"),
+      appBar: createAppBar(context, title: "Статистика"),
 
       body: state.when(
         data: (data) {
@@ -67,14 +67,6 @@ class StatisticsScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Статистика рефлексий',
-
-                        style: theme.textTheme.bodyLarge!.copyWith(
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                      SizedBox(height: theme.largePaddingDouble),
                       FutureBuilder(
                         future: fetchReflectionsAsFuture(ref),
                         builder: (context, asyncSnapshot) {

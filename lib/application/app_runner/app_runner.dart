@@ -25,6 +25,7 @@ class AppRunner {
           throw Exception("$e StackTrace: $stack");
         }
 
+
         runApp(
           ProviderScope(
             overrides: [appEnvProvider.overrideWithValue(env)],

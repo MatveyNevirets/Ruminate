@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 
-class AppButton extends StatelessWidget {
-  AppButton({
+class AppDualStateButton extends StatelessWidget {
+  AppDualStateButton({
     super.key,
     this.buttonSize,
     this.backgroundColor,
+    this.isSelected = false,
     required this.onClick,
     required this.text,
+    required this.selectedText,
   });
 
   Size? buttonSize;
   final VoidCallback onClick;
+  bool isSelected;
   Color? backgroundColor;
-  final String text;
+  final String text, selectedText;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +23,14 @@ class AppButton extends StatelessWidget {
       width: buttonSize?.width ?? double.maxFinite,
       height: buttonSize?.height ?? 60,
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: backgroundColor),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isSelected
+              ? backgroundColor?.withAlpha(150)
+              : backgroundColor,
+        ),
         onPressed: () => onClick.call(),
         child: Text(
-          text,
+          isSelected ? selectedText : text,
           style: Theme.of(context).textTheme.bodySmall!.copyWith(
             color: Theme.of(context).colorScheme.primary,
           ),

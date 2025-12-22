@@ -1,12 +1,15 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:ruminate/core/themes/app_themes.dart';
+import 'package:ruminate/features/profile/presentation/view_model/theme_change_view_model.dart';
 
-class ThemeIndexViewModel extends StateNotifier<int> {
-  ThemeIndexViewModel([super.initial = 0]);
+class ThemeViewModel extends StateNotifier<int> {
+  ThemeViewModel([super.initial = 0]);
 
   final themesCount = AppThemes.getThemes.length;
 
-  void setIndex(int newIndex) {
+  void setTheme(int newIndex) {
     state = newIndex;
   }
 
@@ -20,3 +23,14 @@ class ThemeIndexViewModel extends StateNotifier<int> {
 
   int get getThemeIndex => state;
 }
+
+final themeViewModelProvider = StateNotifierProvider<ThemeViewModel, int>(
+  (ref) => ThemeViewModel(),
+);
+
+final themeProvider = Provider<ThemeData>((ref) {
+  final themeChangeProvider = ref.watch(themeChangeViewModelProvider.notifier);
+  themeChangeProvider.initState();
+  final themeIndex = ref.watch(themeViewModelProvider);
+  return AppThemes.getThemes[themeIndex];
+});

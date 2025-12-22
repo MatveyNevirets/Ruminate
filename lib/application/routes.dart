@@ -24,31 +24,39 @@ import 'package:ruminate/features/start/presentation/view_model/start_view_model
 
 final routerConfigProvider = Provider<GoRouter>((ref) {
   FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
+    final startStateViewModel = ref.watch(startViewModelProvider.notifier);
     final startState = ref.watch(startViewModelProvider);
     final currentLocation = state.matchedLocation;
 
-    log("$currentLocation redirrreeect");
+    log("Current location: $currentLocation");
 
     switch (startState) {
       case StartState.onBoarding:
+        log("OnBoarding state");
         if (currentLocation.startsWith("/onBoarding/") &&
             !currentLocation.contains("/go_home")) {
           return null;
         } else if (currentLocation.contains("/go_home")) {
+          startStateViewModel.changeState(StartState.authenticated);
           return '/home';
         }
         return "/onBoarding";
 
       case StartState.password:
+        log("Password state");
         if (currentLocation.contains("/go_home")) {
+          startStateViewModel.changeState(StartState.authenticated);
           return "/home";
         }
         return "/password";
 
       case StartState.loading:
+        log("Loading state");
+
         return "/splash";
 
       case StartState.authenticated:
+        log("Auth state");
         if (currentLocation.startsWith("/home/")) {
           return null;
         } else {

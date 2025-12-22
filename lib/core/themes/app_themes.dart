@@ -5,9 +5,10 @@ abstract class AppThemes {
     Colors.amber,
     Colors.red,
     Colors.green,
+    Colors.blue,
   ];
 
-  static final _themes = List.unmodifiable([
+  static final List<ThemeData> _themes = List.unmodifiable([
     ThemeData.light().copyWith(
       scaffoldBackgroundColor: ColorScheme.fromSeed(
         seedColor: _seedColors[0],
@@ -44,7 +45,20 @@ abstract class AppThemes {
         bodySmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
       ),
     ),
+    ThemeData.light().copyWith(
+      scaffoldBackgroundColor: ColorScheme.fromSeed(
+        seedColor: _seedColors[3],
+      ).surfaceContainer,
+      colorScheme: ColorScheme.fromSeed(seedColor: _seedColors[3]),
+      textTheme: TextTheme(
+        headlineLarge: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+        bodyLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        bodyMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+        bodySmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+      ),
+    ),
   ]);
 
-  static get getThemes => _themes;
+  static List<ThemeData> get getThemes => _themes;
+  static List<Color> get seedColors => _seedColors;
 }

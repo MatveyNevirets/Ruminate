@@ -7,8 +7,8 @@ import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_bar.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
 import 'package:ruminate/core/widgets/app_text_field.dart';
+import 'package:ruminate/core/widgets/snack_bar.dart';
 import 'package:ruminate/features/intro/presentation/view_model/password_view_model.dart';
-import 'package:ruminate/features/start/presentation/view_model/start_view_model.dart';
 
 class PasswordScreen extends ConsumerWidget {
   PasswordScreen({super.key});
@@ -18,7 +18,6 @@ class PasswordScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final startVM = ref.watch(startViewModelProvider.notifier);
     final passwordVM = ref.watch(passwordViewModelProvider.notifier);
     final passwordVMState = ref.watch(passwordViewModelProvider);
 
@@ -26,16 +25,12 @@ class PasswordScreen extends ConsumerWidget {
       data: (data) {
         if (data) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("Success!")));
+            showSnackBar(context, "Успешный вход!");
             context.go("/password/go_home");
           });
         } else {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("Invalid password!")));
+            showSnackBar(context, "Неверный пароль!");
           });
         }
       },

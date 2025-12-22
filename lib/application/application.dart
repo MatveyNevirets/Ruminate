@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/application/routes.dart';
 import 'package:ruminate/core/providers/start_provider.dart';
-import 'package:ruminate/core/providers/theme_provider.dart';
-import 'package:ruminate/features/start/providers/start_repository_provider.dart';
+import 'package:ruminate/core/view_models/theme_view_model.dart';
+import 'package:ruminate/features/profile/presentation/view_model/theme_change_view_model.dart';
 
 class Application extends ConsumerWidget {
   const Application({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeProvider);
-
     final startFutureRepository = ref.watch(startDataProvider);
+    final theme = ref.watch(themeProvider);
 
     return startFutureRepository.when(
       data: (data) {
