@@ -56,4 +56,14 @@ class SharedPreferencesStorage implements KeyValueStorage {
       throw Exception("$e StackTrace: $stack");
     }
   }
+
+  @override
+  Future<void> deletePassword(String key) async {
+    try {
+      if (_sharedPreferences == null) await _initSharedPreferences();
+      await _sharedPreferences!.remove(key);
+    } on Object catch (e, stack) {
+      throw Exception("$e StackTrace: $stack");
+    }
+  }
 }

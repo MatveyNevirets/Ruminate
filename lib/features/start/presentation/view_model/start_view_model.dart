@@ -15,7 +15,7 @@ class StartViewModel extends StateNotifier<StartState> {
     fetchDataValue();
   }
 
-  Future<void> fetchDataValue() async {
+  void fetchDataValue() {
     try {
       if (_isLoading) return;
 
@@ -26,11 +26,15 @@ class StartViewModel extends StateNotifier<StartState> {
       final isHavePassword = ref.watch(isHavePasswordProvider);
 
       if (isFirstEnter && !isHavePassword) {
+        log("OnBoarding");
         state = StartState.onBoarding;
       } else if (!isFirstEnter && isHavePassword) {
         state = StartState.password;
       } else if (!isFirstEnter && !isHavePassword) {
         state = StartState.authenticated;
+      } else {
+        state = StartState.onBoarding;
+        log("OnBoarding else");
       }
 
       _isLoading = false;

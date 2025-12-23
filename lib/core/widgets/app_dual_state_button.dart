@@ -6,12 +6,14 @@ class AppDualStateButton extends StatelessWidget {
     this.buttonSize,
     this.backgroundColor,
     this.isSelected = false,
+    this.radius = 64,
     required this.onClick,
     required this.text,
     required this.selectedText,
   });
 
   Size? buttonSize;
+  double radius;
   final VoidCallback onClick;
   bool isSelected;
   Color? backgroundColor;
@@ -24,15 +26,20 @@ class AppDualStateButton extends StatelessWidget {
       height: buttonSize?.height ?? 60,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radius),
+          ),
           backgroundColor: isSelected
-              ? backgroundColor?.withAlpha(150)
-              : backgroundColor,
+              ? Theme.of(context).colorScheme.surfaceContainer.withAlpha(180)
+              : Theme.of(context).colorScheme.surfaceContainer,
         ),
         onPressed: () => onClick.call(),
         child: Text(
           isSelected ? selectedText : text,
           style: Theme.of(context).textTheme.bodySmall!.copyWith(
-            color: Theme.of(context).colorScheme.primary,
+            color: isSelected
+                ? Theme.of(context).colorScheme.onSurface
+                : Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ),

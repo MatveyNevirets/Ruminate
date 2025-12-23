@@ -15,7 +15,9 @@ class StartRepositoryImpl implements StartRepository {
           await _startDatasource.readValue<bool>(AppConsts.isFirstEnterKey) ??
           true;
       final isHavePasswordValue =
-          await _startDatasource.readValue<bool>(AppConsts.isHavePasswordKey) ??
+          await _startDatasource.readValue<bool>(
+            AppConsts.isPasswordExistsKey,
+          ) ??
           false;
 
       return <bool>[isFirstEnterValue, isHavePasswordValue];
@@ -36,7 +38,7 @@ class StartRepositoryImpl implements StartRepository {
   @override
   Future<void> setHavePassword(bool value) async {
     try {
-      await _startDatasource.writeBool(AppConsts.isHavePasswordKey, value);
+      await _startDatasource.writeBool(AppConsts.isPasswordExistsKey, value);
     } on Object catch (e, stack) {
       throw Exception("$e StackTrace: $stack");
     }

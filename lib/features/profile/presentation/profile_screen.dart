@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ruminate/core/providers/navigation_providers.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/themes/app_themes.dart';
@@ -9,7 +10,11 @@ import 'package:ruminate/core/widgets/app_button.dart';
 import 'package:ruminate/core/widgets/app_dual_state_button.dart';
 import 'package:ruminate/core/widgets/bottom_navigation_bar.dart';
 import 'package:ruminate/core/widgets/separator_widget.dart';
-import 'package:ruminate/features/profile/presentation/view_model/theme_change_view_model.dart';
+import 'package:ruminate/core/view_models/settings_view_model.dart';
+import 'package:ruminate/core/widgets/snack_bar.dart';
+import 'package:ruminate/features/intro/presentation/view_model/password_view_model.dart';
+import 'package:ruminate/features/start/enum/start_state.dart';
+import 'package:ruminate/features/start/presentation/view_model/start_view_model.dart';
 import 'package:ruminate/features/sync/presentation/widgets/obsidian_sync_button.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -19,6 +24,8 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final navigationProvider = ref.watch(navigationViewModel.notifier);
     final navigationIndex = ref.watch(navigationViewModel);
+    final settingsViewModel = ref.watch(settingsViewModelProvider.notifier);
+    final startStateViewModel = ref.watch(startViewModelProvider.notifier);
 
     final theme = Theme.of(context);
 
@@ -27,74 +34,125 @@ class ProfileScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: theme.largePadding,
-          child: SizedBox(
-            height: MediaQuery.sizeOf(context).height,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
                     "Экспорт",
                     style: theme.textTheme.bodyLarge!.copyWith(
                       color: theme.colorScheme.primary,
                     ),
                   ),
-                ),
-                Expanded(child: SizedBox()),
-                ObsidianSyncButton(),
-                Expanded(child: SizedBox()),
-                SeparatorWidget(),
-                Expanded(child: SizedBox()),
-                Expanded(
-                  child: Text(
+                  SizedBox(height: theme.mediumPaddingDouble),
+                  Text(
+                    "Для экспорта вам понадобиться приложение проводника, чтобы сохранить файл в папку, а затем разархивировать его",
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: theme.extraLargePaddingDouble),
+              ObsidianSyncButton(),
+
+              SizedBox(height: theme.extraLargePaddingDouble),
+              SeparatorWidget(),
+
+              SizedBox(height: theme.extraLargePaddingDouble),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
                     "Конфиденциальность",
                     style: theme.textTheme.bodyLarge!.copyWith(
                       color: theme.colorScheme.primary,
                     ),
                   ),
-                ),
-                Expanded(child: SizedBox()),
-                AppButton(onClick: () {}, text: "Установить"),
-                AppButton(onClick: () {}, text: "Изменить"),
-                AppButton(onClick: () {}, text: "Удалить"),
-                Expanded(child: SizedBox()),
-                SeparatorWidget(),
-                Expanded(child: SizedBox()),
-                Expanded(
-                  child: Text(
-                    "Цвет темы",
-                    style: theme.textTheme.bodyLarge!.copyWith(
+                  SizedBox(height: theme.mediumPaddingDouble),
+                  Text(
+                    "Доступные действия с паролем",
+                    style: theme.textTheme.bodyMedium!.copyWith(
                       color: theme.colorScheme.primary,
                     ),
                   ),
+                ],
+              ),
+              SizedBox(height: theme.extraLargePaddingDouble),
+
+              FutureBuilder(
+                future: settingsViewModel.isPasswordExistsCheck(),
+                builder: (context, asyncSnapshot) {
+                  if (asyncSnapshot.hasData) {
+                    if (asyncSnapshot.data == true) {
+                      return Column(
+                        children: [
+                          AppButton(
+                            onClick: () {
+                              startStateViewModel.changeState(
+                                StartState.onBoarding,
+                              );
+                              context.go(
+                                "/onBoarding/before_start/password_set",
+                              );
+                            },
+                            text: "Изменить",
+                          ),
+                          SizedBox(height: theme.largePaddingDouble),
+                          AppButton(
+                            onClick: () async {
+                              final result = await settingsViewModel
+                                  .deletePassword();
+                              if (result) {
+                                // ignore: use_build_context_synchronously
+                                showSnackBar(context, "Пароль успешно удален!");
+                              }
+                            },
+                            text: "Удалить",
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          AppButton(
+                            onClick: () {
+                              startStateViewModel.changeState(
+                                StartState.onBoarding,
+                              );
+                              context.go(
+                                "/onBoarding/before_start/password_set",
+                              );
+                            },
+                            text: "Установить пароль",
+                          ),
+                        ],
+                      );
+                    }
+                  }
+
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+
+              SizedBox(height: theme.extraLargePaddingDouble),
+              SeparatorWidget(),
+              SizedBox(height: theme.extraLargePaddingDouble),
+              Text(
+                "Цвет темы",
+                style: theme.textTheme.bodyLarge!.copyWith(
+                  color: theme.colorScheme.primary,
                 ),
-                Expanded(child: SizedBox()),
-                ColorRadioButtonGroup(),
-                Expanded(child: SizedBox()),
-                Row(
-                  children: [
-                    AppButton(
-                      onClick: () {},
-                      text: "Отменить",
-                      buttonSize: Size(
-                        MediaQuery.sizeOf(context).width / 2.2,
-                        MediaQuery.sizeOf(context).width / 8,
-                      ),
-                    ),
-                    Expanded(child: SizedBox()),
-                    AppButton(
-                      onClick: () {},
-                      text: "Сохранить",
-                      buttonSize: Size(
-                        MediaQuery.sizeOf(context).width / 2.2,
-                        MediaQuery.sizeOf(context).width / 8,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+              SizedBox(height: theme.extraLargePaddingDouble),
+              ColorRadioButtonGroup(),
+              SizedBox(height: theme.extraLargePaddingDouble),
+            ],
           ),
         ),
       ),
@@ -115,15 +173,13 @@ class ColorRadioButtonGroup extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeChangeViewModel = ref.watch(
-      themeChangeViewModelProvider.notifier,
-    );
-    final themeChangeViewModelState = ref.watch(themeChangeViewModelProvider);
+    final settingsViewModel = ref.watch(settingsViewModelProvider.notifier);
+    final settingsViewModelState = ref.watch(settingsViewModelProvider);
 
     return SizedBox(
       height: MediaQuery.sizeOf(context).height / 5,
       child: FutureBuilder(
-        future: themeChangeViewModel.initState(),
+        future: settingsViewModel.initState(),
         builder: (context, asyncSnapshot) {
           if (asyncSnapshot.hasData) {
             if (asyncSnapshot.data == true) {
@@ -133,11 +189,10 @@ class ColorRadioButtonGroup extends ConsumerWidget {
                 itemCount: colors.length,
                 itemBuilder: (context, index) {
                   return ColorRadioButton(
-                    isSelected: themeChangeViewModelState[index],
+                    isSelected: settingsViewModelState[index],
                     color: colors[index],
                     onClick: () {
-                      log("click");
-                      themeChangeViewModel.changeTheme(index);
+                      settingsViewModel.changeTheme(index);
                     },
                   );
                 },
@@ -174,7 +229,7 @@ class ColorRadioButton extends StatelessWidget {
         children: [
           Positioned(
             child: Container(
-              height: MediaQuery.sizeOf(context).height / 2,
+              height: MediaQuery.sizeOf(context).height,
 
               width: MediaQuery.sizeOf(context).width,
               decoration: BoxDecoration(
@@ -185,7 +240,7 @@ class ColorRadioButton extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: MediaQuery.sizeOf(context).height / 10,
+            top: MediaQuery.sizeOf(context).height / 12,
             left: MediaQuery.sizeOf(context).width / 8,
             right: MediaQuery.sizeOf(context).width / 8,
             child: SizedBox(
@@ -193,6 +248,7 @@ class ColorRadioButton extends StatelessWidget {
               width: 200,
               child: AppDualStateButton(
                 isSelected: isSelected,
+                radius: theme.largePaddingDouble,
                 onClick: () => onClick.call(),
                 text: "Выбрать",
                 selectedText: "Выбрано",

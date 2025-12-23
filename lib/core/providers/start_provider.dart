@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:ruminate/core/consts/app_consts.dart';
@@ -11,6 +13,9 @@ final startDataProvider = FutureProvider<bool>((ref) async {
 
   final isFirstStart = startValues[0];
   final isHavePassword = startValues[1];
+
+  log(isFirstStart.toString());
+  log(isHavePassword.toString());
 
   ref.read(isFirstStartProvider.notifier).state = isFirstStart;
   ref.read(isHavePasswordProvider.notifier).state = isHavePassword;

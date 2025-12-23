@@ -12,7 +12,7 @@ class PasswordRepositoryImpl implements PasswordRepository {
   Future<String?> recievePassword() async {
     try {
       final result = await _keyValueStorage.readValue<String>(
-        AppConsts.usersLocalPasswordKey,
+        AppConsts.localPasswordKey,
       );
       return result;
     } on Object catch (e, stack) {
@@ -23,10 +23,7 @@ class PasswordRepositoryImpl implements PasswordRepository {
   @override
   Future<void> writePassword(String value) async {
     try {
-      await _keyValueStorage.writeString(
-        AppConsts.usersLocalPasswordKey,
-        value,
-      );
+      await _keyValueStorage.writeString(AppConsts.localPasswordKey, value);
     } on Object catch (e, stack) {
       throw Exception("$e StackTrace: $stack");
     }

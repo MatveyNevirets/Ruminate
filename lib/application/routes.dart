@@ -51,8 +51,6 @@ final routerConfigProvider = Provider<GoRouter>((ref) {
         return "/password";
 
       case StartState.loading:
-        log("Loading state");
-
         return "/splash";
 
       case StartState.authenticated:
@@ -104,8 +102,13 @@ final routerConfigProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: "/splash",
-        builder: (context, state) =>
-            Scaffold(body: Center(child: CircularProgressIndicator())),
+        builder: (context, state) => Scaffold(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [Text("LOADING"), CircularProgressIndicator()],
+          ),
+        ),
       ),
       GoRoute(
         path: "/home",

@@ -4,14 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/application/routes.dart';
 import 'package:ruminate/core/providers/start_provider.dart';
 import 'package:ruminate/core/view_models/theme_view_model.dart';
-import 'package:ruminate/features/profile/presentation/view_model/theme_change_view_model.dart';
 
 class Application extends ConsumerWidget {
   const Application({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final startFutureRepository = ref.watch(startDataProvider);
+    final startFutureRepository = ref.read(startDataProvider);
     final theme = ref.watch(themeProvider);
 
     return startFutureRepository.when(
@@ -28,7 +27,7 @@ class Application extends ConsumerWidget {
         return Container();
       },
       loading: () {
-        return CircularProgressIndicator();
+        return Center(child: CircularProgressIndicator());
       },
     );
   }
