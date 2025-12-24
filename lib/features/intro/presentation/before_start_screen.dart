@@ -13,38 +13,43 @@ class BeforeStartScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: createAppBar(context),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: theme.extraLargePaddingDouble,
-          vertical: theme.extraLargePaddingDouble,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Перед тем как\nНачать",
-              textAlign: TextAlign.start,
-              style: theme.textTheme.headlineLarge!.copyWith(
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            Expanded(child: SizedBox()),
-            Text(
-              '''
-В Ruminate данные храняться исключительно на вашем устройсте, удаление приложения повлечет за собой удаление данных\n\nВы можете сохранять ваши рефлексии в отдельные файлы\nТакую возможность вы найдете в разделе "Профиль"
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: theme.extraLargePaddingDouble,
+            vertical: theme.extraLargePaddingDouble,
+          ),
+          child: SizedBox(
+            height: MediaQuery.sizeOf(context).height / 1.25,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Перед тем как\nНачать",
+                  textAlign: TextAlign.start,
+                  style: theme.textTheme.headlineLarge!.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+                Expanded(child: SizedBox()),
+                Text(
+                  '''
+                В Ruminate данные храняться исключительно на вашем устройсте, удаление приложения повлечет за собой удаление данных\n\nВы можете сохранять ваши рефлексии в отдельные файлы\nТакую возможность вы найдете в разделе "Профиль"
                 ''',
-              style: theme.textTheme.headlineSmall!.copyWith(
-                color: theme.colorScheme.primary,
-              ),
+                  style: theme.textTheme.headlineSmall!.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+                Expanded(child: SizedBox()),
+                AppButton(
+                  onClick: () {
+                    context.go("/onBoarding/before_start/password_set/");
+                  },
+                  text: "Понятно",
+                ),
+              ],
             ),
-            Expanded(child: SizedBox()),
-            AppButton(
-              onClick: () {
-                context.go("/onBoarding/before_start/password_set/");
-              },
-              text: "Понятно",
-            ),
-          ],
+          ),
         ),
       ),
     );

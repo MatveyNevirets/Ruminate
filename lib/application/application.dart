@@ -10,7 +10,7 @@ class Application extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final startFutureRepository = ref.read(startDataProvider);
+    final startFutureRepository = ref.watch(startDataProvider);
     final theme = ref.watch(themeProvider);
 
     return startFutureRepository.when(

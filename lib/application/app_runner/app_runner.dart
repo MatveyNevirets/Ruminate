@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ruminate/application/app_runner/app_env.dart';
 import 'package:ruminate/application/application.dart';
 import 'package:ruminate/application/provider/app_env_provider.dart';
@@ -17,14 +20,7 @@ class AppRunner {
       () async {
         await _init();
 
-        try {
-          await Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          );
-        } on Object catch (e, stack) {
-          throw Exception("$e StackTrace: $stack");
-        }
-
+        await _initDependecies();
 
         runApp(
           ProviderScope(
@@ -40,6 +36,16 @@ class AppRunner {
       (e, stack) {
         throw Exception("Exception: $e StackTrace: $stack");
       },
+    );
+  }
+
+  Future<void> _initDependecies() async {
+    await dotenv.load(fileName: ".env");
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    await GoogleSignIn.instance.initialize(
+      serverClientId: dotenv.env['GOOGLE_CLIENT_ID'],
     );
   }
 

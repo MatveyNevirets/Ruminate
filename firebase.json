@@ -1,1 +1,27 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"ruminate-001","appId":"1:158801590958:android:39c0c636c5e1f540224b3f","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"ruminate-001","configurations":{"android":"1:158801590958:android:39c0c636c5e1f540224b3f"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "ruminate-001",
+          "appId": "1:158801590958:android:39c0c636c5e1f540224b3f",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "ruminate-001",
+          "configurations": {
+            "android": "1:158801590958:android:39c0c636c5e1f540224b3f"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "database": "(default)",
+    "location": "eur3",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}
