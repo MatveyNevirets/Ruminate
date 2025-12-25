@@ -1,1 +1,7 @@
-enum StartState { loading, onBoarding, password, authenticated }
+enum StartState {
+  loading,
+  onBoarding,
+  password,
+  unauthenticated,
+  authenticated,
+}

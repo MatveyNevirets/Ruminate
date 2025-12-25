@@ -25,6 +25,27 @@ class FirebaseAuthViewModel extends StateNotifier<AsyncValue<User?>> {
     return _cachedUser;
   }
 
+  Future<void> logout() async {
+    authRepository.logout(FirebaseFetchUserCase());
+  }
+
+  Future<void> loginWithEmail(FirebaseEmailCase loginUsecase) async {
+    try {
+      if (_isLoading) return;
+
+      _isLoading = true;
+      state = AsyncValue.loading();
+
+      final user = await loginUsecase.login();
+
+      _cachedUser = null;
+
+      state = AsyncValue.data(user);
+    } on Object catch (e, stack) {
+      throw Exception("$e StackTrace: $stack");
+    }
+  }
+
   Future<void> loginWithGoogle(LoginUsecase loginUsecase) async {
     try {
       if (_isLoading) return;

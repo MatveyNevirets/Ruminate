@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:ruminate/core/auth/data/auth_params/login_params.dart';
+import 'package:ruminate/core/auth/presentation/view_model/auth_view_model.dart';
+import 'package:ruminate/core/auth/usecases/google_login_usecase.dart';
 
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 
@@ -8,12 +12,15 @@ import 'package:ruminate/core/widgets/app_button.dart';
 
 import 'package:ruminate/core/widgets/app_text_field.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final firebaseAuth = ref.watch(firebaseAuthViewModel.notifier);
+    final emailController = TextEditingController(),
+        passwordController = TextEditingController();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -70,23 +77,26 @@ class LoginScreen extends StatelessWidget {
 
               SizedBox(height: theme.largePaddingDouble),
 
-              Center(
-                child: Column(
-                  children: [
-                    SizedBox(height: 60, width: 60, child: Placeholder()),
+              GestureDetector(
+                onTap: () => firebaseAuth.loginWithGoogle(GoogleLoginUsecase()),
+                child: Center(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 60, width: 60, child: Placeholder()),
 
-                    SizedBox(height: theme.mediumPaddingDouble),
+                      SizedBox(height: theme.mediumPaddingDouble),
 
-                    Text(
-                      textAlign: TextAlign.center,
+                      Text(
+                        textAlign: TextAlign.center,
 
-                      '''Войти с\nGoogle''',
+                        '''Войти с\nGoogle''',
 
-                      style: theme.textTheme.bodySmall!.copyWith(
-                        color: theme.colorScheme.primary,
+                        style: theme.textTheme.bodySmall!.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
 
@@ -94,7 +104,12 @@ class LoginScreen extends StatelessWidget {
 
               AppButton(
                 onClick: () {
-                  context.go("/onBoarding/before_start/login/password_set/");
+                  firebaseAuth.loginWithEmail(
+                    FirebaseEmailCase(
+                      email: emailController.text,
+                      password: passwordController.text,
+                    ),
+                  );
                 },
 
                 text: "Войти",

@@ -7,4 +7,9 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<User?> signIn(FirebaseAuthCase loginCase) async {
     return await loginCase.login();
   }
+
+  @override
+  Future<void> logout(FirebaseAuthCase loginCase) async {
+    await loginCase.logout();
+  }
 }

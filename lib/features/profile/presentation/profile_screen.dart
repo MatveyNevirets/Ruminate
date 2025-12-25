@@ -161,10 +161,28 @@ class ProfileScreen extends ConsumerWidget {
                       return Center(child: CircularProgressIndicator());
                     },
                   ),
-                  AppButton(
-                    onClick: () =>
-                        firebaseAuthVM.loginWithGoogle(GoogleLoginUsecase()),
-                    text: "Войти в аккаунт",
+                  Column(
+                    children: [
+                      AppButton(
+                        onClick: () {
+                          startStateViewModel.changeState(
+                            StartState.unauthenticated,
+                          );
+
+                          context.go("/login");
+                        },
+                        text: "Войти в аккаунт",
+                      ),
+                      AppButton(
+                        onClick: () {
+                          firebaseAuthVM.logout();
+                          startStateViewModel.changeState(
+                            StartState.unauthenticated,
+                          );
+                        },
+                        text: "Выйти",
+                      ),
+                    ],
                   ),
                 ],
               ),
