@@ -4,8 +4,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ruminate/core/auth/presentation/login_screen.dart';
-import 'package:ruminate/core/auth/presentation/registration_screen.dart';
 import 'package:ruminate/core/reflection/data/model/reflection_model.dart';
 import 'package:ruminate/core/reflection/enums/reflect_type_enum.dart';
 import 'package:ruminate/core/widgets/main_pages_widget.dart';
@@ -79,22 +77,6 @@ final routerConfigProvider = Provider<GoRouter>((ref) {
     redirect: redirect,
     initialLocation: "/splash",
     routes: [
-      GoRoute(
-        path: "/login",
-        builder: (context, state) => LoginScreen(),
-        routes: [
-          GoRoute(
-            path: "/register",
-            builder: (context, state) => RegistrationScreen(),
-            routes: [
-              GoRoute(
-                path: "/go_home",
-                builder: (context, state) => Container(),
-              ),
-            ],
-          ),
-        ],
-      ),
       GoRoute(path: "/password", builder: (context, state) => PasswordScreen()),
       GoRoute(
         path: '/onBoarding',

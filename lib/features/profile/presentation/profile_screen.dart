@@ -2,9 +2,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ruminate/core/auth/data/auth_params/login_params.dart';
-import 'package:ruminate/core/auth/presentation/view_model/auth_view_model.dart';
-import 'package:ruminate/core/auth/usecases/google_login_usecase.dart';
 import 'package:ruminate/core/providers/navigation_providers.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/themes/app_themes.dart';
@@ -29,8 +26,6 @@ class ProfileScreen extends ConsumerWidget {
     final navigationIndex = ref.watch(navigationViewModel);
     final settingsViewModel = ref.watch(settingsViewModelProvider.notifier);
     final startStateViewModel = ref.watch(startViewModelProvider.notifier);
-    final firebaseAuthVM = ref.watch(firebaseAuthViewModel.notifier);
-    final firebaseAuthState = ref.watch(firebaseAuthViewModel);
 
     final theme = Theme.of(context);
 
@@ -145,47 +140,6 @@ class ProfileScreen extends ConsumerWidget {
                 },
               ),
 
-              SizedBox(height: theme.extraLargePaddingDouble),
-              SeparatorWidget(),
-              SizedBox(height: theme.extraLargePaddingDouble),
-              Column(
-                children: [
-                  firebaseAuthState.when(
-                    data: (data) {
-                      return Text(data != null ? "Вы вошли" : "Не вошли");
-                    },
-                    error: (Object error, StackTrace stackTrace) {
-                      return Text("Ошибка!");
-                    },
-                    loading: () {
-                      return Center(child: CircularProgressIndicator());
-                    },
-                  ),
-                  Column(
-                    children: [
-                      AppButton(
-                        onClick: () {
-                          startStateViewModel.changeState(
-                            StartState.unauthenticated,
-                          );
-
-                          context.go("/login");
-                        },
-                        text: "Войти в аккаунт",
-                      ),
-                      AppButton(
-                        onClick: () {
-                          firebaseAuthVM.logout();
-                          startStateViewModel.changeState(
-                            StartState.unauthenticated,
-                          );
-                        },
-                        text: "Выйти",
-                      ),
-                    ],
-                  ),
-                ],
-              ),
               SizedBox(height: theme.extraLargePaddingDouble),
               SeparatorWidget(),
               SizedBox(height: theme.extraLargePaddingDouble),
