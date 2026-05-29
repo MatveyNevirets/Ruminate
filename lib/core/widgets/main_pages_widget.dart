@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/core/providers/navigation_providers.dart';
-import 'package:ruminate/core/widgets/bottom_navigation_bar.dart';
 import 'package:ruminate/features/home/presentation/home_screen.dart';
 import 'package:ruminate/features/profile/presentation/profile_screen.dart';
 import 'package:ruminate/features/statistics/presentation/statistics_screen.dart';

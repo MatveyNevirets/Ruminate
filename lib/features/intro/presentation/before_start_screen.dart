@@ -1,57 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ruminate/core/styles/app_paddings_extention.dart';
-import 'package:ruminate/core/widgets/app_bar.dart';
-import 'package:ruminate/core/widgets/app_button.dart';
+import 'package:ruminate/core/widgets/page_shell_widget.dart';
 
-class BeforeStartScreen extends ConsumerWidget {
+class BeforeStartScreen extends StatelessWidget {
   const BeforeStartScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    return Scaffold(
-      appBar: createAppBar(context),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: theme.extraLargePaddingDouble,
-            vertical: theme.extraLargePaddingDouble,
-          ),
-          child: SizedBox(
-            height: MediaQuery.sizeOf(context).height / 1.25,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Перед тем как\nНачать",
-                  textAlign: TextAlign.start,
-                  style: theme.textTheme.headlineLarge!.copyWith(
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                Expanded(child: SizedBox()),
-                Text(
-                  '''
-                В Ruminate данные храняться исключительно на вашем устройсте, удаление приложения повлечет за собой удаление данных\n\nВы можете сохранять ваши рефлексии в отдельные файлы\nТакую возможность вы найдете в разделе "Профиль"
-                ''',
-                  style: theme.textTheme.headlineSmall!.copyWith(
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                Expanded(child: SizedBox()),
-                AppButton(
-                  onClick: () {
-                    context.go("/onBoarding/before_start/password_set/");
-                  },
-                  text: "Понятно",
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+  Widget build(BuildContext context) {
+    return PageShell(
+      icon: Icons.lock_outline_rounded,
+      title: "Перед тем\nкак начать",
+      subtitle:
+          "Данные хранятся только на устройстве. Удаление приложения удалит и записи. Экспорт в Obsidian доступен позже в профиле.",
+      primaryActionText: "Понятно",
+      onPrimaryAction: () {
+        context.go("/onBoarding/before_start/password_set/");
+      },
+      child: const SizedBox.shrink(),
     );
   }
 }

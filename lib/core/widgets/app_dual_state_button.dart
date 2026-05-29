@@ -1,54 +1,68 @@
 import 'package:flutter/material.dart';
 
 class AppDualStateButton extends StatelessWidget {
-  AppDualStateButton({
+  const AppDualStateButton({
     super.key,
     this.buttonSize,
     this.backgroundColor,
     this.isSelected = false,
-    this.radius = 64,
+    this.radius = 20,
     this.onNotSelectedClick,
     required this.onClick,
     required this.text,
     required this.selectedText,
   });
 
-  Size? buttonSize;
-  double radius;
-  final VoidCallback? onClick, onNotSelectedClick;
-  bool isSelected;
-  Color? backgroundColor;
-  final String text, selectedText;
+  final Size? buttonSize;
+  final double radius;
+  final VoidCallback onClick;
+  final VoidCallback? onNotSelectedClick;
+  final bool isSelected;
+  final Color? backgroundColor;
+  final String text;
+  final String selectedText;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return SizedBox(
       width: buttonSize?.width ?? double.maxFinite,
-      height: buttonSize?.height ?? 60,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius),
-          ),
-          backgroundColor: isSelected
-              ? Theme.of(context).colorScheme.surfaceContainer.withAlpha(180)
-              : Theme.of(context).colorScheme.surfaceContainer,
-        ),
-        onPressed: () {
-          if (isSelected && onNotSelectedClick != null) {
-            onClick!.call();
-          } else if (onNotSelectedClick == null) {
-            onClick!.call();
-          } else {
-            onNotSelectedClick?.call();
-          }
-        },
-        child: Text(
-          isSelected ? selectedText : text,
-          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+      height: buttonSize?.height ?? 56,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? (backgroundColor ?? colorScheme.primary).withOpacity(0.12)
+              : colorScheme.surface,
+          borderRadius: BorderRadius.circular(radius),
+          border: Border.all(
             color: isSelected
-                ? Theme.of(context).colorScheme.onSurface
-                : Theme.of(context).colorScheme.onSurface,
+                ? colorScheme.primary.withOpacity(0.22)
+                : colorScheme.onSurface.withOpacity(0.08),
+          ),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(radius),
+            onTap: () {
+              if (isSelected && onNotSelectedClick != null) {
+                onNotSelectedClick!.call();
+                return;
+              }
+              onClick.call();
+            },
+            child: Center(
+              child: Text(
+                isSelected ? selectedText : text,
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
           ),
         ),
       ),

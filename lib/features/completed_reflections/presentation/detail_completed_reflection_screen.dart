@@ -1,31 +1,212 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:ruminate/core/reflection/data/model/reflection_model.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
-import 'package:ruminate/core/widgets/app_bar.dart';
 
 class DetailCompletedReflectionScreen extends StatelessWidget {
   final ReflectionModel reflection;
+
   const DetailCompletedReflectionScreen({super.key, required this.reflection});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    log(reflection.steps[0].title);
+    final colorScheme = theme.colorScheme;
+
+    if (reflection.steps.isNotEmpty) {
+      log(reflection.steps[0].title);
+    }
+
     return Scaffold(
-      appBar: createAppBar(context),
-      body: Padding(
-        padding: Theme.of(context).largePadding,
-        child: CustomScrollView(
-          slivers: [
-            _TitleWidget(reflection: reflection, theme: theme),
-            SliverToBoxAdapter(child: SizedBox(height: theme.mediumPaddingDouble)),
-            _SeparatorWidget(theme: theme),
-            SliverToBoxAdapter(child: SizedBox(height: theme.mediumPaddingDouble)),
-            _DescriptionWidget(reflection: reflection, theme: theme),
-            SliverToBoxAdapter(child: SizedBox(height: theme.largePaddingDouble)),
-            _ReflectionDataWidget(reflection: reflection, theme: theme),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: Stack(
+        children: [
+          Positioned(
+            top: -120,
+            right: -90,
+            child: Container(
+              width: 320,
+              height: 250,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(56),
+                color: colorScheme.primary.withOpacity(0.08),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 240,
+            left: -120,
+            child: Container(
+              width: 260,
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(42),
+                color: colorScheme.primary.withOpacity(0.045),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -170,
+            right: -100,
+            child: Container(
+              width: 360,
+              height: 280,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(64),
+                color: colorScheme.primary.withOpacity(0.05),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverPadding(
+                  padding: theme.largePadding.copyWith(top: 8),
+                  sliver: SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _HeroCard(
+                          title: reflection.title,
+                          subtitle:
+                              "Просматривай сохранённую рефлексию по шагам и возвращайся к своим ответам в любой момент.",
+                          date: _receiveDataFromReflectionModel(reflection),
+                          icon: Icons.library_books_rounded,
+                        ),
+
+                        SizedBox(height: theme.largePaddingDouble * 2.15),
+                        _SectionTitle(
+                          title: "Содержимое",
+                          subtitle:
+                              "Каждый шаг и каждый ответ собраны ниже в аккуратные карточки.",
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverPadding(
+                  padding: theme.largePadding.copyWith(top: 18),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final step = reflection.steps[index];
+
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          bottom: theme.mediumPaddingDouble,
+                        ),
+                        child: _StepCard(
+                          stepIndex: index + 1,
+                          title: step.title,
+                          qnaWidgets: step.questionsAndAnswers
+                              .map((qna) => _QnaCard(qna: qna))
+                              .toList(),
+                        ),
+                      );
+                    }, childCount: reflection.steps.length),
+                  ),
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.only(
+                    bottom: theme.largePaddingDouble * 2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _receiveDataFromReflectionModel(ReflectionModel reflection) {
+    final date = reflection.reflectionDate;
+
+    if (date == null) {
+      return "Тут пусто";
+    }
+
+    return "${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}";
+  }
+}
+
+class _HeroCard extends StatelessWidget {
+  const _HeroCard({
+    required this.title,
+    required this.subtitle,
+    required this.date,
+    required this.icon,
+  });
+
+  final String title;
+  final String subtitle;
+  final String date;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return _SurfaceCard(
+      accent: colorScheme.primary,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colorScheme.primary.withOpacity(0.11),
+              colorScheme.surfaceContainerHighest.withOpacity(0.16),
+            ],
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 72,
+              width: 72,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                color: colorScheme.primary.withOpacity(0.14),
+                border: Border.all(
+                  color: colorScheme.primary.withOpacity(0.10),
+                ),
+              ),
+              child: Icon(icon, size: 36, color: colorScheme.primary),
+            ),
+            const SizedBox(width: 18),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.8,
+                      height: 1.05,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurface.withOpacity(0.64),
+                      height: 1.6,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _MiniChip(text: "Дата: $date", color: colorScheme.primary),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -33,132 +214,236 @@ class DetailCompletedReflectionScreen extends StatelessWidget {
   }
 }
 
-class _ReflectionDataWidget extends StatelessWidget {
-  const _ReflectionDataWidget({required this.reflection, required this.theme});
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle({required this.title, required this.subtitle});
 
-  final ReflectionModel reflection;
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate((context, index) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _TitleStepWidget(reflection: reflection, theme: theme, index: index),
-            SizedBox(height: theme.mediumPaddingDouble),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: reflection.steps[index].questionsAndAnswers
-                  .map((qna) => _QNAWidget(theme: theme, qna: qna))
-                  .toList(),
-            ),
-          ],
-        );
-      }, childCount: reflection.steps.length),
-    );
-  }
-}
-
-class _TitleStepWidget extends StatelessWidget {
-  final int index;
-  const _TitleStepWidget({required this.reflection, required this.theme, required this.index});
-
-  final ReflectionModel reflection;
-  final ThemeData theme;
+  final String title;
+  final String subtitle;
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      reflection.steps[index].title,
-      style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.primary),
-    );
-  }
-}
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-class _QNAWidget extends StatelessWidget {
-  final Map<String, String?> qna;
-  const _QNAWidget({required this.theme, required this.qna});
-
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(qna.keys.first, style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.primary)),
-        SizedBox(height: theme.mediumPaddingDouble),
-        Container(
-          decoration: BoxDecoration(color: theme.colorScheme.primaryContainer, borderRadius: BorderRadius.circular(8)),
-
-          child: Padding(
-            padding: theme.mediumPadding,
-            child: Text(
-              qna.values.first ?? "Тут пусто",
-              style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.primary),
-            ),
+        Text(
+          title,
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.6,
           ),
         ),
-        SizedBox(height: theme.largePaddingDouble),
+        const SizedBox(height: 6),
+        Text(
+          subtitle,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurface.withOpacity(0.60),
+            height: 1.5,
+          ),
+        ),
       ],
     );
   }
 }
 
-class _DescriptionWidget extends StatelessWidget {
-  const _DescriptionWidget({required this.reflection, required this.theme});
+class _StepCard extends StatelessWidget {
+  const _StepCard({
+    required this.stepIndex,
+    required this.title,
+    required this.qnaWidgets,
+  });
 
-  final ReflectionModel reflection;
-  final ThemeData theme;
+  final int stepIndex;
+  final String title;
+  final List<Widget> qnaWidgets;
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Text(
-        reflection.description,
-        style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.primary),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return _SurfaceCard(
+      accent: colorScheme.primary,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: colorScheme.surfaceContainerHighest.withOpacity(0.10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 44,
+                  width: 44,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: colorScheme.primary.withOpacity(0.12),
+                    border: Border.all(
+                      color: colorScheme.primary.withOpacity(0.10),
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "$stepIndex",
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          height: 1.2,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        "Вопросы и ответы этого шага",
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurface.withOpacity(0.60),
+                          height: 1.45,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 22),
+            ...qnaWidgets,
+          ],
+        ),
       ),
     );
   }
 }
 
-class _SeparatorWidget extends StatelessWidget {
-  const _SeparatorWidget({required this.theme});
+class _QnaCard extends StatelessWidget {
+  const _QnaCard({required this.qna});
 
-  final ThemeData theme;
+  final Map<String, String?> qna;
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(height: theme.smallPaddingDouble / 2, width: double.maxFinite, color: theme.colorScheme.primary),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    final question = qna.keys.first;
+    final answer = qna.values.first ?? "Тут пусто";
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            question,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: colorScheme.primary,
+              fontWeight: FontWeight.w700,
+              height: 1.35,
+            ),
+          ),
+          SizedBox(height: theme.mediumPaddingDouble),
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(22),
+              color: colorScheme.surfaceContainerHighest.withOpacity(0.18),
+              border: Border.all(
+                color: colorScheme.onSurface.withOpacity(0.06),
+              ),
+            ),
+            child: Padding(
+              padding: theme.mediumPadding,
+              child: Text(
+                answer,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurface.withOpacity(0.72),
+                  height: 1.6,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _TitleWidget extends StatelessWidget {
-  const _TitleWidget({required this.reflection, required this.theme});
+class _MiniChip extends StatelessWidget {
+  const _MiniChip({required this.text, required this.color});
 
-  final ReflectionModel reflection;
-  final ThemeData theme;
-
-  String _reciveDataFromReflectionModel(ReflectionModel reflection) {
-    String date;
-
-    date = reflection.reflectionDate == null
-        ? "Тут пусто"
-        : "${reflection.reflectionDate?.day.toString()}.${reflection.reflectionDate?.month}.${reflection.reflectionDate?.year}";
-
-    return date;
-  }
+  final String text;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.10),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: color.withOpacity(0.10)),
+      ),
       child: Text(
-        "Рефлексия: ${reflection.title} | Дата: ${_reciveDataFromReflectionModel(reflection)}",
-        style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.primary),
+        text,
+        style: theme.textTheme.labelMedium?.copyWith(
+          color: color,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}
+
+class _SurfaceCard extends StatelessWidget {
+  const _SurfaceCard({required this.child, this.accent});
+
+  final Widget child;
+  final Color? accent;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final borderColor = (accent ?? colorScheme.onSurface).withOpacity(0.08);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        color: colorScheme.surface,
+        border: Border.all(color: borderColor),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 26,
+            offset: const Offset(0, 12),
+            color: Colors.black.withOpacity(0.045),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: child,
+        ),
       ),
     );
   }

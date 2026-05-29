@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:ruminate/core/providers/start_provider.dart';
-import 'package:ruminate/features/start/domain/repository/start_repository.dart';
 import 'package:ruminate/features/start/enum/start_state.dart';
 import 'package:ruminate/features/start/providers/start_repository_provider.dart';
 
