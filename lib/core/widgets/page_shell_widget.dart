@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ruminate/core/styles/app_paddings_extention.dart';
 import 'package:ruminate/core/widgets/app_button.dart';
@@ -15,7 +16,7 @@ class PageShell extends StatelessWidget {
     this.secondaryActionText,
     this.onSecondaryAction,
     this.icon,
-    required this.child,
+    this.child,
   });
 
   final String title;
@@ -25,7 +26,7 @@ class PageShell extends StatelessWidget {
   final String? secondaryActionText;
   final VoidCallback? onSecondaryAction;
   final IconData? icon;
-  final Widget child;
+  final Widget? child;
 
   double _titleSize(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
@@ -72,7 +73,16 @@ class PageShell extends StatelessWidget {
     final iconSize = _iconSize(context);
     final iconInnerSize = _iconInnerSize(context);
 
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+    );
+
     return Scaffold(
+      extendBodyBehindAppBar: true,
       body: Stack(
         children: [
           Positioned(
@@ -104,7 +114,12 @@ class PageShell extends StatelessWidget {
               builder: (context, constraints) {
                 return SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                    vertical: context.canPop()
+                        ? MediaQuery.sizeOf(context).height / 20
+                        : MediaQuery.sizeOf(context).height / 8,
+                  ),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       minHeight: constraints.maxHeight,
@@ -112,14 +127,23 @@ class PageShell extends StatelessWidget {
                     child: IntrinsicHeight(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+
                         children: [
                           SizedBox(height: topSpacing),
 
                           if (context.canPop()) ...[
                             const _BackButton(),
-                            SizedBox(height: MediaQuery.sizeOf(context).width < 360 ? 28 : 36),
+                            SizedBox(
+                              height: MediaQuery.sizeOf(context).width < 360
+                                  ? 28
+                                  : 36,
+                            ),
                           ] else ...[
-                            SizedBox(height: MediaQuery.sizeOf(context).width < 360 ? 12 : 18),
+                            SizedBox(
+                              height: MediaQuery.sizeOf(context).width < 360
+                                  ? 12
+                                  : 18,
+                            ),
                           ],
 
                           if (icon != null)
@@ -156,7 +180,11 @@ class PageShell extends StatelessWidget {
                               ),
                             ),
 
-                          SizedBox(height: MediaQuery.sizeOf(context).width < 360 ? 28 : 34),
+                          SizedBox(
+                            height: MediaQuery.sizeOf(context).width < 360
+                                ? 28
+                                : 34,
+                          ),
 
                           ConstrainedBox(
                             constraints: const BoxConstraints(maxWidth: 520),
@@ -172,7 +200,11 @@ class PageShell extends StatelessWidget {
                             ),
                           ),
 
-                          SizedBox(height: MediaQuery.sizeOf(context).width < 360 ? 14 : 18),
+                          SizedBox(
+                            height: MediaQuery.sizeOf(context).width < 360
+                                ? 14
+                                : 18,
+                          ),
 
                           ConstrainedBox(
                             constraints: const BoxConstraints(maxWidth: 540),
@@ -188,25 +220,38 @@ class PageShell extends StatelessWidget {
                             ),
                           ),
 
-                          SizedBox(height: MediaQuery.sizeOf(context).width < 360 ? 40 : 48),
-
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(22),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(32),
-                              color: colorScheme.surface.withOpacity(0.55),
-                              border: Border.all(
-                                color: colorScheme.outline.withOpacity(0.08),
-                              ),
-                            ),
-                            child: child,
+                          SizedBox(
+                            height: MediaQuery.sizeOf(context).width < 360
+                                ? 40
+                                : 48,
                           ),
+
+                          child != null
+                              ? Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(22),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(32),
+                                    color: colorScheme.surface.withOpacity(
+                                      0.55,
+                                    ),
+                                    border: Border.all(
+                                      color: colorScheme.outline.withOpacity(
+                                        0.08,
+                                      ),
+                                    ),
+                                  ),
+                                  child: child,
+                                )
+                              : SizedBox(),
 
                           Padding(
                             padding: EdgeInsets.only(
-                              top: MediaQuery.sizeOf(context).width < 360 ? 24 : 30,
-                              bottom: MediaQuery.of(context).padding.bottom + 18,
+                              top: MediaQuery.sizeOf(context).width < 360
+                                  ? 24
+                                  : 30,
+                              bottom:
+                                  MediaQuery.of(context).padding.bottom + 18,
                             ),
                             child: Column(
                               children: [
@@ -226,9 +271,10 @@ class PageShell extends StatelessWidget {
                                       ),
                                       child: Text(
                                         secondaryActionText!,
-                                        style: theme.textTheme.bodyMedium?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
                                     ),
                                   ),

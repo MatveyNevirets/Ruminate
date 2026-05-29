@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/application/routes.dart';
 import 'package:ruminate/core/providers/start_provider.dart';
@@ -12,6 +13,14 @@ class Application extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final startFutureRepository = ref.watch(startDataProvider);
     final theme = ref.watch(themeProvider);
+
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+    );
 
     return startFutureRepository.when(
       data: (data) {

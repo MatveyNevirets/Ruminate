@@ -18,7 +18,7 @@ class WhereChangePasswordScreen extends StatelessWidget {
           "/onBoarding/before_start/password_set/where_change/go_home",
         );
       },
-      child: const SizedBox.shrink(),
+    
     );
   }
 }

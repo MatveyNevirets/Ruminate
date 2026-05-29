@@ -16,7 +16,7 @@ class BeforeStartScreen extends StatelessWidget {
       onPrimaryAction: () {
         context.go("/onBoarding/before_start/password_set/");
       },
-      child: const SizedBox.shrink(),
+    
     );
   }
 }

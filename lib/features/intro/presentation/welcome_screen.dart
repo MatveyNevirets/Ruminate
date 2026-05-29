@@ -16,7 +16,6 @@ class WelcomeScreen extends StatelessWidget {
       onPrimaryAction: () {
         context.go("/onBoarding/before_start/");
       },
-      child: const SizedBox.shrink(),
     );
   }
 }
