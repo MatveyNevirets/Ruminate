@@ -104,9 +104,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               "Экспорт, конфиденциальность и оформление приложения в одном месте.",
                           icon: Icons.account_circle_rounded,
                         ),
-
                         SizedBox(height: theme.largePaddingDouble),
-
                         _SectionTitle(
                           title: "Экспорт",
                           subtitle:
@@ -172,9 +170,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             ),
                           ),
                         ),
-
                         SizedBox(height: theme.largePaddingDouble * 1.15),
-
                         _SectionTitle(
                           title: "Конфиденциальность",
                           subtitle: "Действия с паролем и защитой данных.",
@@ -269,7 +265,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                               "Пароль успешно удален!",
                                             );
                                             setState(() {
-                                              _passwordExistsFuture; // no-op, keeps structure stable
+                                              _passwordExistsFuture;
                                             });
                                           }
                                         },
@@ -294,9 +290,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             ),
                           ),
                         ),
-
                         SizedBox(height: theme.largePaddingDouble * 1.15),
-
                         _SectionTitle(
                           title: "Цвет темы",
                           subtitle:
@@ -310,7 +304,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             child: ColorRadioButtonGroup(),
                           ),
                         ),
-
                         SizedBox(height: theme.largePaddingDouble * 2),
                       ],
                     ),
@@ -368,7 +361,7 @@ class _ColorRadioButtonGroupState extends ConsumerState<ColorRadioButtonGroup> {
       builder: (context, asyncSnapshot) {
         if (asyncSnapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox(
-            height: 320,
+            height: 340,
             child: Center(child: CircularProgressIndicator()),
           );
         }
@@ -386,7 +379,7 @@ class _ColorRadioButtonGroupState extends ConsumerState<ColorRadioButtonGroup> {
         }
 
         return SizedBox(
-          height: 330,
+          height: 350,
           child: PageView.builder(
             controller: _pageController,
             itemCount: _colors.length,
@@ -510,48 +503,121 @@ class ColorRadioButton extends StatelessWidget {
                       ],
                     ),
                     const Spacer(),
-                    Container(
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 220),
+                      curve: Curves.easeOutCubic,
+                      width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(24),
-                        color: colorScheme.surface.withOpacity(0.46),
-                        border: Border.all(
-                          color: colorScheme.onSurface.withOpacity(0.06),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: isSelected
+                              ? [
+                                  color.withOpacity(0.16),
+                                  colorScheme.surface.withOpacity(0.55),
+                                ]
+                              : [
+                                  colorScheme.surface.withOpacity(0.52),
+                                  colorScheme.surfaceContainerHighest
+                                      .withOpacity(0.24),
+                                ],
                         ),
+                        border: Border.all(
+                          color: isSelected
+                              ? color.withOpacity(0.20)
+                              : colorScheme.onSurface.withOpacity(0.06),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 18,
+                            offset: const Offset(0, 8),
+                            color: Colors.black.withOpacity(0.03),
+                          ),
+                        ],
                       ),
-                      child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  isSelected
-                                      ? "Тема уже выбрана"
-                                      : "Сделать активной",
-                                  style: theme.textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.w800,
+                          Row(
+                            children: [
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 220),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 7,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? color.withOpacity(0.12)
+                                      : colorScheme.onSurface.withOpacity(0.04),
+                                  borderRadius: BorderRadius.circular(999),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? color.withOpacity(0.14)
+                                        : colorScheme.onSurface.withOpacity(
+                                            0.05,
+                                          ),
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  isSelected
-                                      ? "Эта палитра сейчас используется в приложении."
-                                      : "Нажми, чтобы применить эту тему.",
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: colorScheme.onSurface.withOpacity(
-                                      0.60,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      isSelected
+                                          ? Icons.check_circle_rounded
+                                          : Icons.touch_app_rounded,
+                                      size: 16,
+                                      color: isSelected
+                                          ? color
+                                          : colorScheme.onSurface.withOpacity(
+                                              0.50,
+                                            ),
                                     ),
-                                    height: 1.35,
-                                  ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      isSelected
+                                          ? "Активная тема"
+                                          : "Готова к выбору",
+                                      style: theme.textTheme.labelMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w800,
+                                            color: isSelected
+                                                ? color
+                                                : colorScheme.onSurface
+                                                      .withOpacity(0.62),
+                                          ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
+                              const Spacer(),
+                              Icon(
+                                isSelected
+                                    ? Icons.verified_rounded
+                                    : Icons.circle_outlined,
+                                size: 20,
+                                color: isSelected
+                                    ? color
+                                    : colorScheme.onSurface.withOpacity(0.30),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            isSelected
+                                ? "Эта палитра уже применяется в приложении."
+                                : "Нажми, чтобы сделать её активной.",
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: colorScheme.onSurface.withOpacity(0.66),
+                              height: 1.45,
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(height: 14),
                           SizedBox(
                             height: 58,
-                            width: 132,
+                            width: double.infinity,
                             child: AppDualStateButton(
                               isSelected: isSelected,
                               radius: theme.largePaddingDouble,

@@ -11,11 +11,17 @@ import 'package:ruminate/features/completed_reflections/presentation/providers/c
 class CompletedReflectionsScreen extends ConsumerWidget {
   const CompletedReflectionsScreen({super.key});
 
+  String _formatDate(DateTime? date) {
+    if (date == null) return "Дата не указана";
+    return "${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}";
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final reflectionsState = ref.watch(completedReflectionsProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isCompact = MediaQuery.sizeOf(context).width < 360;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -129,41 +135,30 @@ class CompletedReflectionsScreen extends ConsumerWidget {
                         );
                       }
 
+                      final displayReflections = reflections.reversed.toList(
+                        growable: false,
+                      );
+
                       return SliverGrid(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           mainAxisSpacing: theme.mediumPaddingDouble,
                           crossAxisSpacing: theme.mediumPaddingDouble,
-                          childAspectRatio: 0.98,
+                          childAspectRatio: isCompact ? 0.82 : 0.88,
                         ),
                         delegate: SliverChildBuilderDelegate((context, index) {
-                          final reflection = reflections[index];
+                          final reflection = displayReflections[index];
+                          final dateText = _formatDate(
+                            reflection.reflectionDate,
+                          );
 
-                          return AppContainer(
+                          return _ReflectionCard(
                             title: reflection.title,
-                            backgroundColor: colorScheme.surface,
-                            accentColor: colorScheme.primary,
-                            leading: Container(
-                              height: 44,
-                              width: 44,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                color: colorScheme.primary.withOpacity(0.10),
-                              ),
-                              child: Icon(
-                                Icons.note_alt_rounded,
-                                color: colorScheme.primary,
-                                size: 24,
-                              ),
-                            ),
-                            trailing: Icon(
-                              Icons.arrow_forward_rounded,
-                              color: colorScheme.onSurface.withOpacity(0.36),
-                            ),
-                            onClick: () =>
+                            dateText: dateText,
+                            onTap: () =>
                                 context.go("/home/details", extra: reflection),
                           );
-                        }, childCount: reflections.length),
+                        }, childCount: displayReflections.length),
                       );
                     },
                   ),
@@ -177,6 +172,103 @@ class CompletedReflectionsScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ReflectionCard extends StatelessWidget {
+  const _ReflectionCard({
+    required this.title,
+    required this.dateText,
+    required this.onTap,
+  });
+
+  final String title;
+  final String dateText;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isCompact = MediaQuery.sizeOf(context).width < 360;
+
+    return _SurfaceCard(
+      accent: colorScheme.primary,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(30),
+          onTap: onTap,
+          child: Container(
+            padding: EdgeInsets.all(isCompact ? 16 : 18),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: colorScheme.surfaceContainerHighest.withOpacity(0.12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: isCompact ? 42 : 46,
+                  width: isCompact ? 42 : 46,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: colorScheme.primary.withOpacity(0.10),
+                  ),
+                  child: Icon(
+                    Icons.note_alt_rounded,
+                    color: colorScheme.primary,
+                    size: isCompact ? 22 : 24,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontSize: isCompact ? 14.5 : 15.5,
+                    fontWeight: FontWeight.w800,
+                    height: 1.2,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.schedule_rounded,
+                      size: 16,
+                      color: colorScheme.onSurface.withOpacity(0.42),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        dateText,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurface.withOpacity(0.58),
+                          fontSize: 11.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Icon(
+                    Icons.arrow_forward_rounded,
+                    size: 18,
+                    color: colorScheme.primary.withOpacity(0.60),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -197,12 +289,13 @@ class _HeroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isCompact = MediaQuery.sizeOf(context).width < 360;
 
     return _SurfaceCard(
       accent: colorScheme.primary,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(isCompact ? 22 : 24),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           gradient: LinearGradient(
@@ -217,8 +310,8 @@ class _HeroCard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              height: 72,
-              width: 72,
+              height: isCompact ? 64 : 72,
+              width: isCompact ? 64 : 72,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
                 color: colorScheme.primary.withOpacity(0.14),
@@ -226,7 +319,11 @@ class _HeroCard extends StatelessWidget {
                   color: colorScheme.primary.withOpacity(0.10),
                 ),
               ),
-              child: Icon(icon, size: 36, color: colorScheme.primary),
+              child: Icon(
+                icon,
+                size: isCompact ? 32 : 36,
+                color: colorScheme.primary,
+              ),
             ),
             const SizedBox(width: 18),
             Expanded(
@@ -235,10 +332,13 @@ class _HeroCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.headlineSmall?.copyWith(
+                      fontSize: isCompact ? 19 : 21,
                       fontWeight: FontWeight.w900,
-                      letterSpacing: -0.8,
-                      height: 1.05,
+                      letterSpacing: -0.7,
+                      height: 1.08,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -246,7 +346,8 @@ class _HeroCard extends StatelessWidget {
                     subtitle,
                     style: theme.textTheme.bodyLarge?.copyWith(
                       color: colorScheme.onSurface.withOpacity(0.64),
-                      height: 1.6,
+                      height: 1.55,
+                      fontSize: isCompact ? 14.5 : 16,
                     ),
                   ),
                 ],
@@ -269,6 +370,7 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isCompact = MediaQuery.sizeOf(context).width < 360;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,8 +378,9 @@ class _SectionTitle extends StatelessWidget {
         Text(
           title,
           style: theme.textTheme.headlineSmall?.copyWith(
+            fontSize: isCompact ? 20 : 22,
             fontWeight: FontWeight.w800,
-            letterSpacing: -0.6,
+            letterSpacing: -0.5,
           ),
         ),
         const SizedBox(height: 6),
@@ -286,6 +389,7 @@ class _SectionTitle extends StatelessWidget {
           style: theme.textTheme.bodyMedium?.copyWith(
             color: colorScheme.onSurface.withOpacity(0.60),
             height: 1.5,
+            fontSize: isCompact ? 13.5 : 14,
           ),
         ),
       ],

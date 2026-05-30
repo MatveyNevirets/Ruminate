@@ -90,7 +90,7 @@ class StartDailyReflectionScreen extends ConsumerWidget {
                       onTap: () => context.go(
                         "/home/daily_reflection/superficial_reflection",
                       ),
-                      buttonText: "Начать поверхностную рефлексию",
+                      buttonText: "Начать поверхн. рефлексию",
                     ),
                     SizedBox(height: theme.largePaddingDouble * 1.15),
                     _SectionTitle(

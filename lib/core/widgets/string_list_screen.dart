@@ -142,7 +142,7 @@ class StringListScreen extends StatelessWidget {
                       ),
                       child: Container(
                         width: double.infinity,
-                        height: MediaQuery.sizeOf(context).height / 4,
+                        height: MediaQuery.sizeOf(context).height / 3,
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(32),
