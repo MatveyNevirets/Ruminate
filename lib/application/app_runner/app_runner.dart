@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/application/app_runner/app_env.dart';
 import 'package:ruminate/application/application.dart';
@@ -35,9 +34,7 @@ class AppRunner {
     );
   }
 
-  Future<void> _initDependecies() async {
-    await dotenv.load(fileName: ".env");
-  }
+  Future<void> _initDependecies() async {}
 
   Future<void> _init() async {
     WidgetsFlutterBinding.ensureInitialized();
