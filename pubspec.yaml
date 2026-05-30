@@ -1,7 +1,7 @@
 name: ruminate
 description: "Ruminate is an app designed to help people with self-reflection so they can get to know themselves and find their happiness."
 publish_to: "none"
-version: 0.1.0
+version: 0.2.0
 
 environment:
   sdk: ^3.9.2
@@ -43,21 +43,21 @@ flutter:
 
 flutter_icons:
   android: true
-  image_path: "assets/images/Ruminate_icon.png"
-  adaptive_icon_foreground: "assets/images/Ruminate_icon.png"
-  adaptive_icon_background: "#ffffff"
+  image_path: "assets/images/dark_logo.png"
+  adaptive_icon_foreground: "assets/images/dark_logo.png"
+  adaptive_icon_background: "#121212"
 
 flutter_native_splash:
   color: "#FCFAF7"
-  image: assets/images/light_splash_logo.png
+  image: assets/images/light_logo.png
 
   color_dark: "#121212"
-  image_dark: assets/images/dark_splash_logo.png
+  image_dark: assets/images/dark_logo.png
 
   android_12:
-    image: assets/images/light_splash_logo.png
+    image: assets/images/light_logo.png
     icon_background_color: "#FCFAF7"
-    image_dark: assets/images/dark_splash_logo.png
+    image_dark: assets/images/dark_logo.png
     icon_background_color_dark: "#121212"
 
   fullscreen: true
