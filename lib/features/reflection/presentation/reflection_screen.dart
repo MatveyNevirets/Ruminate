@@ -19,6 +19,8 @@ class _ReflectionScreenState extends ConsumerState<ReflectionScreen> {
   final ScrollController scrollController = ScrollController();
   final Map<int, TextEditingController> _controllers = {};
 
+  ReflectionStepModel? _activeStep;
+
   @override
   void dispose() {
     scrollController.dispose();
@@ -28,7 +30,7 @@ class _ReflectionScreenState extends ConsumerState<ReflectionScreen> {
     super.dispose();
   }
 
-  List<TextEditingController> _controllersForStep(ReflectionStepModel? step) {
+  void _syncControllersWithStep(ReflectionStepModel? step) {
     final count = step?.questionsAndAnswers.length ?? 0;
 
     for (final key in _controllers.keys.toList()) {
@@ -42,6 +44,25 @@ class _ReflectionScreenState extends ConsumerState<ReflectionScreen> {
       _controllers.putIfAbsent(i, () => TextEditingController());
     }
 
+    if (!identical(_activeStep, step)) {
+      for (int i = 0; i < count; i++) {
+        final rawAnswer =
+            step?.questionsAndAnswers[i].values.first?.toString() ?? "";
+        final controller = _controllers[i]!;
+
+        controller.text = rawAnswer;
+        controller.selection = TextSelection.collapsed(
+          offset: controller.text.length,
+        );
+      }
+
+      _activeStep = step;
+    }
+  }
+
+  List<TextEditingController> _controllersForStep(ReflectionStepModel? step) {
+    _syncControllersWithStep(step);
+    final count = step?.questionsAndAnswers.length ?? 0;
     return List.generate(count, (index) => _controllers[index]!);
   }
 
@@ -173,6 +194,7 @@ class _ReflectionScreenState extends ConsumerState<ReflectionScreen> {
 
                     SizedBox(height: theme.extraLargePaddingDouble),
                     _QuestionsWidget(
+                      key: ValueKey(currentStep),
                       currentStep: currentStep,
                       controllers: controllers,
                     ),
@@ -221,6 +243,7 @@ class _ReflectionScreenState extends ConsumerState<ReflectionScreen> {
 
 class _QuestionsWidget extends StatelessWidget {
   const _QuestionsWidget({
+    super.key,
     required this.currentStep,
     required this.controllers,
   });
