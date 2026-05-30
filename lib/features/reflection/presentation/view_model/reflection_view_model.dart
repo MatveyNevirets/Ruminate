@@ -44,33 +44,63 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
     super.initial,
   ]);
 
-  void setType(ReflectType type) {
-    currentReflection = null;
-    state = null;
+  ReflectionModel _cloneReflectionModel(ReflectionModel source) {
+    final clonedSteps = source.steps.map(_cloneStep).toList(growable: false);
+    return source.copyWith(steps: clonedSteps);
+  }
+
+  ReflectionStepModel _cloneStep(ReflectionStepModel step) {
+    final clonedQna = step.questionsAndAnswers
+        .map((qna) => Map<String, String?>.from(qna))
+        .toList(growable: false);
+
+    return step.copyWith(questionsAndAnswers: clonedQna);
+  }
+
+  void _resetRuntimeState() {
     firstStep = null;
     lastStep = null;
+    currentReflection = null;
+    personalVictories.clear();
+    energyGenerator = null;
+    energyKiller = null;
+    importantToWork = null;
+    averageConfident = null;
+    fears = null;
+    state = null;
+  }
+
+  void setType(ReflectType type) {
+    _resetRuntimeState();
 
     final dailySuperficial = ref.read(dailySuperficialReflectionProvider);
     final dailyIndepth = ref.read(dailyIndepthReflectionProvider);
     final monthly = ref.read(monthlyReflectionProvider);
     final weekly = ref.read(weeklyReflectionProvider);
 
+    final ReflectionModel sourceReflection;
+
     switch (type) {
       case ReflectType.dailySuperficital:
-        currentReflection = dailySuperficial;
+        sourceReflection = dailySuperficial;
+        break;
       case ReflectType.dailyIndepth:
-        currentReflection = dailyIndepth;
+        sourceReflection = dailyIndepth;
+        break;
       case ReflectType.monthly:
-        currentReflection = monthly;
+        sourceReflection = monthly;
+        break;
       case ReflectType.weekly:
-        currentReflection = weekly;
-
+        sourceReflection = weekly;
+        break;
       default:
         throw Exception("Not found $type reflection type");
     }
 
-    //A loop that creates a linked list
-    for (int i = 0; currentReflection!.steps.length > i; i++) {
+    // Always work with a fresh copy so old answers never leak into a new run.
+    currentReflection = _cloneReflectionModel(sourceReflection);
+
+    for (int i = 0; i < currentReflection!.steps.length; i++) {
       insertStep(currentReflection!.steps[i]);
     }
 
@@ -88,53 +118,41 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
   }
 
   void nextStep(List<String> answers, BuildContext context) {
-    //Gets an index of the current step
     final index = currentReflection!.steps.indexOf(state!);
     final List<Map<String, String?>> newQnaList = [];
 
-    //Here we iterate through each question and answer,
-    //Replacing null values ​​with the answers just entered by the user.
     for (int i = 0; i < answers.length; i++) {
       final qna = currentReflection!.steps[index].questionsAndAnswers[i];
       final qnaKey = qna.keys.first;
 
       qna[qnaKey] = answers[i].isEmpty ? null : answers[i];
 
-      //Checks the key for the word "victory"
       if ((qnaKey.contains("Побед") || qnaKey.contains("стал(а) лучше")) &&
           answers[i].isNotEmpty) {
-        //Then adds to the personalVictories list
         personalVictories.add(answers[i]);
-        //Then adds to the fears list
       } else if (qnaKey.contains("стра") ||
           qnaKey.contains("боюс") && answers[i].isNotEmpty) {
         fears = answers[i];
-        //Then adds to the energy generators list
       } else if (qnaKey.contains("ресу") ||
           qnaKey.contains("помогало сегодня") ||
           qnaKey.contains("больше всего энергии") && answers[i].isNotEmpty) {
         energyGenerator = answers[i];
-        //Then adds to the energy killers list
       } else if (qnaKey.contains("энергетическим вампиром") &&
           answers[i].isNotEmpty) {
         energyKiller = answers[i];
-        //Then adds to the important to work list
       } else if (qnaKey.contains("конкретный шаг") ||
           qnaKey.contains("начну делать по-другому") ||
           qnaKey.contains("я откажусь") && answers[i].isNotEmpty) {
         importantToWork = answers[i];
       }
 
-      //And we add them to a new list of questions and answers for future reference
       newQnaList.add(qna);
     }
 
-    //Creates a new step of reflection, replaces the last questions and answers with new ones
     final newState = state!.copyWith(questionsAndAnswers: newQnaList);
 
     final List<ReflectionStepModel> newSteps = [];
 
-    //We go through all the steps to find which ReflectionStepModel needs to be changed.
     for (ReflectionStepModel step in currentReflection!.steps) {
       if (step == state) {
         step = newState;
@@ -142,8 +160,8 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
       newSteps.add(step);
     }
 
-    //Updates the ReflectionModel with modified steps
     currentReflection = currentReflection!.copyWith(steps: newSteps);
+
     if (state?.next == null) {
       completeReflection(context);
     } else {
@@ -152,16 +170,19 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
   }
 
   void prevStep() {
-    if (state?.prev == null) {
-    } else {
+    if (state?.prev != null) {
       state = state!.prev;
     }
   }
 
   Future<void> completeReflection(BuildContext context) async {
-    context.go("/home");
-    await reflectionRepository.insertReflection(currentReflection!);
+    final reflectionToSave = currentReflection;
 
+    if (reflectionToSave == null) return;
+
+    context.go("/home");
+
+    await reflectionRepository.insertReflection(reflectionToSave);
     await personalVictoriesViewModel.insertVictories(personalVictories);
 
     final newStatisticsModel = StatisticsModel(
@@ -178,7 +199,9 @@ class ReflectionViewModel extends StateNotifier<ReflectionStepModel?> {
 
     await statisticsRepository.insertData(newStatisticsModel);
     await ref.read(statisticsViewModelProvider.notifier).fetchData();
-
     await ref.read(completedReflectionsProvider.notifier).refresh();
+
+    // Important: reset everything so the next run starts from a clean state.
+    _resetRuntimeState();
   }
 }

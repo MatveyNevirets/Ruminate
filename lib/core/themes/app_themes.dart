@@ -1,7 +1,32 @@
+// app_themes.dart
 import 'package:flutter/material.dart';
 
+class ThemeSeedExtension extends ThemeExtension<ThemeSeedExtension> {
+  const ThemeSeedExtension({required this.seedColor});
+
+  final Color seedColor;
+
+  @override
+  ThemeSeedExtension copyWith({Color? seedColor}) {
+    return ThemeSeedExtension(
+      seedColor: seedColor ?? this.seedColor,
+    );
+  }
+
+  @override
+  ThemeExtension<ThemeSeedExtension> lerp(
+    covariant ThemeExtension<ThemeSeedExtension>? other,
+    double t,
+  ) {
+    if (other is! ThemeSeedExtension) return this;
+    return ThemeSeedExtension(
+      seedColor: Color.lerp(seedColor, other.seedColor, t) ?? seedColor,
+    );
+  }
+}
+
 abstract class AppThemes {
-  static const List<Color> _seedColors = [
+  static const List<Color> seedColors = [
     Color.fromARGB(255, 255, 255, 255), // white calm
     Color(0xFFE0A83C), // amber calm
     Color(0xFFE56B6F), // rose calm
@@ -9,23 +34,29 @@ abstract class AppThemes {
     Color(0xFF5B8DEF), // blue calm
   ];
 
-  static ThemeData _buildTheme(Color seed) {
-    final scheme =
-        ColorScheme.fromSeed(
-          seedColor: seed,
-          brightness: Brightness.light,
-        ).copyWith(
-          surface: const Color(0xFFF7F4EE),
-          surfaceContainerLowest: const Color(0xFFFCFAF7),
-          surfaceContainerLow: const Color(0xFFF7F2EB),
-          surfaceContainer: const Color(0xFFF0EADF),
-          surfaceContainerHigh: const Color(0xFFE8E1D7),
-          surfaceContainerHighest: const Color(0xFFE1D8CD),
-        );
+  static ThemeData _buildTheme(Color seed, Brightness brightness) {
+    final isDark = brightness == Brightness.dark;
+
+    final scheme = ColorScheme.fromSeed(
+      seedColor: seed,
+      brightness: brightness,
+    ).copyWith(
+      surface: isDark ? const Color(0xFF151515) : const Color(0xFFF7F4EE),
+      surfaceContainerLowest:
+          isDark ? const Color(0xFF101010) : const Color(0xFFFCFAF7),
+      surfaceContainerLow:
+          isDark ? const Color(0xFF171717) : const Color(0xFFF7F2EB),
+      surfaceContainer:
+          isDark ? const Color(0xFF1D1D1D) : const Color(0xFFF0EADF),
+      surfaceContainerHigh:
+          isDark ? const Color(0xFF242424) : const Color(0xFFE8E1D7),
+      surfaceContainerHighest:
+          isDark ? const Color(0xFF2B2B2B) : const Color(0xFFE1D8CD),
+    );
 
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.light,
+      brightness: brightness,
       colorScheme: scheme,
       scaffoldBackgroundColor: scheme.surfaceContainerLowest,
       appBarTheme: AppBarTheme(
@@ -36,6 +67,9 @@ abstract class AppThemes {
         scrolledUnderElevation: 0,
       ),
       splashFactory: InkSparkle.splashFactory,
+      extensions: <ThemeExtension<dynamic>>[
+        ThemeSeedExtension(seedColor: seed),
+      ],
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
           fontSize: 34,
@@ -82,27 +116,41 @@ abstract class AppThemes {
           fontWeight: FontWeight.w600,
           letterSpacing: 0.2,
         ),
+      ).apply(
+        bodyColor: scheme.onSurface,
+        displayColor: scheme.onSurface,
       ),
       cardTheme: CardThemeData(
         color: scheme.surface,
         elevation: 0,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(28),
+        ),
       ),
       dividerTheme: DividerThemeData(
-        color: scheme.onSurface.withOpacity(0.08),
+        color: scheme.onSurface.withOpacity(isDark ? 0.12 : 0.08),
         thickness: 1,
       ),
     );
   }
 
-  static final List<ThemeData> _themes = List.unmodifiable([
-    _buildTheme(_seedColors[0]),
-    _buildTheme(_seedColors[1]),
-    _buildTheme(_seedColors[2]),
-    _buildTheme(_seedColors[3]),
-  ]);
+  static ThemeData lightTheme(Color seed) =>
+      _buildTheme(seed, Brightness.light);
+
+  static ThemeData darkTheme(Color seed) =>
+      _buildTheme(seed, Brightness.dark);
+
+  static final List<ThemeData> _themes = List.generate(
+    seedColors.length,
+    (index) => lightTheme(seedColors[index]),
+  );
 
   static List<ThemeData> get getThemes => _themes;
-  static List<Color> get seedColors => _seedColors;
+  static List<Color> get seedColorsList => seedColors;
+
+  static Color seedOf(ThemeData theme) {
+    return theme.extension<ThemeSeedExtension>()?.seedColor ??
+        theme.colorScheme.primary;
+  }
 }

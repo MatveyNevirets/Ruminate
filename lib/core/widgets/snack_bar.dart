@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 void showSnackBar(
   BuildContext context,
   String text, {
-  Duration duration = Durations.medium3,
+  Duration duration = Durations.long3,
 }) {
   final theme = Theme.of(context);
   final colorScheme = theme.colorScheme;

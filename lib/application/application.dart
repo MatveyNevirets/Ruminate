@@ -1,24 +1,49 @@
+// application.dart
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ruminate/application/routes.dart';
 import 'package:ruminate/core/providers/start_provider.dart';
+import 'package:ruminate/core/themes/app_themes.dart';
 import 'package:ruminate/core/view_models/theme_view_model.dart';
 
 class Application extends ConsumerWidget {
   const Application({super.key});
 
+  ThemeData _lightThemeFromSelected(ThemeData selectedTheme) {
+    final seed = AppThemes.seedOf(selectedTheme);
+    return AppThemes.lightTheme(seed);
+  }
+
+  ThemeData _darkThemeFromSelected(ThemeData selectedTheme) {
+    final seed = AppThemes.seedOf(selectedTheme);
+    return AppThemes.darkTheme(seed);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startFutureRepository = ref.watch(startDataProvider);
-    final theme = ref.watch(themeProvider);
+    final selectedTheme = ref.watch(themeProvider);
+
+    final lightTheme = _lightThemeFromSelected(selectedTheme);
+    final darkTheme = _darkThemeFromSelected(selectedTheme);
+
+    final platformBrightness =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness;
+    final previewTheme = platformBrightness == Brightness.dark
+        ? darkTheme
+        : lightTheme;
 
     SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
+      SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: platformBrightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarBrightness: platformBrightness == Brightness.dark
+            ? Brightness.dark
+            : Brightness.light,
       ),
     );
 
@@ -27,17 +52,21 @@ class Application extends ConsumerWidget {
         final routerConfig = ref.read(routerConfigProvider);
 
         return MaterialApp.router(
-          theme: theme,
           debugShowCheckedModeBanner: false,
           routerConfig: routerConfig,
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: ThemeMode.system,
         );
       },
       error: (e, stack) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: theme,
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: ThemeMode.system,
           home: Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor,
+            backgroundColor: previewTheme.scaffoldBackgroundColor,
             body: Center(
               child: Padding(
                 padding: const EdgeInsets.all(24),
@@ -47,13 +76,13 @@ class Application extends ConsumerWidget {
                     Icon(
                       Icons.error_outline_rounded,
                       size: 44,
-                      color: theme.colorScheme.error,
+                      color: previewTheme.colorScheme.error,
                     ),
                     const SizedBox(height: 16),
                     Text(
                       "Не удалось запустить приложение",
                       textAlign: TextAlign.center,
-                      style: theme.textTheme.titleLarge?.copyWith(
+                      style: previewTheme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -61,8 +90,10 @@ class Application extends ConsumerWidget {
                     Text(
                       "Попробуй перезапустить приложение позже.",
                       textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.65),
+                      style: previewTheme.textTheme.bodyMedium?.copyWith(
+                        color: previewTheme.colorScheme.onSurface.withOpacity(
+                          0.65,
+                        ),
                       ),
                     ),
                   ],
@@ -75,18 +106,20 @@ class Application extends ConsumerWidget {
       loading: () {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: theme,
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: ThemeMode.system,
           home: Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor,
+            backgroundColor: previewTheme.scaffoldBackgroundColor,
             body: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     "Ruminate",
-                    style: theme.textTheme.headlineMedium?.copyWith(
+                    style: previewTheme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.primary,
+                      color: previewTheme.colorScheme.primary,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -95,7 +128,7 @@ class Application extends ConsumerWidget {
                     height: 28,
                     child: CircularProgressIndicator(
                       strokeWidth: 2.5,
-                      color: theme.colorScheme.primary,
+                      color: previewTheme.colorScheme.primary,
                     ),
                   ),
                 ],
